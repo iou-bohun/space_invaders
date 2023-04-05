@@ -58,4 +58,5 @@ public class ShipEntity extends Entity {
 			game.notifyDeath();
 		}
 	}
+
 }

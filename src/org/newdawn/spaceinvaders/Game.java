@@ -52,6 +52,7 @@ public class Game extends Canvas
 	private double moveSpeed = 300;
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
+	private long bossLastFire = 0;
 	/** The interval between our players shot (ms) */
 	private long firingInterval = 500;
 	/** The number of aliens left on the screen */
@@ -257,8 +258,18 @@ public class Game extends Canvas
 		lastFire = System.currentTimeMillis();
 		ShotEntity shot = new ShotEntity(this,"sprites/shot.gif",ship.getX()+10,ship.getY()-30);
 		entities.add(shot);
+
 	}
 
+	public void BossFire(){
+		if(System.currentTimeMillis() %10 ==0){
+
+		}
+		bossLastFire = System.currentTimeMillis();
+		BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
+		entities.add(shot);
+		shot.FallowPlayer(ship.getX() - shot.getX());
+	}
 	/**
 	 * The main game loop. This loop is running during all game
 	 * play as is responsible for the following activities:
@@ -283,6 +294,7 @@ public class Game extends Canvas
 			// update the frame counter
 			lastFpsTime += delta;
 			fps++;
+			timer ++;
 			// update our FPS counter if a second has passed since
 			// we last recorded
 			if (lastFpsTime >= 1000) {
@@ -351,6 +363,7 @@ public class Game extends Canvas
 				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 				g.drawString("Press any key",(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
 			}
+
 			strategy.show();
 
 			// resolve the movement of the ship. First assume the ship 
@@ -367,14 +380,18 @@ public class Game extends Canvas
 			if (firePressed) {
 				tryToFire();
 			}
+			if(timer%100== 0){
+				BossFire();
+			}
+			if((timer&20) == 0){
+
+			}
 
 			// we want each frame to take 10 milliseconds, to do this
 			// we've recorded when we started the frame. We add 10 milliseconds
 			// to this and then factor in the current time to give 
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
-
-
 		}
 	}
 	

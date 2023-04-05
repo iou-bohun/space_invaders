@@ -31,6 +31,7 @@ public class ShotEntity extends Entity {
 		dy = moveSpeed;
 	}
 
+
 	/**
 	 * Request that this shot moved based on time elapsed
 	 * 
