@@ -1,6 +1,9 @@
 package org.newdawn.spaceinvaders.entity;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.newdawn.spaceinvaders.Game;
+import org.newdawn.spaceinvaders.Sprite;
+import org.newdawn.spaceinvaders.SpriteStore;
 
 /**
  * The entity that represents the players ship
@@ -12,29 +15,34 @@ public class BossEntity extends Entity {
     private Game game;
     private double moveSpeed = 100;
 
+    private Sprite[] frames = new Sprite[2];
+
+    private Sprite hitFrame;
+
     /** The time since the last frame change took place */
     private long lastFrameChange;
     /** The frame duration in milliseconds, i.e. how long any given frame of animation lasts */
     private long frameDuration = 250;
 
-    public int hp = 1;
+    public int hp = 10;
 
     public Boolean immortal =false;
 
     public String immortalCheck;
 
+    public Boolean gotHit=false;
 
-    /**
-     * Create a new entity to represent the players ship
-     *
-     * @param game The game in which the ship is being created
-     * @param ref The reference to the sprite to show for the ship
-     * @param x The initial x location of the player's ship
-     * @param y The initial y location of the player's ship
-     */
-    public BossEntity(Game game,String ref,int x,int y) {
-        super(ref,x,y);
+    private int frameNumber;
+
+
+    public BossEntity(Game game,int x,int y) {
+        super("sprites/boss1_.png",x,y);
+        frames[0] = sprite;
+        frames[1] = SpriteStore.get().getSprite("sprites/boss1_.png");
+        hitFrame = SpriteStore.get().getSprite("sprites/boss1_hit.png");
+
         this.game = game;
+
         dx = -moveSpeed;
     }
 
@@ -56,7 +64,19 @@ public class BossEntity extends Entity {
             // reset our frame change time counter
             lastFrameChange = 0;
 
+            // update the frame
+            frameNumber++;
+            if (frameNumber >= frames.length) {
+                frameNumber = 0;
+            }
+            sprite = frames[frameNumber];
+            if (gotHit == true)
+            {
+                sprite = hitFrame;
+            }
+            gotHit = false;
         }
+
 
         // if we have reached the left hand side of the screen and
         // are moving left then request a logic update
@@ -68,10 +88,8 @@ public class BossEntity extends Entity {
         if ((dx > 0) && (x > 710)) {
             game.updateLogic();
         }
-
         // proceed with normal move
         super.move(delta);
-
     }
     public void doLogic() {
         // swap over horizontal movement and move down the
@@ -104,6 +122,7 @@ public class BossEntity extends Entity {
     public void collidedWith(Entity other) {
         if (other instanceof ShotEntity && immortal==false) {
             hp--;
+            gotHit = true;
             if(hp<=0){
                 game.removeEntity(this);
                 game.notifyBossKilled();

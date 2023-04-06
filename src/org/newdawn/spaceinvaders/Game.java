@@ -158,7 +158,8 @@ public class Game extends Canvas
 		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		entities.add(ship);
 
-		AddAlien();
+		//AddAlien();
+		AddBoss();
 	}
 	/**기본 적 생성 **/
 	public void AddAlien(){
@@ -173,7 +174,7 @@ public class Game extends Canvas
 	}
 	public  void AddBoss(){
 		bossCount = 1;
-		boss = new BossEntity(this,"sprites/boss1_.png",350,100);
+		boss = new BossEntity(this,350,100);
 		entities.add(boss);
 		boss1Alive = true;
 	}
