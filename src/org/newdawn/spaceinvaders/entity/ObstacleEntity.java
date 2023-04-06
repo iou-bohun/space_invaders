@@ -7,21 +7,15 @@ import org.newdawn.spaceinvaders.Game;
  *
  * @author Kevin Glass
  */
-public class BossEntity extends Entity {
+public class ObstacleEntity extends Entity {
     /** The game in which the ship exists */
     private Game game;
-    private double moveSpeed = 100;
+    private double moveSpeed = 500;
 
     /** The time since the last frame change took place */
     private long lastFrameChange;
     /** The frame duration in milliseconds, i.e. how long any given frame of animation lasts */
     private long frameDuration = 250;
-
-    public int hp = 1;
-
-    public Boolean immortal =false;
-
-    public String immortalCheck;
 
 
     /**
@@ -32,10 +26,10 @@ public class BossEntity extends Entity {
      * @param x The initial x location of the player's ship
      * @param y The initial y location of the player's ship
      */
-    public BossEntity(Game game,String ref,int x,int y) {
+    public ObstacleEntity(Game game, String ref, int x, int y) {
         super(ref,x,y);
         this.game = game;
-        dx = -moveSpeed;
+        dy = moveSpeed;
     }
 
     /**
@@ -49,24 +43,11 @@ public class BossEntity extends Entity {
         // by we can use it to drive the animation, however
         // its the not the prettiest solution
         lastFrameChange += delta;
-
         // if we need to change the frame, update the frame number
         // and flip over the sprite in use
         if (lastFrameChange > frameDuration) {
             // reset our frame change time counter
             lastFrameChange = 0;
-
-        }
-
-        // if we have reached the left hand side of the screen and
-        // are moving left then request a logic update
-        if ((dx < 0) && (x < 10)) {
-            game.updateLogic();
-        }
-        // and vice vesa, if we have reached the right hand side of
-        // the screen and are moving right, request a logic update
-        if ((dx > 0) && (x > 710)) {
-            game.updateLogic();
         }
 
         // proceed with normal move
@@ -82,19 +63,10 @@ public class BossEntity extends Entity {
         // if we've reached the bottom of the screen then the player
         // dies
         if (y > 570) {
-            game.notifyDeath();
+            game.removeEntity(this);
         }
     }
-    public void ImmortallityCheck(int timer){
-        if(timer %800 ==0){
-            immortal = true;
-            immortalCheck ="true";
-        }
-        else if(timer %1000 == 0){
-            immortal = false;
-            immortalCheck ="false";
-        }
-    }
+
 
     /**
      * Notification that the player's ship has collided with something
@@ -102,12 +74,9 @@ public class BossEntity extends Entity {
      * @param other The entity with which the ship has collided
      */
     public void collidedWith(Entity other) {
-        if (other instanceof ShotEntity && immortal==false) {
-            hp--;
-            if(hp<=0){
+        if (other instanceof ShipEntity) {
                 game.removeEntity(this);
-                game.notifyBossKilled();
-            }
+                game.notifyDeath();
         }
     }
 }

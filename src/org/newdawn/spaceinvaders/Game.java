@@ -47,6 +47,8 @@ public class Game extends Canvas
 	private Entity ship;
 	/** The speed at which the player's ship should move (pixels/sec) */
 	private Entity boss; //보스 생성
+
+	private Entity obstacle;
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
 	private double moveSpeed = 300;
@@ -54,7 +56,7 @@ public class Game extends Canvas
 	private long lastFire = 0;
 	private long bossLastFire = 0;
 	/** The interval between our players shot (ms) */
-	private long firingInterval = 100;
+	private long firingInterval = 500;
 	/** The number of aliens left on the screen */
 	private int alienCount;
 
@@ -81,6 +83,7 @@ public class Game extends Canvas
 
 	private Boolean boss1Alive = false;
 
+	private enum BossType{stage1, stage2, stage3, stage4, stage5}
 	/**
 	 * Construct our game and set it running.
 	 */
@@ -156,26 +159,28 @@ public class Game extends Canvas
 		entities.add(ship);
 
 		AddAlien();
-		// create a block of aliens (5 rows, by 12 aliens, spaced evenly)
-
-//		boss = new BossEntity(this,"sprites/boss1_.png",350,100);
-//		entities.add(boss);
 	}
 	/**기본 적 생성 **/
 	public void AddAlien(){
-		alienCount = 0;
+		alienCount = 60;
 		for (int row=0;row<5;row++) {
 			for (int x=0;x<12;x++) {
 				Entity alien = new AlienEntity(this,100+(x*50),(50)+row*30);
 				entities.add(alien);
-				alienCount++;
+//				alienCount++;
 			}
 		}
 	}
 	public  void AddBoss(){
+		bossCount = 1;
 		boss = new BossEntity(this,"sprites/boss1_.png",350,100);
 		entities.add(boss);
 		boss1Alive = true;
+	}
+
+	public void AddObstacle(){
+		obstacle = new ObstacleEntity(this,"sprites/Obstacle.png",(int)(Math.random()*750),10);
+		entities.add(obstacle);
 	}
 	/**
 	 * Notification from a game entity that the logic of the game
@@ -235,7 +240,6 @@ public class Game extends Canvas
 	}
 	public void notifyBossKilled(){
 		boss1Alive = false;
-		bossCount = 1;
 		bossCount--;
 		if(bossCount ==0){
 			AddAlien();
@@ -378,6 +382,13 @@ public class Game extends Canvas
 			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 			g.drawString(String.valueOf(timer),(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
 
+			g.setColor(Color.white);
+			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+			g.drawString(String.valueOf(alienCount),10,30);
+
+			g.setColor(Color.white);
+			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+			g.drawString(String.valueOf(bossCount),30,30);
 
 			strategy.show();
 
@@ -397,6 +408,9 @@ public class Game extends Canvas
 			}
 			if(timer%100== 0){
 				BossFire();
+			}
+			if(timer%100 == 0){
+				AddObstacle();
 			}
 			// we want each frame to take 10 milliseconds, to do this
 			// we've recorded when we started the frame. We add 10 milliseconds
