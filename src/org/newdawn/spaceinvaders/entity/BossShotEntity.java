@@ -68,9 +68,7 @@ public class BossShotEntity extends Entity {
         if (other instanceof ShipEntity) {
             // remove the affected entities
             game.removeEntity(this);
-            game.removeEntity(other);
-
-            game.notifyDeath();
+            used =true;
         }
     }
 }

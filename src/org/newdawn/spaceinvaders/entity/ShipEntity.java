@@ -10,6 +10,8 @@ import org.newdawn.spaceinvaders.Game;
 public class ShipEntity extends Entity {
 	/** The game in which the ship exists */
 	private Game game;
+
+	private int hp=5;
 	
 	/**
 	 * Create a new entity to represent the players ship
@@ -24,6 +26,10 @@ public class ShipEntity extends Entity {
 		
 		this.game = game;
 	}
+
+	public int getHp(){return (int)hp;}
+
+	public void setHp(int shipHp){this.hp = shipHp;}
 	
 	/**
 	 * Request that the ship move itself based on an elapsed ammount of
@@ -52,10 +58,12 @@ public class ShipEntity extends Entity {
 	 * @param other The entity with which the ship has collided
 	 */
 	public void collidedWith(Entity other) {
-		// if its an alien, notify the game that the player
-		// is dead
-		if (other instanceof AlienEntity) {
-			game.notifyDeath();
+		if (other instanceof BossShotEntity) {
+			this.hp--;
+			if(this.hp<=0){
+				game.removeEntity(this);
+				game.notifyDeath();
+			}
 		}
 	}
 }

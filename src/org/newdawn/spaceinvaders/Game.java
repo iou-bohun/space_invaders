@@ -82,11 +82,10 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage= 1;
+	private int stage= 2;
 
 	private int bossStage=0;
 
-	private int hp = 0;
 	/**
 	 * Construct our game and set it running.
 	 */
@@ -216,6 +215,7 @@ public class Game extends Canvas
 	public void notifyDeath() {
 		message = "Oh no! They got you, try again?";
 		waitingForKeyPress = true;
+		stage = 1;
 	}
 
 	/**
@@ -418,11 +418,15 @@ public class Game extends Canvas
 			g.drawString(String.valueOf(stage),30,500);
 
 			/** 미니언 수 **/
-			if(timer >150){
-				g.setColor(Color.white);
-				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-				g.drawString(String.valueOf(alienCount),10,30);
-			}
+			g.setColor(Color.white);
+			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+			g.drawString(String.valueOf(alienCount),10,30);
+
+			/**플레이어 체력**/
+			g.setColor(Color.white);
+			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+			g.drawString(String.valueOf(ship.getHp()),30,200);
+
 
 			/**보스 체력**/
 			if(bossAlive){
