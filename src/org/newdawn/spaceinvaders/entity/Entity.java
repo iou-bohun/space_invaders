@@ -34,7 +34,9 @@ public abstract class Entity {
 	private Rectangle me = new Rectangle();
 	/** The rectangle used for other entities during collision resolution */
 	private Rectangle him = new Rectangle();
-	
+
+	private Boolean immortal = false;
+
 	/**
 	 * Construct a entity based on a sprite image and a location.
 	 * 
@@ -69,11 +71,7 @@ public abstract class Entity {
 		this.dx = dx;
 	}
 
-	/**
-	 * Set the vertical speed of this entity
-	 * 
-	 * @param dx The vertical speed of this entity (pixels/sec)
-	 */
+
 	public void setVerticalMovement(double dy) {
 		this.dy = dy;
 	}
@@ -95,7 +93,7 @@ public abstract class Entity {
 	public double getVerticalMovement() {
 		return dy;
 	}
-	
+
 	/**
 	 * Draw this entity to the graphics context provided
 	 * 
@@ -111,6 +109,7 @@ public abstract class Entity {
 	 */
 	public void doLogic() {
 	}
+	public void ImmortallityCheck(int timer){}
 	
 	/**
 	 * Get the x location of this entity
@@ -129,6 +128,7 @@ public abstract class Entity {
 	public int getY() {
 		return (int) y;
 	}
+
 	
 	/**
 	 * Check if this entity collised with another.

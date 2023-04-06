@@ -1,12 +1,6 @@
 package org.newdawn.spaceinvaders.entity;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
 import org.newdawn.spaceinvaders.Game;
-import org.newdawn.spaceinvaders.Sprite;
-import org.newdawn.spaceinvaders.SystemTimer;
-
-import java.sql.Struct;
 
 /**
  * The entity that represents the players ship
@@ -26,6 +20,8 @@ public class BossEntity extends Entity {
     public int hp = 1;
 
     public Boolean immortal =false;
+
+    public String immortalCheck;
 
 
     /**
@@ -77,6 +73,7 @@ public class BossEntity extends Entity {
 
         // proceed with normal move
         super.move(delta);
+
     }
     public void doLogic() {
         // swap over horizontal movement and move down the
@@ -90,20 +87,15 @@ public class BossEntity extends Entity {
             game.notifyDeath();
         }
     }
-
-    public void ImmortallityCheck(){
-        long lastLoopTime = SystemTimer.getTime();
-        while(true){
-            lastLoopTime = SystemTimer.getTime();
-            if(lastLoopTime %10==0){
-                immortal= true;
-            }
+    public void ImmortallityCheck(int timer){
+        if(timer %800 ==0){
+            immortal = true;
+            immortalCheck ="true";
         }
-    }
-
-
-    public double getHp() {
-        return hp;
+        else if(timer %1000 == 0){
+            immortal = false;
+            immortalCheck ="false";
+        }
     }
 
     /**

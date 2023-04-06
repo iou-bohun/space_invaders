@@ -54,7 +54,7 @@ public class Game extends Canvas
 	private long lastFire = 0;
 	private long bossLastFire = 0;
 	/** The interval between our players shot (ms) */
-	private long firingInterval = 500;
+	private long firingInterval = 100;
 	/** The number of aliens left on the screen */
 	private int alienCount;
 
@@ -79,6 +79,7 @@ public class Game extends Canvas
 	/** The game window that we'll update with the frame count */
 	private JFrame container;
 
+	private Boolean boss1Alive = false;
 
 	/**
 	 * Construct our game and set it running.
@@ -154,20 +155,28 @@ public class Game extends Canvas
 		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		entities.add(ship);
 
+		AddAlien();
 		// create a block of aliens (5 rows, by 12 aliens, spaced evenly)
-		/*alienCount = 0;
+
+//		boss = new BossEntity(this,"sprites/boss1_.png",350,100);
+//		entities.add(boss);
+	}
+	/**기본 적 생성 **/
+	public void AddAlien(){
+		alienCount = 0;
 		for (int row=0;row<5;row++) {
 			for (int x=0;x<12;x++) {
 				Entity alien = new AlienEntity(this,100+(x*50),(50)+row*30);
 				entities.add(alien);
 				alienCount++;
 			}
-		}*/
+		}
+	}
+	public  void AddBoss(){
 		boss = new BossEntity(this,"sprites/boss1_.png",350,100);
 		entities.add(boss);
+		boss1Alive = true;
 	}
-
-
 	/**
 	 * Notification from a game entity that the logic of the game
 	 * should be run at the next opportunity (normally as a result of some
@@ -210,11 +219,9 @@ public class Game extends Canvas
 	public void notifyAlienKilled() {
 		// reduce the alient count, if there are none left, the player has won!
 		alienCount--;
-
 		if (alienCount == 0) {
-			notifyWin();
+			AddBoss();
 		}
-
 		// if there are still some aliens left then they all need to get faster, so
 		// speed up all the existing aliens
 		for (int i=0;i<entities.size();i++) {
@@ -226,13 +233,12 @@ public class Game extends Canvas
 			}
 		}
 	}
-
-
 	public void notifyBossKilled(){
+		boss1Alive = false;
 		bossCount = 1;
 		bossCount--;
 		if(bossCount ==0){
-			notifyWin();
+			AddAlien();
 		}
 		Entity entity = (Entity) entities.get(0);
 		if(entity instanceof BossEntity){
@@ -260,9 +266,19 @@ public class Game extends Canvas
 	}
 
 	public void BossFire(){
+		if(!boss1Alive){
+			return;
+		}
 		BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
 		entities.add(shot);
 		shot.FallowPlayer(ship.getX() - shot.getX());
+	}
+
+	public void BossGodMode(int time){
+		if(!boss1Alive){
+			return;
+		}
+		boss.ImmortallityCheck(time);
 	}
 	/**
 	 * The main game loop. This loop is running during all game
@@ -358,6 +374,11 @@ public class Game extends Canvas
 				g.drawString("Press any key",(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
 			}
 
+			g.setColor(Color.white);
+			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+			g.drawString(String.valueOf(timer),(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
+
+
 			strategy.show();
 
 			// resolve the movement of the ship. First assume the ship
@@ -382,6 +403,7 @@ public class Game extends Canvas
 			// to this and then factor in the current time to give
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
+			BossGodMode(timer);
 		}
 	}
 
