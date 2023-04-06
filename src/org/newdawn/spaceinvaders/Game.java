@@ -56,7 +56,7 @@ public class Game extends Canvas
 	private long lastFire = 0;
 	private long bossLastFire = 0;
 	/** The interval between our players shot (ms) */
-	private long firingInterval = 500;
+	private long firingInterval = 100;
 	/** The number of aliens left on the screen */
 	private int alienCount;
 
@@ -81,9 +81,12 @@ public class Game extends Canvas
 	/** The game window that we'll update with the frame count */
 	private JFrame container;
 
-	private Boolean boss1Alive = false;
+	private Boolean bossAlive = false;
+	private int stage= 1;
 
-	private enum BossType{stage1, stage2, stage3, stage4, stage5}
+	private int bossStage=0;
+
+	private int hp = 0;
 	/**
 	 * Construct our game and set it running.
 	 */
@@ -158,30 +161,35 @@ public class Game extends Canvas
 		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		entities.add(ship);
 
-		//AddAlien();
-		AddBoss();
+		AddAlien();
+		//AddBoss();
 	}
 	/**기본 적 생성 **/
 	public void AddAlien(){
-		alienCount = 60;
+		alienCount = 0;
 		for (int row=0;row<5;row++) {
 			for (int x=0;x<12;x++) {
 				Entity alien = new AlienEntity(this,100+(x*50),(50)+row*30);
 				entities.add(alien);
-//				alienCount++;
+				alienCount++;
 			}
 		}
 	}
-	public  void AddBoss(){
+	public  void AddBoss(int hp){
 		bossCount = 1;
 		boss = new BossEntity(this,350,100);
 		entities.add(boss);
-		boss1Alive = true;
+		bossAlive = true;
+		bossStage++;
+		boss.setHp(100);
 	}
-
 	public void AddObstacle(){
-		obstacle = new ObstacleEntity(this,"sprites/Obstacle.png",(int)(Math.random()*750),10);
-		entities.add(obstacle);
+		if(!bossAlive){
+			return;}
+		if(stage ==3){
+			obstacle = new ObstacleEntity(this,"sprites/Obstacle.png",(int)(Math.random()*750),10);
+			entities.add(obstacle);
+		}
 	}
 	/**
 	 * Notification from a game entity that the logic of the game
@@ -226,7 +234,23 @@ public class Game extends Canvas
 		// reduce the alient count, if there are none left, the player has won!
 		alienCount--;
 		if (alienCount == 0) {
-			AddBoss();
+			switch (stage){
+				case 1:
+					AddBoss(100);
+					break;
+				case 2:
+					AddBoss(110);
+					break;
+				case 3:
+					AddBoss(120);
+					break;
+				case 4:
+					AddBoss(130);
+					break;
+				case 5:
+					AddBoss(140);
+					break;
+			}
 		}
 		// if there are still some aliens left then they all need to get faster, so
 		// speed up all the existing aliens
@@ -240,8 +264,9 @@ public class Game extends Canvas
 		}
 	}
 	public void notifyBossKilled(){
-		boss1Alive = false;
+		bossAlive = false;
 		bossCount--;
+		stage++;
 		if(bossCount ==0){
 			AddAlien();
 		}
@@ -271,19 +296,23 @@ public class Game extends Canvas
 	}
 
 	public void BossFire(){
-		if(!boss1Alive){
+		if(!bossAlive){
 			return;
 		}
-		BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
-		entities.add(shot);
-		shot.FallowPlayer(ship.getX() - shot.getX());
+		if((stage ==2)){
+			BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
+			entities.add(shot);
+			shot.FallowPlayer(ship.getX() - shot.getX());
+		}
 	}
-
 	public void BossGodMode(int time){
-		if(!boss1Alive){
+		if(!bossAlive){
 			return;
 		}
-		boss.ImmortallityCheck(time);
+		if((stage==1)){
+			boss.ImmortallityCheck(time);
+		}
+
 	}
 	/**
 	 * The main game loop. This loop is running during all game
@@ -378,19 +407,29 @@ public class Game extends Canvas
 				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 				g.drawString("Press any key",(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
 			}
-
+			/** 타이머**/
 			g.setColor(Color.white);
 			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 			g.drawString(String.valueOf(timer),(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
 
+			/** 스테이지 **/
 			g.setColor(Color.white);
 			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-			g.drawString(String.valueOf(alienCount),10,30);
+			g.drawString(String.valueOf(stage),30,500);
 
-			g.setColor(Color.white);
-			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-			g.drawString(String.valueOf(bossCount),30,30);
+			/** 미니언 수 **/
+			if(timer >150){
+				g.setColor(Color.white);
+				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+				g.drawString(String.valueOf(alienCount),10,30);
+			}
 
+			/**보스 체력**/
+			if(bossAlive){
+				g.setColor(Color.white);
+				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+				g.drawString(String.valueOf(boss.getHp()),10,100);
+			}
 			strategy.show();
 
 			// resolve the movement of the ship. First assume the ship

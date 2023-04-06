@@ -19,6 +19,8 @@ public class BossEntity extends Entity {
 
     private Sprite hitFrame;
 
+    private Sprite godFrame;
+
     /** The time since the last frame change took place */
     private long lastFrameChange;
     /** The frame duration in milliseconds, i.e. how long any given frame of animation lasts */
@@ -35,11 +37,13 @@ public class BossEntity extends Entity {
     private int frameNumber;
 
 
+
     public BossEntity(Game game,int x,int y) {
         super("sprites/boss1_.png",x,y);
         frames[0] = sprite;
         frames[1] = SpriteStore.get().getSprite("sprites/boss1_.png");
         hitFrame = SpriteStore.get().getSprite("sprites/boss1_hit.png");
+        godFrame = SpriteStore.get().getSprite("sprites/boss_God_Mode.png");
 
         this.game = game;
 
@@ -73,6 +77,9 @@ public class BossEntity extends Entity {
             if (gotHit == true)
             {
                 sprite = hitFrame;
+            }
+            else if(immortal ==true){
+                sprite = godFrame;
             }
             gotHit = false;
         }
@@ -113,6 +120,10 @@ public class BossEntity extends Entity {
             immortalCheck ="false";
         }
     }
+
+    public int getHp(){return (int)hp;}
+
+    public void setHp(int bosshp){this.hp = bosshp;}
 
     /**
      * Notification that the player's ship has collided with something

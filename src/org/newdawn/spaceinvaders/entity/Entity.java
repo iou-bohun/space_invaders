@@ -37,6 +37,9 @@ public abstract class Entity {
 
 	private Boolean immortal = false;
 
+	private int hp;
+
+
 	/**
 	 * Construct a entity based on a sprite image and a location.
 	 * 
@@ -129,7 +132,9 @@ public abstract class Entity {
 		return (int) y;
 	}
 
-	
+	public int getHp(){return(int)hp;}
+
+	public void setHp(int bossHp){this.hp = bossHp;}
 	/**
 	 * Check if this entity collised with another.
 	 * 
