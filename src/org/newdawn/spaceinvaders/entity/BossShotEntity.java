@@ -15,7 +15,6 @@ public class BossShotEntity extends Entity {
     /** True if this shot has been "used", i.e. its hit something */
     private boolean used = false;
 
-    private  double fallowX = 110;
 
     /**
      * Create a new shot from the player
@@ -29,7 +28,6 @@ public class BossShotEntity extends Entity {
         super(sprite,x,y);
 
         this.game = game;
-        dx = 30;
         dy = moveSpeed;
     }
 

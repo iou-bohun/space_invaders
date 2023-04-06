@@ -47,6 +47,7 @@ public class Game extends Canvas
 	private Entity ship;
 	/** The speed at which the player's ship should move (pixels/sec) */
 	private Entity boss; //보스 생성
+
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
 	private double moveSpeed = 300;
@@ -169,7 +170,7 @@ public class Game extends Canvas
 		entities.add(boss);
 	}
 
-	
+
 	/**
 	 * Notification from a game entity that the logic of the game
 	 * should be run at the next opportunity (normally as a result of some
@@ -258,17 +259,13 @@ public class Game extends Canvas
 		lastFire = System.currentTimeMillis();
 		ShotEntity shot = new ShotEntity(this,"sprites/shot.gif",ship.getX()+10,ship.getY()-30);
 		entities.add(shot);
-
 	}
 
 	public void BossFire(){
-		if(System.currentTimeMillis() %10 ==0){
-
-		}
-		bossLastFire = System.currentTimeMillis();
 		BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
 		entities.add(shot);
-		shot.FallowPlayer(ship.getX() - shot.getX());
+		//shot.FallowPlayer(ship.getX() - shot.getX());
+
 	}
 	/**
 	 * The main game loop. This loop is running during all game
@@ -364,9 +361,15 @@ public class Game extends Canvas
 				g.drawString("Press any key",(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
 			}
 
+			g.setColor(Color.white);
+			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+			g.drawString(Double.toString(ship.getX()),20,30);
+
+
+
 			strategy.show();
 
-			// resolve the movement of the ship. First assume the ship 
+			// resolve the movement of the ship. First assume the ship
 			// isn't moving. If either cursor key is pressed then
 			// update the movement appropraitely
 			ship.setHorizontalMovement(0);
@@ -382,17 +385,20 @@ public class Game extends Canvas
 			}
 			if(timer%100== 0){
 				BossFire();
+				Entity entity = (Entity) entities.get(1);
+				if(entity instanceof BossShotEntity){
+					((BossShotEntity) entity).FallowPlayer(ship.getX() - entity.getX());
+				}
 			}
-			if((timer&20) == 0){
-
-			}
-
 			// we want each frame to take 10 milliseconds, to do this
 			// we've recorded when we started the frame. We add 10 milliseconds
 			// to this and then factor in the current time to give 
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 		}
+	}
+	private void Debug(double d){
+
 	}
 	
 	/**
