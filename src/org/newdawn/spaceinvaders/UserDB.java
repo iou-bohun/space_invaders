@@ -1,5 +1,7 @@
 package org.newdawn.spaceinvaders;
 
+import sun.security.mscapi.CPublicKey;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +10,12 @@ import javax.swing.*;
 import javax.swing.JPanel;
 
 public class UserDB extends JFrame implements ActionListener {
+
+    private JFrame loginFrame;
+    private JLabel titleLabel, idLabel, pwLabel, confirmPwLabel;
+    private JTextField idField;
+    private JPasswordField pwField, confirmPwField;
+    private JButton loginButton, registerButton;
 
     private static Connection conn;
 
@@ -28,66 +36,16 @@ public class UserDB extends JFrame implements ActionListener {
         return conn;
     }
 
-    private JFrame loginFrame;
-    private JLabel titleLabel, idLabel, pwLabel, confirmPwLabel;
-    private JTextField idField;
-    private JPasswordField pwField, confirmPwField;
-    private JButton loginButton, registerButton;
-    private JPanel loginPanel,mainPanel,buttonPanel;
-
+    Dimension frameDim = new Dimension(800,600);
     public UserDB() {
-        Dimension frameDim = new Dimension(800,600);
+        CardLayout cards = new CardLayout();
 
         loginFrame = new JFrame("Login System");
         loginFrame.setPreferredSize(frameDim);
-        loginFrame.setLayout(null);
-
-        //로그인 패널
-
-        idLabel = new JLabel("ID:");
-        pwLabel = new JLabel("Password:");
-        confirmPwLabel = new JLabel("Confirm Password:");
-
-        idField = new JTextField();
-        pwField = new JPasswordField();
-        confirmPwField = new JPasswordField();
-
-
-
-        //버튼 패널
-
-        loginButton = new JButton("Login");
-        registerButton = new JButton("Register");
-
-        //메인 패널
-        titleLabel = new JLabel("SPACE INVADERS");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
-
-        idLabel.setBounds(275,200,50,25);
-        idField.setBounds(425,200,100,25);
-        pwLabel.setBounds(275,250,100,25);
-        pwField.setBounds(425,250,100,25);
-        confirmPwLabel.setBounds(275,300,125,25);
-        confirmPwField.setBounds(425,300,100,25);
-        loginButton.setBounds(275,350,100,25);
-        registerButton.setBounds(425,350,100,25);
-        titleLabel.setBounds(265,100,300,50);
-
-        loginFrame.add(titleLabel);
-        loginFrame.add(idLabel);
-        loginFrame.add(idField);
-        loginFrame.add(pwLabel);
-        loginFrame.add(pwField);
-        loginFrame.add(confirmPwLabel);
-        loginFrame.add(confirmPwField);
-        loginFrame.add(loginButton);
-        loginFrame.add(registerButton);
-
-        // add action listener to buttons
-        loginButton.addActionListener(this);
-        registerButton.addActionListener(this);
+        loginFrame.setLayout(cards);
 
         // set window properties
+        loginFrame.getContentPane().add("mainPanel",new mainPanel(this));
         loginFrame.pack();
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setLocationRelativeTo(null);
@@ -95,7 +53,62 @@ public class UserDB extends JFrame implements ActionListener {
         loginFrame.setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public class mainPanel extends JPanel{
+
+        public mainPanel(UserDB U){
+
+
+            setLayout(null);
+
+            idLabel = new JLabel("ID:");
+            pwLabel = new JLabel("Password:");
+            confirmPwLabel = new JLabel("Confirm Password:");
+
+            idField = new JTextField();
+            pwField = new JPasswordField();
+            confirmPwField = new JPasswordField();
+
+            //로그인, 회원가입 버튼
+            loginButton = new JButton("Login");
+            registerButton = new JButton("Register");
+
+            titleLabel = new JLabel("SPACE INVADERS");
+            titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
+
+            //setBounds로 컴포넌트 크기, 위치 조정
+            idLabel.setBounds(275,200,50,25);
+            idField.setBounds(425,200,100,25);
+            pwLabel.setBounds(275,250,100,25);
+            pwField.setBounds(425,250,100,25);
+            confirmPwLabel.setBounds(275,300,125,25);
+            confirmPwField.setBounds(425,300,100,25);
+            loginButton.setBounds(275,350,100,25);
+            registerButton.setBounds(425,350,100,25);
+            titleLabel.setBounds(265,100,300,50);
+
+
+            add(titleLabel);
+            add(idLabel);
+            add(idField);
+            add(pwLabel);
+            add(pwField);
+            add(confirmPwLabel);
+            add(confirmPwField);
+            add(loginButton);
+            add(registerButton);
+
+            // add action listener to buttons
+            loginButton.addActionListener(UserDB.this::actionPerformed);
+            registerButton.addActionListener(UserDB.this::actionPerformed);
+
+        }
+
+
+
+    }
+
+
+    public void actionPerformed(ActionEvent e){
         if (e.getSource() == loginButton) {
             String id = idField.getText();
             String pw = new String(pwField.getPassword());
