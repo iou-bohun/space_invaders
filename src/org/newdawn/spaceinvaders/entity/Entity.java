@@ -34,10 +34,6 @@ public abstract class Entity {
 	private Rectangle me = new Rectangle();
 	/** The rectangle used for other entities during collision resolution */
 	private Rectangle him = new Rectangle();
-
-	private Boolean immortal = false;
-
-	public int reflectDmg;
 	private int hp;
 
 
@@ -117,9 +113,6 @@ public abstract class Entity {
 
 	public void ReflectCheck(int timer){}
 
-	public int getReflectDmg(){return  (int)reflectDmg;}
-
-	public void setReflectDmg(){this.reflectDmg = 0;}
 	/**
 	 * Get the x location of this entity
 	 * 

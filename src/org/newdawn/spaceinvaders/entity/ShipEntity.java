@@ -51,9 +51,17 @@ public class ShipEntity extends Entity {
 		
 		super.move(delta);
 	}
-
-	public void setReflectDmg(int dmg){this.hp--;}
-
+	public void setReflectDmg(int dmg)
+	{
+		for(int i=1; i<dmg;i++){
+			hp--;
+			try{
+				Thread.sleep(1000);
+			}catch (InterruptedException e){
+				e.printStackTrace();
+			}
+		}
+	}
 	/**
 	 * Notification that the player's ship has collided with something
 	 * 

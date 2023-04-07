@@ -82,9 +82,8 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage= 4;
+	private int stage= 1;
 
-	private int bossStage=0;
 
 	/**
 	 * Construct our game and set it running.
@@ -179,17 +178,9 @@ public class Game extends Canvas
 		boss = new BossEntity(this,350,100);
 		entities.add(boss);
 		bossAlive = true;
-		bossStage++;
 		boss.setHp(hp);
 	}
-	public void AddObstacle(){
-		if(!bossAlive){
-			return;}
-		if(stage ==3){
-			obstacle = new ObstacleEntity(this,"sprites/Obstacle.png",(int)(Math.random()*750),10);
-			entities.add(obstacle);
-		}
-	}
+
 
 	/**
 	 * Notification from a game entity that the logic of the game
@@ -276,8 +267,9 @@ public class Game extends Canvas
 			entity.setHorizontalMovement(entity.getHorizontalMovement()*1.02);
 		}
 	}
-
-
+	public void bossReflectStart(){
+		ship.setHp(-1);
+	}
 	/**
 	 * Attempt to fire a shot from the player. Its called "try"
 	 * since we must first check that the player can fire at this
@@ -295,34 +287,44 @@ public class Game extends Canvas
 		entities.add(shot);
 
 	}
+	/** 단게별 보스 공격 구현**/
 
-	public void BossFire(){
+	public void BossGodMode(int time){ /**1단계 보스 패턴**/
 		if(!bossAlive){
 			return;
 		}
-		if((stage ==2)){
+		if((stage==1)||(stage==5)){
+			boss.ImmortallityCheck(time);
+		}
+	}
+	public void BossFire(){ /**2단계 보스 패턴**/
+		if(!bossAlive){
+			return;
+		}
+		if((stage ==2)||(stage ==4) ||(stage==5) ){
 			BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
 			entities.add(shot);
 			shot.FallowPlayer(ship.getX() - shot.getX());
 		}
 	}
-	public void BossGodMode(int time){
+	public void AddObstacle(){ /**3단계 보스 패턴**/
 		if(!bossAlive){
-			return;
-		}
-		if((stage==1)){
-			boss.ImmortallityCheck(time);
+			return;}
+		if((stage ==3)||(stage==5)){
+			obstacle = new ObstacleEntity(this,"sprites/Obstacle.png",(int)(Math.random()*750),10);
+			entities.add(obstacle);
 		}
 	}
-
-	public void BossReflectMode(int time){
+	public void BossReflectMode(int time){ /**4단계 보스 패턴**/
 		if(!bossAlive){
 			return;
 		}
-		if ((stage == 4)) {
+		if ((stage == 4)||(stage ==5)) {
 			boss.ReflectCheck(time);
 		}
 	}
+	/** 단계별 보스 구현 끝**/
+
 	/**
 	 * The main game loop. This loop is running during all game
 	 * play as is responsible for the following activities:
@@ -419,37 +421,33 @@ public class Game extends Canvas
 			/** 타이머**/
 			g.setColor(Color.white);
 			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-			g.drawString(String.valueOf(timer),(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
+			g.drawString("타이머 "+String.valueOf(timer),720,30);
 
 			/** 스테이지 **/
 			g.setColor(Color.white);
 			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-			g.drawString(String.valueOf(stage),30,500);
+			g.drawString("현제 스테이지  "+ String.valueOf(stage),30,580);
 
 			/** 미니언 수 **/
 			g.setColor(Color.white);
 			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-			g.drawString(String.valueOf(alienCount),10,30);
+			g.drawString("남은 적 수 "+String.valueOf(alienCount),10,30);
 
 			/**플레이어 체력**/
 			g.setColor(Color.white);
 			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-			g.drawString(String.valueOf(ship.getHp()),30,200);
+			g.drawString("플레이어 체력 "+String.valueOf(ship.getHp()),700,580);
 
 
 			/**보스 체력**/
 			if(bossAlive){
 				g.setColor(Color.white);
 				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-				g.drawString(String.valueOf(boss.getHp()),10,100);
+				g.drawString("보스 체력  "+String.valueOf(boss.getHp()),10,100);
 			}
 
-			if(bossAlive){
-				g.setColor(Color.white);
-				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-				g.drawString(String.valueOf(boss.getReflectDmg()),40,100);
-			}
 			strategy.show();
+
 
 			// resolve the movement of the ship. First assume the ship
 			// isn't moving. If either cursor key is pressed then
@@ -466,15 +464,13 @@ public class Game extends Canvas
 				tryToFire();
 			}
 			if(timer%100== 0){
+				AddObstacle();
 				BossFire();
 			}
-			if(timer%100 == 0){
-				AddObstacle();
-			}
+
 			if(ship.getHp()<=0){
 				notifyDeath();
 			}
-
 			// we want each frame to take 10 milliseconds, to do this
 			// we've recorded when we started the frame. We add 10 milliseconds
 			// to this and then factor in the current time to give
@@ -482,7 +478,6 @@ public class Game extends Canvas
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossGodMode(timer); /**보스 무적**/
 			BossReflectMode(timer); /**보스 데미지 반사**/
-
 		}
 	}
 

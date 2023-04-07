@@ -39,10 +39,6 @@ public class BossEntity extends Entity {
 
     public Boolean reflect =false;
 
-    public int reflectDmg;
-
-
-
     public BossEntity(Game game,int x,int y) {
         super("sprites/boss1_.png",x,y);
         frames[0] = sprite;
@@ -128,28 +124,18 @@ public class BossEntity extends Entity {
             immortal = false;
             immortalCheck ="false";
         }
-
     }
-
     public void ReflectCheck(int timer){
         if(timer %800 ==0){
             reflect = true;
             immortal = true;
-            immortalCheck ="true";
         }
         else if(timer %1000 == 0){
             reflect = false;
             immortal =false;
-            immortalCheck ="false";
-            setReflectDmg();
         }
     }
-
-    public int getReflectDmg(){return (int)reflectDmg;}
-
-    public void setReflectDmg(){this.reflectDmg = 0;}
     public int getHp(){return (int)hp;}
-
     public void setHp(int bosshp){this.hp = bosshp;}
 
 
@@ -168,8 +154,8 @@ public class BossEntity extends Entity {
                     game.notifyBossKilled();
                 }
             }
-            else if(immortal == true){
-                reflectDmg++;
+            else if(reflect  == true){
+                game.bossReflectStart();
             }
         }
     }
