@@ -1,6 +1,5 @@
 package org.newdawn.spaceinvaders.entity;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.newdawn.spaceinvaders.Game;
 import org.newdawn.spaceinvaders.Sprite;
 import org.newdawn.spaceinvaders.SpriteStore;
@@ -21,6 +20,8 @@ public class BossEntity extends Entity {
 
     private Sprite godFrame;
 
+    private Sprite reflectFrame;
+
     /** The time since the last frame change took place */
     private long lastFrameChange;
     /** The frame duration in milliseconds, i.e. how long any given frame of animation lasts */
@@ -36,6 +37,10 @@ public class BossEntity extends Entity {
 
     private int frameNumber;
 
+    public Boolean reflect =false;
+
+    public int reflectDmg;
+
 
 
     public BossEntity(Game game,int x,int y) {
@@ -44,6 +49,7 @@ public class BossEntity extends Entity {
         frames[1] = SpriteStore.get().getSprite("sprites/boss1_.png");
         hitFrame = SpriteStore.get().getSprite("sprites/boss1_hit.png");
         godFrame = SpriteStore.get().getSprite("sprites/boss_God_Mode.png");
+        reflectFrame = SpriteStore.get().getSprite("sprites/bossReflect.png");
 
         this.game = game;
 
@@ -82,6 +88,9 @@ public class BossEntity extends Entity {
                 sprite = godFrame;
             }
             gotHit = false;
+            if(reflect ==true&&immortal ==true){
+                sprite = reflectFrame;
+            }
         }
 
 
@@ -119,11 +128,30 @@ public class BossEntity extends Entity {
             immortal = false;
             immortalCheck ="false";
         }
+
     }
 
+    public void ReflectCheck(int timer){
+        if(timer %800 ==0){
+            reflect = true;
+            immortal = true;
+            immortalCheck ="true";
+        }
+        else if(timer %1000 == 0){
+            reflect = false;
+            immortal =false;
+            immortalCheck ="false";
+            setReflectDmg();
+        }
+    }
+
+    public int getReflectDmg(){return (int)reflectDmg;}
+
+    public void setReflectDmg(){this.reflectDmg = 0;}
     public int getHp(){return (int)hp;}
 
     public void setHp(int bosshp){this.hp = bosshp;}
+
 
     /**
      * Notification that the player's ship has collided with something
@@ -131,12 +159,17 @@ public class BossEntity extends Entity {
      * @param other The entity with which the ship has collided
      */
     public void collidedWith(Entity other) {
-        if (other instanceof ShotEntity && immortal==false) {
-            hp--;
-            gotHit = true;
-            if(hp<=0){
-                game.removeEntity(this);
-                game.notifyBossKilled();
+        if (other instanceof ShotEntity) {
+            if(immortal ==false ){
+                hp--;
+                gotHit = true;
+                if(hp<=0){
+                    game.removeEntity(this);
+                    game.notifyBossKilled();
+                }
+            }
+            else if(immortal == true){
+                reflectDmg++;
             }
         }
     }

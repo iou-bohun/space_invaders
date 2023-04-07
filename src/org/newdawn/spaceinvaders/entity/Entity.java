@@ -37,6 +37,7 @@ public abstract class Entity {
 
 	private Boolean immortal = false;
 
+	public int reflectDmg;
 	private int hp;
 
 
@@ -113,7 +114,12 @@ public abstract class Entity {
 	public void doLogic() {
 	}
 	public void ImmortallityCheck(int timer){}
-	
+
+	public void ReflectCheck(int timer){}
+
+	public int getReflectDmg(){return  (int)reflectDmg;}
+
+	public void setReflectDmg(){this.reflectDmg = 0;}
 	/**
 	 * Get the x location of this entity
 	 * 

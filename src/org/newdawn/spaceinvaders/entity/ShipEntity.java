@@ -29,7 +29,7 @@ public class ShipEntity extends Entity {
 
 	public int getHp(){return (int)hp;}
 
-	public void setHp(int shipHp){this.hp = shipHp;}
+	public void setHp(int shipHp){this.hp += shipHp;}
 	
 	/**
 	 * Request that the ship move itself based on an elapsed ammount of
@@ -51,7 +51,9 @@ public class ShipEntity extends Entity {
 		
 		super.move(delta);
 	}
-	
+
+	public void setReflectDmg(int dmg){this.hp--;}
+
 	/**
 	 * Notification that the player's ship has collided with something
 	 * 

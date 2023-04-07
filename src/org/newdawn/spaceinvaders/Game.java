@@ -82,7 +82,7 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage= 2;
+	private int stage= 4;
 
 	private int bossStage=0;
 
@@ -180,7 +180,7 @@ public class Game extends Canvas
 		entities.add(boss);
 		bossAlive = true;
 		bossStage++;
-		boss.setHp(100);
+		boss.setHp(hp);
 	}
 	public void AddObstacle(){
 		if(!bossAlive){
@@ -190,6 +190,7 @@ public class Game extends Canvas
 			entities.add(obstacle);
 		}
 	}
+
 	/**
 	 * Notification from a game entity that the logic of the game
 	 * should be run at the next opportunity (normally as a result of some
@@ -312,7 +313,15 @@ public class Game extends Canvas
 		if((stage==1)){
 			boss.ImmortallityCheck(time);
 		}
+	}
 
+	public void BossReflectMode(int time){
+		if(!bossAlive){
+			return;
+		}
+		if ((stage == 4)) {
+			boss.ReflectCheck(time);
+		}
 	}
 	/**
 	 * The main game loop. This loop is running during all game
@@ -434,6 +443,12 @@ public class Game extends Canvas
 				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 				g.drawString(String.valueOf(boss.getHp()),10,100);
 			}
+
+			if(bossAlive){
+				g.setColor(Color.white);
+				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+				g.drawString(String.valueOf(boss.getReflectDmg()),40,100);
+			}
 			strategy.show();
 
 			// resolve the movement of the ship. First assume the ship
@@ -456,12 +471,18 @@ public class Game extends Canvas
 			if(timer%100 == 0){
 				AddObstacle();
 			}
+			if(ship.getHp()<=0){
+				notifyDeath();
+			}
+
 			// we want each frame to take 10 milliseconds, to do this
 			// we've recorded when we started the frame. We add 10 milliseconds
 			// to this and then factor in the current time to give
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
-			BossGodMode(timer);
+			BossGodMode(timer); /**보스 무적**/
+			BossReflectMode(timer); /**보스 데미지 반사**/
+
 		}
 	}
 
