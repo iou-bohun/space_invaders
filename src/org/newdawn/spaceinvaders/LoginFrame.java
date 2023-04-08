@@ -11,6 +11,7 @@ public class LoginFrame extends JFrame implements ActionListener{
     CardLayout card = new CardLayout();
     LoginPanel login = new LoginPanel();
     RegisterPanel register = new RegisterPanel();
+    GameLobbyPanel lobby = new GameLobbyPanel();
     UserDB u = new UserDB();
     public LoginFrame(){
         super("Space Invaders 102");
@@ -18,6 +19,7 @@ public class LoginFrame extends JFrame implements ActionListener{
 
         add("Login",login);
         add("Register",register);
+        add("Lobby",lobby);
 
         setSize(800,600);
         setVisible(true);
@@ -52,9 +54,7 @@ public class LoginFrame extends JFrame implements ActionListener{
                     ResultSet rs = pstmt.executeQuery();
 
                     if (rs.next()) {
-                        dispose();
-                        Game g = new Game();
-                        g.gameLoop();
+                        card.show(getContentPane(), "Lobby");
 
                     } else {
                         JOptionPane.showMessageDialog(this, "Incorrect ID or password!");
