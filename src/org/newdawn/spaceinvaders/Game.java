@@ -11,8 +11,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.newdawn.spaceinvaders.entity.AlienEntity;
 import org.newdawn.spaceinvaders.entity.Entity;
@@ -103,11 +102,7 @@ public class Game extends Canvas
 		
 		// add a listener to respond to the user closing the window. If they
 		// do we'd like to exit the game
-		container.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
+		container.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		// add a key input system (defined below) to our canvas
 		// so we can respond to key pressed
