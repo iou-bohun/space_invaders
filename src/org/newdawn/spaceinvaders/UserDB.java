@@ -10,13 +10,11 @@ import javax.swing.*;
 import javax.swing.JPanel;
 
 public class UserDB extends JFrame implements ActionListener {
-
     private JFrame loginFrame;
-    private JLabel titleLabel, idLabel, pwLabel, confirmPwLabel;
+    private JLabel titleLabel, idLabel, pwLabel, confirmPwLabel, registerLabel;
     private JTextField idField;
     private JPasswordField pwField, confirmPwField;
     private JButton loginButton, registerButton;
-
     private static Connection conn;
 
     static {
@@ -31,11 +29,9 @@ public class UserDB extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
-
     public static Connection getConnection() {
         return conn;
     }
-
     Dimension frameDim = new Dimension(800,600);
     public UserDB() {
         CardLayout cards = new CardLayout();
@@ -46,6 +42,7 @@ public class UserDB extends JFrame implements ActionListener {
 
         // set window properties
         loginFrame.getContentPane().add("mainPanel",new mainPanel(this));
+        loginFrame.getContentPane().add("registerPanel",new registerPanel(this));
         loginFrame.pack();
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setLocationRelativeTo(null);
@@ -53,10 +50,10 @@ public class UserDB extends JFrame implements ActionListener {
         loginFrame.setVisible(true);
     }
 
+    //로그인 패널
     public class mainPanel extends JPanel{
 
         public mainPanel(UserDB U){
-
 
             setLayout(null);
 
@@ -86,7 +83,6 @@ public class UserDB extends JFrame implements ActionListener {
             registerButton.setBounds(425,350,100,25);
             titleLabel.setBounds(265,100,300,50);
 
-
             add(titleLabel);
             add(idLabel);
             add(idField);
@@ -100,11 +96,21 @@ public class UserDB extends JFrame implements ActionListener {
             // add action listener to buttons
             loginButton.addActionListener(UserDB.this::actionPerformed);
             registerButton.addActionListener(UserDB.this::actionPerformed);
+        }
+    }
+
+    //회원가입 패널
+    public class registerPanel extends JPanel{
+        public registerPanel(UserDB U){
+            setLayout(null);
+
+            registerLabel = new JLabel("REGISTER");
+            registerLabel.setFont(new Font("Arial", Font.BOLD, 30));
+            registerLabel.setBounds(265,100,300,50);
+
+            add(registerLabel);
 
         }
-
-
-
     }
 
 
