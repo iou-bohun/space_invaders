@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 public class GameLobbyPanel extends JPanel implements ActionListener {
     JLabel logo;
     JButton gameStart, selectShip, goShop, changeNick, record, exitGame;
+    //private LoginFrame llfg;
 
     public GameLobbyPanel(){
         setLayout(null);
@@ -31,7 +32,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         record.setBounds(350,425,100,75);
         exitGame.setBounds(500,425,100,75);
 
-        gameStart.addActionListener(this);
+        //gameStart.addActionListener(this);
         selectShip.addActionListener(this);
         goShop.addActionListener(this);
         changeNick.addActionListener(this);
@@ -49,6 +50,12 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == exitGame){
             System.exit(0);
-        }
+        } /*else if (e.getSource() == gameStart) {
+            LoginFrame lf = new LoginFrame();
+            lf.card.show(lf.getContentPane(), "Game");
+            Game g = new Game();
+            g.gameLoop();
+
+        }*/
     }
 }

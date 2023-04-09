@@ -73,36 +73,41 @@ public class Game extends Canvas
 	/** The normal title of the game window */
 	private String windowTitle = "Space Invaders 102";
 	/** The game window that we'll update with the frame count */
-	private JFrame container;
+	//private JFrame container;
+	private LoginFrame lfg;
+
 	
 	/**
 	 * Construct our game and set it running.
 	 */
 	public Game() {
+
+		GamePanel gp = new GamePanel();
+
+
 		// create a frame to contain our game
-		container = new JFrame("Space Invaders 102");
+		//container = new JFrame("Space Invaders 102");
 		
 		// get hold the content of the frame and set up the resolution of the game
-		JPanel panel = (JPanel) container.getContentPane();
-		panel.setPreferredSize(new Dimension(800,600));
-		panel.setLayout(null);
+		//panel.setPreferredSize(new Dimension(800,600));
+		//gp.setLayout(null);
 		
 		// setup our canvas size and put it into the content of the frame
 		setBounds(0,0,800,600);
-		panel.add(this);
+		gp.add(this);
 		
 		// Tell AWT not to bother repainting our canvas since we're
 		// going to do that our self in accelerated mode
 		setIgnoreRepaint(true);
 		
 		// finally make the window visible 
-		container.pack();
-		container.setResizable(false);
-		container.setVisible(true);
+		//container.pack();
+		//container.setResizable(false);
+		//container.setVisible(true);
 		
 		// add a listener to respond to the user closing the window. If they
 		// do we'd like to exit the game
-		container.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		//container.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		// add a key input system (defined below) to our canvas
 		// so we can respond to key pressed
@@ -261,7 +266,7 @@ public class Game extends Canvas
 			// update our FPS counter if a second has passed since
 			// we last recorded
 			if (lastFpsTime >= 1000) {
-				container.setTitle(windowTitle+" (FPS: "+fps+")");
+				lfg.setTitle(windowTitle+" (FPS: "+fps+")");
 				lastFpsTime = 0;
 				fps = 0;
 			}
@@ -460,12 +465,12 @@ public class Game extends Canvas
 	 * 
 	 * @param argv The arguments that are passed into our game
 	 */
-	public static void main(String argv[]) {
+	/*public static void main(String argv[]) {
 		Game g = new Game();
 
 		// Start the main game loop, note: this method will not
 		// return until the game has finished running. Hence we are
 		// using the actual main thread to run the game.
 		g.gameLoop();
-	}
+	}*/
 }

@@ -12,6 +12,7 @@ public class LoginFrame extends JFrame implements ActionListener{
     LoginPanel login = new LoginPanel();
     RegisterPanel register = new RegisterPanel();
     GameLobbyPanel lobby = new GameLobbyPanel();
+    GamePanel gameP = new GamePanel();
     UserDB u = new UserDB();
     public LoginFrame(){
         super("Space Invaders 102");
@@ -20,6 +21,7 @@ public class LoginFrame extends JFrame implements ActionListener{
         add("Login",login);
         add("Register",register);
         add("Lobby",lobby);
+        add("Game",gameP);
 
         setSize(800,600);
         setVisible(true);
@@ -30,6 +32,7 @@ public class LoginFrame extends JFrame implements ActionListener{
         login.registerButton.addActionListener(this);
         register.cancel.addActionListener(this);
         register.registerButton.addActionListener(this);
+        lobby.gameStart.addActionListener(this);
     }
 
     public static void main(String[] args) throws Exception{
@@ -67,14 +70,16 @@ public class LoginFrame extends JFrame implements ActionListener{
                 }
 
         }
+        //회원가입 버튼 - 회원가입 패널 이동
         else if(e.getSource() == login.registerButton){
             card.show(getContentPane(), "Register");
 
         }
+        //회원가입 취소 - 로그인 패널 이동
         else if(e.getSource() == register.cancel){
             card.show(getContentPane(),"Login");
-
         }
+        //회원 등록 버튼 - 성공 시 로그인 패널 이동
         else if (e.getSource() == register.registerButton) {
             String id = register.ridField.getText();
             //String nic = register.nicknameField.getText();
@@ -108,7 +113,12 @@ public class LoginFrame extends JFrame implements ActionListener{
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-
+        }
+        //로비 패널 - 게임 시작
+        else if (e.getSource() == lobby.gameStart) {
+            card.show(getContentPane(),"Game");
+            Game g = new Game();
+            g.gameLoop();
         }
     }
 }
