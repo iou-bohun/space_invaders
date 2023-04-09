@@ -3,6 +3,8 @@ package org.newdawn.spaceinvaders.entity;
 import org.newdawn.spaceinvaders.Game;
 import org.newdawn.spaceinvaders.Sprite;
 import org.newdawn.spaceinvaders.SpriteStore;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The entity that represents the players ship
@@ -39,6 +41,8 @@ public class BossEntity extends Entity {
 
     public Boolean reflect =false;
 
+    private boolean isGod;
+
     public BossEntity(Game game,int x,int y) {
         super("sprites/boss1_.png",x,y);
         frames[0] = sprite;
@@ -50,6 +54,30 @@ public class BossEntity extends Entity {
         this.game = game;
 
         dx = -moveSpeed;
+    }
+
+    public void startBossBattle(){
+        Timer timer = new Timer();
+        TimerTask normalStateTask = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("보스평범");
+                immortal = false;
+            }
+        };
+        TimerTask godStateTask = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("보스무적");
+                immortal = true;
+            }
+        };
+        timer.schedule(normalStateTask,0,1000);
+        timer.schedule(godStateTask,0,9000);
+    }
+
+    public  boolean immortal(){
+        return immortal;
     }
 
     /**
@@ -90,6 +118,7 @@ public class BossEntity extends Entity {
         }
 
 
+
         // if we have reached the left hand side of the screen and
         // are moving left then request a logic update
         if ((dx < 0) && (x < 10)) {
@@ -115,6 +144,8 @@ public class BossEntity extends Entity {
             game.notifyDeath();
         }
     }
+
+    public boolean getImmortal(){return immortal;}
     public void ImmortallityCheck(int timer){
         if(timer %800 ==0){
             immortal = true;

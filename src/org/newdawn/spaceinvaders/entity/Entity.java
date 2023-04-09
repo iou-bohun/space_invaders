@@ -36,6 +36,8 @@ public abstract class Entity {
 	private Rectangle him = new Rectangle();
 	private int hp;
 
+	private boolean immortal;
+
 
 	/**
 	 * Construct a entity based on a sprite image and a location.
@@ -110,6 +112,10 @@ public abstract class Entity {
 	public void doLogic() {
 	}
 	public void ImmortallityCheck(int timer){}
+
+	public void startBossBattle(){}
+
+	public boolean getImmortal(){return immortal;}
 
 	public void ReflectCheck(int timer){}
 
