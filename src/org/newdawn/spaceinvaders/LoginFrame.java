@@ -12,6 +12,7 @@ public class LoginFrame extends JFrame implements ActionListener{
     LoginPanel login = new LoginPanel();
     RegisterPanel register = new RegisterPanel();
     GameLobbyPanel lobby = new GameLobbyPanel();
+    ShopPanel shop = new ShopPanel();
     GamePanel gameP = new GamePanel();
     public LoginFrame(){
         super("Space Invaders 102");
@@ -21,6 +22,7 @@ public class LoginFrame extends JFrame implements ActionListener{
         add("Register",register);
         add("Lobby",lobby);
         add("Game",gameP);
+        add("Shop",shop);
 
         setSize(800,600);
         setVisible(true);
@@ -32,6 +34,8 @@ public class LoginFrame extends JFrame implements ActionListener{
         register.cancel.addActionListener(this);
         register.registerButton.addActionListener(this);
         lobby.gameStart.addActionListener(this);
+        lobby.goShop.addActionListener(this);
+        shop.returnLobby.addActionListener(this);
     }
 
     public static void main(String[] args) throws Exception{
@@ -78,10 +82,10 @@ public class LoginFrame extends JFrame implements ActionListener{
                         UserDB.is_hard_ship = rs2.getBoolean("is_hard_ship");
                         UserDB.is_lucky_ship = rs2.getBoolean("is_lucky_ship");
                         UserDB.HP_potion = rs2.getInt("HP_potion");
-                        UserDB.shield_potion = rs2.getInt("shield_potion");
+                        UserDB.speed_potion = rs2.getInt("speed_potion");
 
                         //데이터 로드 실험
-                        System.out.println(UserDB.userID + " " + UserDB.nickname + " " + UserDB.is_hard_ship + " " + UserDB.HP_potion);
+                        System.out.println(UserDB.coin + " " + UserDB.is_hard_ship + " " + UserDB.is_lucky_ship + " " + UserDB.HP_potion + "" + UserDB.speed_potion);
 
                         card.show(getContentPane(), "Lobby");
                     }
@@ -197,6 +201,15 @@ public class LoginFrame extends JFrame implements ActionListener{
             card.show(getContentPane(),"Game");
             Game g = new Game();
             g.gameLoop();
+        }
+        //상점 이동
+        else if (e.getSource() == lobby.goShop) {
+            card.show(getContentPane(),"Shop");
+            shop.coinLabel.setText(Integer.toString(UserDB.coin));
+        }
+        //로비 복귀
+        else if (e.getSource() == shop.returnLobby) {
+            card.show(getContentPane(), "Lobby");
         }
     }
 }

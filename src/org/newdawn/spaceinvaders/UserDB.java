@@ -26,7 +26,7 @@ public final class UserDB {
     public static boolean is_lucky_ship = false;
     //포션 보유 개수
     public static int HP_potion = 0;
-    public static int shield_potion = 0;
+    public static int speed_potion = 0;
 
     static {
         String url = "jdbc:mysql://localhost:3306/space-invaders?allowMultiQueries=true";
