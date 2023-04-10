@@ -41,33 +41,61 @@ public class LoginFrame extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e){
+        //DB 커넥션 생성
+        Connection conn = UserDB.getConnection();
+
         if(e.getSource() == login.loginButton){
 
-                String id = login.idField.getText();
-                String pw = new String(login.pwField.getPassword());
+            String id = login.idField.getText();
+            String pw = new String(login.pwField.getPassword());
+            //로그인 시도
+            try {
+                String query = "SELECT id,password FROM userdata WHERE id = ? AND password = ?";
+                PreparedStatement pstmt = conn.prepareStatement(query);
 
-                try {
-                    Connection conn = UserDB.getConnection();
-                    String query = "SELECT id,password FROM userdata WHERE id = ? AND password = ?";
-                    PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, id);
+                pstmt.setString(2, pw);
 
-                    pstmt.setString(1, id);
-                    pstmt.setString(2, pw);
+                ResultSet rs = pstmt.executeQuery();
 
-                    ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    String dataLoad = "SELECT * FROM userdata WHERE id = ?";
+                    PreparedStatement pstmt2 = conn.prepareStatement(dataLoad);
 
-                    if (rs.next()) {
+                    pstmt2.setString(1, id);
+
+                    ResultSet rs2 = pstmt2.executeQuery();
+                    //플레이어 데이터 로드 - 데이터베이스 테이블에서 데이터 로드, UserDB의 static 변수에 저장
+                    while (rs2.next()) {
+                        UserDB.userID = id;
+                        UserDB.nickname = rs2.getString("nickname");
+                        UserDB.stage_process = rs2.getInt("stage_process");
+                        UserDB.stage1_best_score = rs2.getInt("stage1_best_score");
+                        UserDB.stage2_best_score = rs2.getInt("stage2_best_score");
+                        UserDB.stage3_best_score = rs2.getInt("stage3_best_score");
+                        UserDB.stage4_best_score = rs2.getInt("stage4_best_score");
+                        UserDB.stage5_best_score = rs2.getInt("stage5_best_score");
+                        UserDB.coin = rs2.getInt("coin");
+                        UserDB.is_hard_ship = rs2.getBoolean("is_hard_ship");
+                        UserDB.is_lucky_ship = rs2.getBoolean("is_lucky_ship");
+                        UserDB.HP_potion = rs2.getInt("HP_potion");
+                        UserDB.shield_potion = rs2.getInt("shield_potion");
+
+                        //데이터 로드 실험
+                        System.out.println(UserDB.userID + " " + UserDB.nickname + " " + UserDB.is_hard_ship + " " + UserDB.HP_potion);
+
                         card.show(getContentPane(), "Lobby");
-
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Incorrect ID or password!");
                     }
 
-                    rs.close();
-                    pstmt.close();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Incorrect ID or password!");
                 }
+
+                rs.close();
+                pstmt.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
 
         }
         //회원가입 버튼 - 회원가입 패널 이동
@@ -82,35 +110,81 @@ public class LoginFrame extends JFrame implements ActionListener{
         //회원 등록 버튼 - 성공 시 로그인 패널 이동
         else if (e.getSource() == register.registerButton) {
             String id = register.ridField.getText();
-            //String nic = register.nicknameField.getText();
+            String nic = register.nicknameField.getText();
             String pw = new String(register.rpwField.getPassword());
             String confirmPw = new String(register.confirmPwField.getPassword());
+
+            //중복체크용 문자열
+            String dupid = "";
+            //String duppw = "";
+            //String dupnic = "";
+
+            if (nic.length() < 5 || nic.length() > 10) {
+                JOptionPane.showMessageDialog(this, "Nickname is too long or short!\nNickname must be at least 5 and not more than 10.");
+                return;
+            }
+
+            if (id.length() < 8  || id.length() > 12) {
+                JOptionPane.showMessageDialog(this, "ID is too long or short!\nID must be at least 8 and not more than 12.");
+                return;
+            }
+
+            if (pw.length() < 8 || pw.length() > 12) {
+                JOptionPane.showMessageDialog(this, "Passwords is too long or short!\nPassword must be at least 8 and not more than 12.");
+                return;
+            }
+
 
             if (!pw.equals(confirmPw)) {
                 JOptionPane.showMessageDialog(this, "Passwords do not match!");
                 return;
             }
 
+            //데이터베이스 접속, 중복된 ID, 패스워드, 닉네임 있는지 확인
             try {
-                Connection conn = UserDB.getConnection();
-                String query = "INSERT INTO userdata (id, password) VALUES (?, ?)";
-                PreparedStatement pstmt = conn.prepareStatement(query);
+                String dupCheck = "SELECT id,password,nickname FROM userdata WHERE id = ? OR password = ? OR nickname = ?";
+                PreparedStatement dpstmt = conn.prepareStatement(dupCheck);
 
-                pstmt.setString(1, id);
-                pstmt.setString(2, pw);
-                //pstmt.setString(2,nic);
+                dpstmt.setString(1, id);
+                dpstmt.setString(2, pw);
+                dpstmt.setString(3, nic);
 
-                int result = pstmt.executeUpdate();
+                ResultSet dprs = dpstmt.executeQuery();
 
-                if (result > 0) {
-                    JOptionPane.showMessageDialog(this, "Registration successful!");
-                    card.show(getContentPane(),"Login");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Registration failed!");
+                while (dprs.next()){
+                    dupid = dprs.getString("id");
+                    //duppw = dprs.getString("password");
+                    //dupnic = dprs.getString("nickname");
                 }
 
-                pstmt.close();
-            } catch (SQLException ex) {
+                if (dupid.equals("") /*&& !duppw.equals(pw) && !dupnic.equals(nic)*/) {
+                    try {
+                        String query = "INSERT INTO userdata (id, password, nickname) VALUES (?, ?, ?)";
+                        PreparedStatement pstmt = conn.prepareStatement(query);
+
+                        pstmt.setString(1, id);
+                        pstmt.setString(2, pw);
+                        pstmt.setString(3, nic);
+
+                        int result = pstmt.executeUpdate();
+
+                        if (result > 0) {
+                            JOptionPane.showMessageDialog(this, "Registration successful!");
+                            card.show(getContentPane(), "Login");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Registration failed!");
+                        }
+
+                        pstmt.close();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "The same ID or password or nickname exists!");
+                }
+            }
+            catch (SQLException ex){
                 ex.printStackTrace();
             }
         }
