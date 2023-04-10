@@ -9,11 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.*;
 
@@ -85,9 +81,7 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage=2;
-
-	public int dis = 1;
+	private int stage=4;
 
 	/**
 	 * Construct our game and set it running.
@@ -325,14 +319,6 @@ public class Game extends Canvas
 			}
 		}
 	}
-	private void BossUltiScatter(){ /**보스 총알 흩뿌리는 패턴**/
-		while((timer >100)&&(timer%20==0)){
-			timer = timer%100;
-			BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
-			entities.add(shot);
-			shot.FallowPlayer((int)(Math.random()*600));
-		}
-	}
 	public void AddObstacle(){ /**3단계 보스 패턴**/
 		if(!bossAlive){
 			return;}
@@ -508,7 +494,7 @@ public class Game extends Canvas
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossGodMode(timer); /**보스 무적**/
 			BossReflectMode(timer); /**보스 데미지 반사**/
-			BossUlti(timer);
+			//BossUlti(timer);
 		}
 	}
 
