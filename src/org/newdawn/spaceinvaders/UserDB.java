@@ -4,7 +4,7 @@ package org.newdawn.spaceinvaders;
 import java.sql.*;
 
 
-public class UserDB {
+public final class UserDB {
 
     public static Connection conn;
 
@@ -43,7 +43,7 @@ public class UserDB {
     public static Connection getConnection() {
         return conn;
     }
-    public UserDB() {
+    private UserDB() {
 
     }
 }

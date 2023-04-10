@@ -13,7 +13,6 @@ public class LoginFrame extends JFrame implements ActionListener{
     RegisterPanel register = new RegisterPanel();
     GameLobbyPanel lobby = new GameLobbyPanel();
     GamePanel gameP = new GamePanel();
-    UserDB u = new UserDB();
     public LoginFrame(){
         super("Space Invaders 102");
         setLayout(card);
@@ -119,6 +118,7 @@ public class LoginFrame extends JFrame implements ActionListener{
             //String duppw = "";
             //String dupnic = "";
 
+            //부적절한 입력정보 감지
             if (nic.length() < 5 || nic.length() > 10) {
                 JOptionPane.showMessageDialog(this, "Nickname is too long or short!\nNickname must be at least 5 and not more than 10.");
                 return;
@@ -134,6 +134,10 @@ public class LoginFrame extends JFrame implements ActionListener{
                 return;
             }
 
+            if (id.equals(pw)) {
+                JOptionPane.showMessageDialog(this, "ID and password must be different!");
+                return;
+            }
 
             if (!pw.equals(confirmPw)) {
                 JOptionPane.showMessageDialog(this, "Passwords do not match!");

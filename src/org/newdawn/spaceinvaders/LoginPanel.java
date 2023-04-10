@@ -5,9 +5,9 @@ import javax.swing.*;
 import javax.swing.JPanel;
 
 public class LoginPanel extends JPanel{
-    JLabel titleLabel, idLabel, pwLabel, confirmPwLabel;
+    JLabel titleLabel, idLabel, pwLabel;
     JTextField idField;
-    JPasswordField pwField, confirmPwField;
+    JPasswordField pwField;
     JButton loginButton, registerButton;
 
     public LoginPanel(){
@@ -16,11 +16,9 @@ public class LoginPanel extends JPanel{
 
         idLabel = new JLabel("ID:");
         pwLabel = new JLabel("Password:");
-        //confirmPwLabel = new JLabel("Confirm Password:");
 
         idField = new JTextField();
         pwField = new JPasswordField();
-        //confirmPwField = new JPasswordField();
 
         //로그인, 회원가입 버튼
         loginButton = new JButton("Login");
@@ -34,8 +32,6 @@ public class LoginPanel extends JPanel{
         idField.setBounds(425,225,100,25);
         pwLabel.setBounds(275,275,100,25);
         pwField.setBounds(425,275,100,25);
-        //confirmPwLabel.setBounds(275,300,125,25);
-        //confirmPwField.setBounds(425,300,100,25);
         loginButton.setBounds(275,350,100,25);
         registerButton.setBounds(425,350,100,25);
         titleLabel.setBounds(265,100,300,50);
@@ -45,8 +41,6 @@ public class LoginPanel extends JPanel{
         add(idField);
         add(pwLabel);
         add(pwField);
-        //add(confirmPwLabel);
-        //add(confirmPwField);
         add(loginButton);
         add(registerButton);
     }

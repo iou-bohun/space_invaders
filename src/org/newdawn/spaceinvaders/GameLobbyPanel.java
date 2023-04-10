@@ -4,11 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class GameLobbyPanel extends JPanel implements ActionListener {
     JLabel logo;
     JButton gameStart, selectShip, goShop, changeNick, record, exitGame;
     //private LoginFrame llfg;
+
+
 
     public GameLobbyPanel(){
         setLayout(null);
@@ -48,8 +54,44 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         add(exitGame);
     }
     public void actionPerformed(ActionEvent e){
+        Connection conn = UserDB.getConnection();
+        //게임 데이터 DB에 저장 후 종료 메세지 출력
         if(e.getSource() == exitGame){
-            System.exit(0);
+            try {
+                String dataSave = "UPDATE userdata SET nickname = ?, stage_process = ?, stage1_best_score = ?, stage2_best_score = ?, stage3_best_score = ?, stage4_best_score = ?, stage5_best_score = ?,coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, shield_potion = ? WHERE id = ?";
+                PreparedStatement pstmt = conn.prepareStatement(dataSave);
+
+                pstmt.setString(1, UserDB.nickname);
+                pstmt.setInt(2, UserDB.stage_process);
+                pstmt.setInt(3, UserDB.stage1_best_score);
+                pstmt.setInt(4, UserDB.stage2_best_score);
+                pstmt.setInt(5, UserDB.stage3_best_score);
+                pstmt.setInt(6, UserDB.stage4_best_score);
+                pstmt.setInt(7, UserDB.stage5_best_score);
+                pstmt.setInt(8, UserDB.coin);
+                pstmt.setBoolean(9, UserDB.is_hard_ship);
+                pstmt.setBoolean(10, UserDB.is_lucky_ship);
+                pstmt.setInt(11, UserDB.HP_potion);
+                pstmt.setInt(12, UserDB.shield_potion);
+                pstmt.setString(13,UserDB.userID);
+
+                int updateResult = pstmt.executeUpdate();
+
+                if (updateResult > 0) {
+
+                    int saveConfirm = JOptionPane.showConfirmDialog(this, "Save complete.\nWanna exit?","Save Complete",JOptionPane.YES_NO_OPTION);
+
+                    if (saveConfirm == JOptionPane.YES_OPTION) {
+                        System.exit(0);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Saving Failed.");
+                }
+            }
+            catch (SQLException ex){
+                ex.printStackTrace();
+            }
         } /*else if (e.getSource() == gameStart) {
             LoginFrame lf = new LoginFrame();
             lf.card.show(lf.getContentPane(), "Game");
