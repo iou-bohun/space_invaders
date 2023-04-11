@@ -81,7 +81,7 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage=4;
+	private int stage=3;
 
 	/**
 	 * Construct our game and set it running.

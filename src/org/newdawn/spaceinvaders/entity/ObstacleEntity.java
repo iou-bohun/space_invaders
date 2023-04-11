@@ -17,6 +17,8 @@ public class ObstacleEntity extends Entity {
     /** The frame duration in milliseconds, i.e. how long any given frame of animation lasts */
     private long frameDuration = 250;
 
+    private boolean used = false;
+
 
     /**
      * Create a new entity to represent the players ship
@@ -74,9 +76,14 @@ public class ObstacleEntity extends Entity {
      * @param other The entity with which the ship has collided
      */
     public void collidedWith(Entity other) {
+        if (used) {
+            return;
+        }
+        // if we've hit an alien, kill it!
         if (other instanceof ShipEntity) {
-                game.removeEntity(this);
-                game.notifyDeath();
+            // remove the affected entities
+            game.removeEntity(this);
+            used =true;
         }
     }
 }

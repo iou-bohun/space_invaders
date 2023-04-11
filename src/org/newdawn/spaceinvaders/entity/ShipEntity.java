@@ -1,5 +1,6 @@
 package org.newdawn.spaceinvaders.entity;
 
+import javafx.beans.value.ObservableStringValue;
 import org.newdawn.spaceinvaders.Game;
 
 /**
@@ -68,7 +69,14 @@ public class ShipEntity extends Entity {
 	 * @param other The entity with which the ship has collided
 	 */
 	public void collidedWith(Entity other) {
-		if (other instanceof BossShotEntity) {
+		if (other instanceof BossShotEntity ) {
+			this.hp--;
+			if(this.hp<=0){
+				game.removeEntity(this);
+				game.notifyDeath();
+			}
+		}
+		else if(other instanceof ObstacleEntity){
 			this.hp--;
 			if(this.hp<=0){
 				game.removeEntity(this);
