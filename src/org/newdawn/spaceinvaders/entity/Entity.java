@@ -139,6 +139,7 @@ public abstract class Entity {
 	public void setHp(int Hp){this.hp = Hp;}
 
 	public boolean getHit(){return  gotHit;}
+	public void setHit(boolean hit){this.gotHit = hit;}
 	/**
 	 * Check if this entity collised with another.
 	 * 
@@ -158,4 +159,6 @@ public abstract class Entity {
 	 * @param other The entity with which this entity collided.
 	 */
 	public abstract void collidedWith(Entity other);
+
+	public  void RemoveThis(){};
 }

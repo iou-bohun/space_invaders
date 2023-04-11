@@ -44,6 +44,7 @@ public class Game extends Canvas
 	/** The speed at which the player's ship should move (pixels/sec) */
 	private Entity boss; //보스 생성
 
+	private Entity bossHpUi;
 	private Entity obstacle;
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
@@ -78,7 +79,7 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage=4;
+	private int stage=1;
 
 	/**
 	 * Construct our game and set it running.
@@ -156,7 +157,7 @@ public class Game extends Canvas
 		entities.add(ship);
 		//AddAlien();
 		AddBoss(100);
-		AddBossHp(100);
+		AddBossHp(10);
 	}
 
 	/**기본 적 생성 **/
@@ -181,8 +182,8 @@ public class Game extends Canvas
 
 	public void AddBossHp(int bossHp){
 		for(int i=0; i<bossHp; i++){
-			Entity playerHp = new GameUi(this,10+i,10);
-			entities.add(playerHp);
+			bossHpUi = new GameUi(this,10+i,10);
+			entities.add(bossHpUi);
 		}
 	}
 	/**
@@ -501,6 +502,12 @@ public class Game extends Canvas
 				g.drawString("보스 체력  "+String.valueOf(boss.getHp()),10,100);
 			}
 
+			if(bossAlive){
+				g.setColor(Color.white);
+				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+				g.drawString("보스 피격  "+String.valueOf(boss.getHit()),10,400);
+			}
+
 			strategy.show();
 
 
@@ -536,6 +543,10 @@ public class Game extends Canvas
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
 			if(boss.getHit()){
+				bossHpUi.RemoveThis();
+			}
+			else{
+				boss.setHit(false);
 			}
 		}
 	}

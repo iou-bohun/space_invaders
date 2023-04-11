@@ -22,6 +22,7 @@ public class GameUi extends Entity {
 	private long frameDuration = 250;
 	/** The current frame of animation being displayed */
 	private int frameNumber;
+	private boolean used = false;
 
 	/**
 	 * Create a new alien entity
@@ -35,7 +36,13 @@ public class GameUi extends Entity {
 		super("sprites/bossHpBar.png",x,y);
 		this.game = game;
 	}
-
+	public void RemoveThis(){
+		if (used) {
+			return;
+		}
+		game.removeEntity(this);
+		used = true;
+	}
 	public void collidedWith(Entity other) {
 		// collisions with aliens are handled elsewhere
 	}
