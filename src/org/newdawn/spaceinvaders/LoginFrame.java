@@ -87,7 +87,6 @@ public class LoginFrame extends JFrame implements ActionListener{
                         //데이터 로드 실험
                         System.out.println(UserDB.coin + " " + UserDB.is_hard_ship + " " + UserDB.is_lucky_ship + " " + UserDB.HP_potion + "" + UserDB.speed_potion);
                         JOptionPane.showMessageDialog(this, "Login successful!");
-                        UserDB.is_logged_in = true;
                         card.show(getContentPane(), "Lobby");
                     }
 
