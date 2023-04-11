@@ -44,7 +44,7 @@ public class Game extends Canvas
 	/** The speed at which the player's ship should move (pixels/sec) */
 	private Entity boss; //보스 생성
 
-	private  Entity[] bossHpUi = new Entity[100];
+	private  Entity[] bossHpUi = new Entity[150];
 	private Entity obstacle;
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
@@ -53,7 +53,7 @@ public class Game extends Canvas
 	private long lastFire = 0;
 	private long bossLastFire = 0;
 	/** The interval between our players shot (ms) */
-	private long firingInterval = 100;
+	private long firingInterval = 500;
 	/** The number of aliens left on the screen */
 	private int alienCount;
 
@@ -156,8 +156,8 @@ public class Game extends Canvas
 		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		entities.add(ship);
 		//AddAlien();
-		AddBoss(100);
-		AddBossHp(10);
+		AddBoss(140);
+		AddBossHp(140);
 	}
 
 	/**기본 적 생성 **/
@@ -183,7 +183,7 @@ public class Game extends Canvas
 	public void AddBossHp(int bossHp){
 		for(int i=0; i<bossHp; i++){
 			bossHpUi[i] = new GameUi(this,10+i,10);
-			entities.add(bossHpUi);
+			entities.add(bossHpUi[i]);
 		}
 	}
 	/**
@@ -233,18 +233,23 @@ public class Game extends Canvas
 			switch (stage){
 				case 1:
 					AddBoss(100);
+					AddBossHp(100);
 					break;
 				case 2:
 					AddBoss(110);
+					AddBossHp(110);
 					break;
 				case 3:
 					AddBoss(120);
+					AddBossHp(120);
 					break;
 				case 4:
 					AddBoss(130);
+					AddBossHp(130);
 					break;
 				case 5:
 					AddBoss(140);
+					AddBossHp(140);
 					break;
 			}
 		}
@@ -543,7 +548,9 @@ public class Game extends Canvas
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
 			if(boss.getHit()){
-
+				int num = boss.getHp();
+				removeEntity(bossHpUi[num]);
+				num--;
 			}
 			else{
 				boss.setHit(false);
