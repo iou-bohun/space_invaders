@@ -45,6 +45,7 @@ public class Game extends Canvas
 	private Entity boss; //보스 생성
 
 	private  Entity[] bossHpUi = new Entity[150];
+	private Entity[] playerHpUI = new Entity[10];
 	private Entity obstacle;
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
@@ -53,7 +54,7 @@ public class Game extends Canvas
 	private long lastFire = 0;
 	private long bossLastFire = 0;
 	/** The interval between our players shot (ms) */
-	private long firingInterval = 500;
+	private long firingInterval = 200;
 	/** The number of aliens left on the screen */
 	private int alienCount;
 
@@ -79,7 +80,8 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage=1;
+	private int stage=2;
+
 
 	/**
 	 * Construct our game and set it running.
@@ -153,13 +155,25 @@ public class Game extends Canvas
 	 */
 	private void initEntities() {
 		// create the player ship and place it roughly in the center of the screen
-		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
-		entities.add(ship);
-		//AddAlien();
-		AddBoss(140);
-		AddBossHp(140);
+		AddShip();
+		AddAlien();
+		//AddBoss(100);
+		//AddBossHp(100);
+		AddPlayerHp(ship.getHp());
 	}
 
+	/**플레이어 생성**/
+	public void AddShip(){
+		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
+		entities.add(ship);
+	}
+	/**플레이어 HP IU**/
+	public void AddPlayerHp(int playerHp){
+		for(int i=0; i<playerHp; i++){
+			playerHpUI[i] = new GameUi(this,"sprites/heart.png",300+(33*i),10);
+			entities.add(playerHpUI[i]);
+		}
+	}
 	/**기본 적 생성 **/
 	public void AddAlien(){
 		alienCount = 0;
@@ -180,9 +194,10 @@ public class Game extends Canvas
 		boss.setHp(hp);
 	}
 
+	/**보스 HP UI**/
 	public void AddBossHp(int bossHp){
 		for(int i=0; i<bossHp; i++){
-			bossHpUi[i] = new GameUi(this,10+i,10);
+			bossHpUi[i] = new GameUi(this,"sprites/bossHpBar.png",10+i,10);
 			entities.add(bossHpUi[i]);
 		}
 	}
@@ -233,23 +248,23 @@ public class Game extends Canvas
 			switch (stage){
 				case 1:
 					AddBoss(100);
-					AddBossHp(100);
+					//AddBossHp(100);
 					break;
 				case 2:
 					AddBoss(110);
-					AddBossHp(110);
+					//AddBossHp(110);
 					break;
 				case 3:
 					AddBoss(120);
-					AddBossHp(120);
+					//AddBossHp(120);
 					break;
 				case 4:
 					AddBoss(130);
-					AddBossHp(130);
+					//AddBossHp(130);
 					break;
 				case 5:
 					AddBoss(140);
-					AddBossHp(140);
+					//AddBossHp(140);
 					break;
 			}
 		}
@@ -547,17 +562,31 @@ public class Game extends Canvas
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
-			if(boss.getHit()){
-				int num = boss.getHp();
-				removeEntity(bossHpUi[num]);
-				num--;
+
+			BossHpDeal();
+
+			if(ship.getHit()){
+				removeEntity(playerHpUI[ship.getHp()]);
 			}
-			else{
-				boss.setHit(false);
-			}
+			else{ship.setHit(false);}
 		}
 	}
-
+	public  void UseItem(int i){
+			ship.setHp(1);
+			playerHpUI[i] = new GameUi(this,"sprites/heart.png",300+(33*i),10);
+			entities.add(playerHpUI[i]);
+	}
+	public void BossHpDeal(){
+		if(!bossAlive){return;}
+		if(boss.getHit()){
+			int num = boss.getHp();
+			removeEntity(bossHpUi[num]);
+			num--;
+		}
+		else{
+			boss.setHit(false);
+		}
+	}
 	/**
 	 * A class to handle keyboard input from the user. The class
 	 * handles both dynamic input during game play, i.e. left/right

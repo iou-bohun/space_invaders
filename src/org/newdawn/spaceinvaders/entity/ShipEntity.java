@@ -13,6 +13,8 @@ public class ShipEntity extends Entity {
 	private Game game;
 
 	private int hp=5;
+
+	private boolean gotHit;
 	
 	/**
 	 * Create a new entity to represent the players ship
@@ -28,7 +30,7 @@ public class ShipEntity extends Entity {
 		this.game = game;
 	}
 
-	public int getHp(){return (int)hp;}
+	public int getHp(){return hp;}
 
 	public void setHp(int Hp){this.hp += Hp;}
 	
@@ -52,6 +54,9 @@ public class ShipEntity extends Entity {
 		
 		super.move(delta);
 	}
+
+	public boolean getHit(){return  gotHit;}
+	public void setHit(boolean hit){this.gotHit = hit;}
 	/**
 	 * Notification that the player's ship has collided with something
 	 * 
@@ -60,6 +65,7 @@ public class ShipEntity extends Entity {
 	public void collidedWith(Entity other) {
 		if (other instanceof BossShotEntity ) {
 			this.hp--;
+			gotHit =true;
 			if(this.hp<=0){
 				game.removeEntity(this);
 				game.notifyDeath();
