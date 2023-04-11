@@ -37,8 +37,7 @@ public class AlienEntity extends Entity {
 		frames[0] = sprite;
 		frames[1] = SpriteStore.get().getSprite("sprites/alien2.gif");
 		frames[2] = sprite;
-		frames[3] = SpriteStore.get().getSprite("sprites/alien3.gif");
-		
+		frames[3] = SpriteStore.get().getSprite("sprites/alien2.gif");
 		this.game = game;
 		dx = -moveSpeed;
 	}

@@ -34,7 +34,12 @@ public abstract class Entity {
 	private Rectangle me = new Rectangle();
 	/** The rectangle used for other entities during collision resolution */
 	private Rectangle him = new Rectangle();
-	
+	private int hp;
+
+	private boolean gotHit;
+
+
+
 	/**
 	 * Construct a entity based on a sprite image and a location.
 	 * 
@@ -69,11 +74,7 @@ public abstract class Entity {
 		this.dx = dx;
 	}
 
-	/*
-	 Set the vertical speed of this entity
 
-	  @param dx The vertical speed of this entity (pixels/sec)*
-	 */
 	public void setVerticalMovement(double dy) {
 		this.dy = dy;
 	}
@@ -95,7 +96,7 @@ public abstract class Entity {
 	public double getVerticalMovement() {
 		return dy;
 	}
-	
+
 	/**
 	 * Draw this entity to the graphics context provided
 	 * 
@@ -111,7 +112,10 @@ public abstract class Entity {
 	 */
 	public void doLogic() {
 	}
-	
+	public void ImmortallityCheck(int timer){}
+
+	public void ReflectCheck(int timer){}
+
 	/**
 	 * Get the x location of this entity
 	 * 
@@ -129,7 +133,13 @@ public abstract class Entity {
 	public int getY() {
 		return (int) y;
 	}
-	
+
+	public int getHp(){return(int)hp;}
+
+	public void setHp(int Hp){this.hp = Hp;}
+
+	public boolean getHit(){return  gotHit;}
+	public void setHit(boolean hit){this.gotHit = hit;}
 	/**
 	 * Check if this entity collised with another.
 	 * 
@@ -149,4 +159,6 @@ public abstract class Entity {
 	 * @param other The entity with which this entity collided.
 	 */
 	public abstract void collidedWith(Entity other);
+
+	public  void RemoveThis(){};
 }
