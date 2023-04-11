@@ -13,10 +13,8 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import org.newdawn.spaceinvaders.entity.AlienEntity;
-import org.newdawn.spaceinvaders.entity.Entity;
-import org.newdawn.spaceinvaders.entity.ShipEntity;
-import org.newdawn.spaceinvaders.entity.ShotEntity;
+import org.newdawn.spaceinvaders.entity.*;
+
 
 /**
  * The main hook of our game. This class with both act as a manager
@@ -229,9 +227,12 @@ public class Game extends Canvas
 	 * Notification that the player has died.
 	 */
 	public void notifyDeath() {
-		message = "Oh no! They got you, try again?";
+		//message = "Oh no! They got you, try again?";
 		waitingForKeyPress = true;
 		stage = 1;
+		container.dispose();
+		LoginFrame lf = new LoginFrame();
+
 	}
 
 	/**

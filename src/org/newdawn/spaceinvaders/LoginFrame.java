@@ -36,6 +36,10 @@ public class LoginFrame extends JFrame implements ActionListener{
         lobby.gameStart.addActionListener(this);
         lobby.goShop.addActionListener(this);
         shop.returnLobby.addActionListener(this);
+
+        if(UserDB.is_logged_in == true){
+            card.show(getContentPane(),"Lobby");
+        }
     }
 
     public static void main(String[] args) throws Exception{
@@ -83,6 +87,7 @@ public class LoginFrame extends JFrame implements ActionListener{
                         //데이터 로드 실험
                         System.out.println(UserDB.coin + " " + UserDB.is_hard_ship + " " + UserDB.is_lucky_ship + " " + UserDB.HP_potion + "" + UserDB.speed_potion);
                         JOptionPane.showMessageDialog(this, "Login successful!");
+                        UserDB.is_logged_in = true;
                         card.show(getContentPane(), "Lobby");
                     }
 
@@ -192,9 +197,14 @@ public class LoginFrame extends JFrame implements ActionListener{
         }
         //로비 패널 - 게임 시작
         else if (e.getSource() == lobby.gameStart) {
-            card.show(getContentPane(),"Game");
-            Game g = new Game();
-            g.gameLoop();
+            Thread gameThread = new Thread(new Runnable() {
+                public void run() {
+                    Game g = new Game();
+                    g.gameLoop();
+                }
+            });
+            gameThread.start();
+            dispose();
         }
         //상점 이동
         else if (e.getSource() == lobby.goShop) {

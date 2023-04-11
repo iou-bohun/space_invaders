@@ -22,6 +22,7 @@ public final class UserDB {
     public static int HP_potion = 0;
     public static int speed_potion = 0;
     public static int selected_ship = 0;
+    public static boolean is_logged_in = false;
 
     static {
         String url = "jdbc:mysql://localhost:3306/space-invaders?allowMultiQueries=true";
