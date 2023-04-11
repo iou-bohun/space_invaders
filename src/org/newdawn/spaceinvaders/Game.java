@@ -81,7 +81,7 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage=3;
+	private int stage=2;
 
 	/**
 	 * Construct our game and set it running.
@@ -157,10 +157,10 @@ public class Game extends Canvas
 		// create the player ship and place it roughly in the center of the screen
 		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		entities.add(ship);
-
-		//AddAlien();
-		AddBoss(110);
+		AddAlien();
+		//AddBoss(100);
 	}
+
 	/**기본 적 생성 **/
 	public void AddAlien(){
 		alienCount = 0;
@@ -172,6 +172,7 @@ public class Game extends Canvas
 			}
 		}
 	}
+	/**보스 생성**/
 	public  void AddBoss(int hp){
 		bossCount = 1;
 		boss = new BossEntity(this,350,100);
@@ -266,9 +267,7 @@ public class Game extends Canvas
 			entity.setHorizontalMovement(entity.getHorizontalMovement()*1.02);
 		}
 	}
-	public void bossReflectStart(){
-		ship.setHp(-1);
-	}
+
 	/**
 	 * Attempt to fire a shot from the player. Its called "try"
 	 * since we must first check that the player can fire at this
@@ -286,8 +285,8 @@ public class Game extends Canvas
 		entities.add(shot);
 
 	}
-	/** 단게별 보스 공격 구현**/
 
+	/** 단게별 보스 패턴 **/
 	public void BossGodMode(int time){ /**1단계 보스 패턴**/
 		if(!bossAlive){
 			return;
@@ -303,23 +302,58 @@ public class Game extends Canvas
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
 			BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
 			entities.add(shot);
-			shot.FallowPlayer(ship.getX() - shot.getX());
+			shot.shotXMove(ship.getX() - shot.getX(),300);
 		}
 	}
 
-	public void BossUlti(int timer){
+	public void BossUlti(int timer){/**보스 미사일 패턴**/
 		if(!bossAlive){
 			return;
 		}
+		double cos = Math.toRadians(timer);
+		double coss = Math.cos(cos);
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
-			if (timer>100){
+			if ((timer>100&&timer<400)&&(timer%10==0)){
 				BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
 				entities.add(shot);
-				shot.FallowPlayer((int)(Math.random()*600));
+				shot.shotXMove(coss*300,200);
+				BossShotEntity shot2 = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
+				entities.add(shot2);
+				shot2.shotXMove(coss*300*-1,200);
+			}
+		}
+		//CircleBossShot();
+	}
+	public void AddBossShot(int startX){
+		BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+startX,boss.getY()+100);
+		entities.add(shot);
+		shot.shotXMove(0,200);
+	}
+	public void CircleBossShot(){
+		if((stage ==2)||(stage ==4) ||(stage==5) ){
+			switch (timer){
+				case 100:
+					AddBossShot(30);
+					break;
+				case 105:
+					AddBossShot(20);
+					AddBossShot(40);
+					break;
+				case 110:
+					AddBossShot(10);
+					AddBossShot(50);
+					break;
+				case 115:
+					AddBossShot(20);
+					AddBossShot(40);
+					break;
+				case 120:
+					AddBossShot(30);
+					break;
 			}
 		}
 	}
-	public void AddObstacle(){ /**3단계 보스 패턴**/
+	public void AddObstacle(){ /**3단계 보스 패턴**//**장애물 생성**/
 		if(!bossAlive){
 			return;}
 		if((stage ==3)||(stage==5)){
@@ -327,7 +361,7 @@ public class Game extends Canvas
 			entities.add(obstacle);
 		}
 	}
-	public void BossReflectMode(int time){ /**4단계 보스 패턴**/
+	public void BossReflectMode(int time){ /**4단계 보스 패턴**//**보스 데미지 반사**/
 		if(!bossAlive){
 			return;
 		}
@@ -335,7 +369,9 @@ public class Game extends Canvas
 			boss.ReflectCheck(time);
 		}
 	}
-	/** 단계별 보스 구현 끝**/
+	public void bossReflectStart(){ /**반사시 캐릭터 체력 감소**/
+		ship.setHp(-1);
+	}
 
 	/**
 	 * The main game loop. This loop is running during all game
@@ -362,7 +398,7 @@ public class Game extends Canvas
 			lastFpsTime += delta;
 			fps++;
 			timer ++;
-			if(timer>1000)
+			if(timer>200)
 			{
 				timer = 1;
 			}
@@ -487,14 +523,15 @@ public class Game extends Canvas
 			if(ship.getHp()<=0){
 				notifyDeath();
 			}
+
+			BossGodMode(timer); /**보스 무적**/
+			BossReflectMode(timer); /**보스 데미지 반사**/
 			// we want each frame to take 10 milliseconds, to do this
 			// we've recorded when we started the frame. We add 10 milliseconds
 			// to this and then factor in the current time to give
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
-			BossGodMode(timer); /**보스 무적**/
-			BossReflectMode(timer); /**보스 데미지 반사**/
-			//BossUlti(timer);
+			BossUlti(timer);
 		}
 	}
 

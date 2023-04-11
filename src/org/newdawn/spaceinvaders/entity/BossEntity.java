@@ -29,19 +29,15 @@ public class BossEntity extends Entity {
     /** The frame duration in milliseconds, i.e. how long any given frame of animation lasts */
     private long frameDuration = 250;
 
-    public int hp = 10;
+    public int hp;
 
     public Boolean immortal =false;
-
-    public String immortalCheck;
 
     public Boolean gotHit=false;
 
     private int frameNumber;
 
     public Boolean reflect =false;
-
-    private boolean isGod;
 
     public BossEntity(Game game,int x,int y) {
         super("sprites/boss1_.png",x,y);
@@ -55,31 +51,6 @@ public class BossEntity extends Entity {
 
         dx = -moveSpeed;
     }
-
-    public void startBossBattle(){
-        Timer timer = new Timer();
-        TimerTask normalStateTask = new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("보스평범");
-                immortal = false;
-            }
-        };
-        TimerTask godStateTask = new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("보스무적");
-                immortal = true;
-            }
-        };
-        timer.schedule(normalStateTask,0,1000);
-        timer.schedule(godStateTask,0,9000);
-    }
-
-    public  boolean immortal(){
-        return immortal;
-    }
-
     /**
      * Request that the ship move itself based on an elapsed ammount of
      * time
@@ -117,8 +88,6 @@ public class BossEntity extends Entity {
             }
         }
 
-
-
         // if we have reached the left hand side of the screen and
         // are moving left then request a logic update
         if ((dx < 0) && (x < 10)) {
@@ -130,7 +99,7 @@ public class BossEntity extends Entity {
             game.updateLogic();
         }
         // proceed with normal move
-        super.move(delta);
+       // super.move(delta);
     }
     public void doLogic() {
         // swap over horizontal movement and move down the
@@ -144,16 +113,12 @@ public class BossEntity extends Entity {
             game.notifyDeath();
         }
     }
-
-    public boolean getImmortal(){return immortal;}
     public void ImmortallityCheck(int timer){
         if(timer %800 ==0){
             immortal = true;
-            immortalCheck ="true";
         }
         else if(timer %1000 == 0){
             immortal = false;
-            immortalCheck ="false";
         }
     }
     public void ReflectCheck(int timer){
@@ -167,7 +132,7 @@ public class BossEntity extends Entity {
         }
     }
     public int getHp(){return (int)hp;}
-    public void setHp(int bosshp){this.hp = bosshp;}
+    public void setHp(int hp){this.hp = hp;}
 
 
     /**

@@ -29,8 +29,6 @@ public class BossShotEntity extends Entity {
         super(sprite,x,y);
 
         this.game = game;
-        dx = 30;
-        dy = moveSpeed;
     }
 
 
@@ -48,8 +46,9 @@ public class BossShotEntity extends Entity {
             game.removeEntity(this);
         }
     }
-    public void FallowPlayer(int distance){
+    public void shotXMove(double distance,double speed){
         dx = distance;
+        dy = speed;
     }
 
     /**

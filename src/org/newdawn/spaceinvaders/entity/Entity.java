@@ -36,7 +36,6 @@ public abstract class Entity {
 	private Rectangle him = new Rectangle();
 	private int hp;
 
-	private boolean immortal;
 
 
 	/**
@@ -113,10 +112,6 @@ public abstract class Entity {
 	}
 	public void ImmortallityCheck(int timer){}
 
-	public void startBossBattle(){}
-
-	public boolean getImmortal(){return immortal;}
-
 	public void ReflectCheck(int timer){}
 
 	/**
@@ -139,7 +134,7 @@ public abstract class Entity {
 
 	public int getHp(){return(int)hp;}
 
-	public void setHp(int bossHp){this.hp = bossHp;}
+	public void setHp(int Hp){this.hp = Hp;}
 	/**
 	 * Check if this entity collised with another.
 	 * 
