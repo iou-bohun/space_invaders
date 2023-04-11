@@ -157,7 +157,6 @@ public class Game extends Canvas
 		//AddAlien();
 		AddBoss(100);
 		AddBossHp(100);
-
 	}
 
 	/**기본 적 생성 **/
@@ -536,7 +535,8 @@ public class Game extends Canvas
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
-
+			if(boss.getHit()){
+			}
 		}
 	}
 

@@ -36,6 +36,8 @@ public abstract class Entity {
 	private Rectangle him = new Rectangle();
 	private int hp;
 
+	private boolean gotHit;
+
 
 
 	/**
@@ -135,6 +137,8 @@ public abstract class Entity {
 	public int getHp(){return(int)hp;}
 
 	public void setHp(int Hp){this.hp = Hp;}
+
+	public boolean getHit(){return  gotHit;}
 	/**
 	 * Check if this entity collised with another.
 	 * 

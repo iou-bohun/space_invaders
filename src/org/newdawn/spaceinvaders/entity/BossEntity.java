@@ -134,6 +134,7 @@ public class BossEntity extends Entity {
     public int getHp(){return (int)hp;}
     public void setHp(int hp){this.hp = hp;}
 
+    public boolean getHit(){return  gotHit;}
 
     /**
      * Notification that the player's ship has collided with something
