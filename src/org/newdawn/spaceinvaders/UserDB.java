@@ -12,13 +12,8 @@ public final class UserDB {
     public static String userID;
     public static String nickname;
     //스테이지 진행도(스테이지를 얼마나 클리어했는지)
-    public static int stage_process = 0;
     //각 스테이지 당 최고 스코어 기록
-    public static int stage1_best_score = 0;
-    public static int stage2_best_score = 0;
-    public static int stage3_best_score = 0;
-    public static int stage4_best_score = 0;
-    public static int stage5_best_score = 0;
+    public static int best_score = 0;
     //상점관련, 보유 코인 수
     public static int coin = 0;
     //우주선 보유 여부

@@ -55,23 +55,18 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         //게임 데이터 DB에 저장 후 종료 메세지 출력
         if(e.getSource() == exitGame){
             try {
-                String dataSave = "UPDATE userdata SET nickname = ?, stage_process = ?, stage1_best_score = ?, stage2_best_score = ?, stage3_best_score = ?, stage4_best_score = ?, stage5_best_score = ?,coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ? WHERE id = ?";
+                String dataSave = "UPDATE userdata SET nickname = ?, best_score = ?, coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ? WHERE id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(dataSave);
 
                 pstmt.setString(1, UserDB.nickname);
-                pstmt.setInt(2, UserDB.stage_process);
-                pstmt.setInt(3, UserDB.stage1_best_score);
-                pstmt.setInt(4, UserDB.stage2_best_score);
-                pstmt.setInt(5, UserDB.stage3_best_score);
-                pstmt.setInt(6, UserDB.stage4_best_score);
-                pstmt.setInt(7, UserDB.stage5_best_score);
-                pstmt.setInt(8, UserDB.coin);
-                pstmt.setBoolean(9, UserDB.is_hard_ship);
-                pstmt.setBoolean(10, UserDB.is_lucky_ship);
-                pstmt.setInt(11, UserDB.HP_potion);
-                pstmt.setInt(12, UserDB.speed_potion);
-                pstmt.setInt(13, UserDB.selected_ship);
-                pstmt.setString(14, UserDB.userID);
+                pstmt.setInt(2, UserDB.best_score);
+                pstmt.setInt(3, UserDB.coin);
+                pstmt.setBoolean(4, UserDB.is_hard_ship);
+                pstmt.setBoolean(5, UserDB.is_lucky_ship);
+                pstmt.setInt(6, UserDB.HP_potion);
+                pstmt.setInt(7, UserDB.speed_potion);
+                pstmt.setInt(8, UserDB.selected_ship);
+                pstmt.setString(9, UserDB.userID);
 
                 int updateResult = pstmt.executeUpdate();
 
