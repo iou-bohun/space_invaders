@@ -1,6 +1,9 @@
 package org.newdawn.spaceinvaders;
 
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -10,22 +13,24 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import org.newdawn.spaceinvaders.entity.*;
-import org.newdawn.spaceinvaders.entity.BossEntity;
+import org.newdawn.spaceinvaders.entity.AlienEntity;
+import org.newdawn.spaceinvaders.entity.Entity;
+import org.newdawn.spaceinvaders.entity.ShipEntity;
+import org.newdawn.spaceinvaders.entity.ShotEntity;
 
 /**
  * The main hook of our game. This class with both act as a manager
  * for the display and central mediator for the game logic. 
- *
+ * 
  * Display management will consist of a loop that cycles round all
  * entities in the game asking them to move and then drawing them
  * in the appropriate place. With the help of an inner class it
  * will also allow the player to control the main ship.
- *
+ * 
  * As a mediator it will be informed when entities within our game
  * detect events (e.g. alient killed, played died) and will take
  * appropriate game actions.
- *
+ * 
  * @author Kevin Glass
  */
 public class Game extends Canvas
@@ -396,7 +401,7 @@ public class Game extends Canvas
 	public void bossReflectStart(){ /**반사시 캐릭터 체력 감소**/
 		ship.setHp(-1);
 	}
-
+	
 	/**
 	 * The main game loop. This loop is running during all game
 	 * play as is responsible for the following activities:
