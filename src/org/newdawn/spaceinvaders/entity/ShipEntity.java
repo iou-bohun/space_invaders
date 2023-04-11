@@ -1,5 +1,6 @@
 package org.newdawn.spaceinvaders.entity;
 
+import javafx.beans.value.ObservableStringValue;
 import org.newdawn.spaceinvaders.Game;
 
 /**
@@ -10,6 +11,10 @@ import org.newdawn.spaceinvaders.Game;
 public class ShipEntity extends Entity {
 	/** The game in which the ship exists */
 	private Game game;
+
+	private int hp=5;
+
+	private boolean gotHit;
 	
 	/**
 	 * Create a new entity to represent the players ship
@@ -24,6 +29,10 @@ public class ShipEntity extends Entity {
 		
 		this.game = game;
 	}
+
+	public int getHp(){return hp;}
+
+	public void setHp(int Hp){this.hp += Hp;}
 	
 	/**
 	 * Request that the ship move itself based on an elapsed ammount of
@@ -45,17 +54,29 @@ public class ShipEntity extends Entity {
 		
 		super.move(delta);
 	}
-	
+
+	public boolean getHit(){return  gotHit;}
+	public void setHit(boolean hit){this.gotHit = hit;}
 	/**
 	 * Notification that the player's ship has collided with something
 	 * 
 	 * @param other The entity with which the ship has collided
 	 */
 	public void collidedWith(Entity other) {
-		// if its an alien, notify the game that the player
-		// is dead
-		if (other instanceof AlienEntity) {
-			game.notifyDeath();
+		if (other instanceof BossShotEntity ) {
+			this.hp--;
+			gotHit =true;
+			if(this.hp<=0){
+				game.removeEntity(this);
+				game.notifyDeath();
+			}
+		}
+		else if(other instanceof ObstacleEntity){
+			this.hp--;
+			if(this.hp<=0){
+				game.removeEntity(this);
+				game.notifyDeath();
+			}
 		}
 	}
 }

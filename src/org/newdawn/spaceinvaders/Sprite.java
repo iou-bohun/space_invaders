@@ -33,7 +33,6 @@ public class Sprite {
 	public int getWidth() {
 		return image.getWidth(null);
 	}
-
 	/**
 	 * Get the height of the drawn sprite
 	 * 
