@@ -83,10 +83,11 @@ public class LoginFrame extends JFrame implements ActionListener{
                         UserDB.is_lucky_ship = rs2.getBoolean("is_lucky_ship");
                         UserDB.HP_potion = rs2.getInt("HP_potion");
                         UserDB.speed_potion = rs2.getInt("speed_potion");
+                        UserDB.selected_ship = rs2.getInt("selected_ship");
 
                         //데이터 로드 실험
                         System.out.println(UserDB.coin + " " + UserDB.is_hard_ship + " " + UserDB.is_lucky_ship + " " + UserDB.HP_potion + "" + UserDB.speed_potion);
-
+                        JOptionPane.showMessageDialog(this, "Login successful!");
                         card.show(getContentPane(), "Lobby");
                     }
 

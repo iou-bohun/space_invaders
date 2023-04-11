@@ -55,7 +55,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         //게임 데이터 DB에 저장 후 종료 메세지 출력
         if(e.getSource() == exitGame){
             try {
-                String dataSave = "UPDATE userdata SET nickname = ?, stage_process = ?, stage1_best_score = ?, stage2_best_score = ?, stage3_best_score = ?, stage4_best_score = ?, stage5_best_score = ?,coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? WHERE id = ?";
+                String dataSave = "UPDATE userdata SET nickname = ?, stage_process = ?, stage1_best_score = ?, stage2_best_score = ?, stage3_best_score = ?, stage4_best_score = ?, stage5_best_score = ?,coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ? WHERE id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(dataSave);
 
                 pstmt.setString(1, UserDB.nickname);
@@ -70,7 +70,8 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
                 pstmt.setBoolean(10, UserDB.is_lucky_ship);
                 pstmt.setInt(11, UserDB.HP_potion);
                 pstmt.setInt(12, UserDB.speed_potion);
-                pstmt.setString(13,UserDB.userID);
+                pstmt.setInt(13, UserDB.selected_ship);
+                pstmt.setString(14, UserDB.userID);
 
                 int updateResult = pstmt.executeUpdate();
 
