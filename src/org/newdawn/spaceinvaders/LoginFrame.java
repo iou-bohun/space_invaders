@@ -161,11 +161,9 @@ public class LoginFrame extends JFrame implements ActionListener{
 
                 while (dprs.next()){
                     dupid = dprs.getString("id");
-                    //duppw = dprs.getString("password");
-                    //dupnic = dprs.getString("nickname");
                 }
 
-                if (dupid.equals("") /*&& !duppw.equals(pw) && !dupnic.equals(nic)*/) {
+                if (dupid.equals("")) {
                     try {
                         String query = "INSERT INTO userdata (id, password, nickname) VALUES (?, ?, ?)";
                         PreparedStatement pstmt = conn.prepareStatement(query);

@@ -134,6 +134,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
 
                         if (result > 0) {
                             JOptionPane.showMessageDialog(this, "Successfully Changed!");
+                            UserDB.nickname = changeNicLabel;
                         } else {
                             JOptionPane.showMessageDialog(this, "Changing Failed.");
                         }
