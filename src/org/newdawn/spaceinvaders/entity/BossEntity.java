@@ -99,7 +99,7 @@ public class BossEntity extends Entity {
             game.updateLogic();
         }
         // proceed with normal move
-       // super.move(delta);
+        super.move(delta);
     }
     public void doLogic() {
         // swap over horizontal movement and move down the

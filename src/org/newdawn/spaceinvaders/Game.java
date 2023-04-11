@@ -81,7 +81,7 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage=2;
+	private int stage=4;
 
 	/**
 	 * Construct our game and set it running.
@@ -157,8 +157,8 @@ public class Game extends Canvas
 		// create the player ship and place it roughly in the center of the screen
 		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		entities.add(ship);
-		AddAlien();
-		//AddBoss(100);
+		//AddAlien();
+		AddBoss(100);
 	}
 
 	/**기본 적 생성 **/
@@ -398,7 +398,7 @@ public class Game extends Canvas
 			lastFpsTime += delta;
 			fps++;
 			timer ++;
-			if(timer>200)
+			if(timer>1000)
 			{
 				timer = 1;
 			}
