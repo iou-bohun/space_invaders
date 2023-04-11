@@ -33,7 +33,9 @@ public class Sprite {
 	public int getWidth() {
 		return image.getWidth(null);
 	}
-
+	public Image setWidth(int xwidth){image.getScaledInstance(xwidth,100,Image.SCALE_SMOOTH);
+		return null;
+	}
 	/**
 	 * Get the height of the drawn sprite
 	 * 

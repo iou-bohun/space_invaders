@@ -1,9 +1,6 @@
 package org.newdawn.spaceinvaders;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -159,6 +156,9 @@ public class Game extends Canvas
 		entities.add(ship);
 		//AddAlien();
 		AddBoss(100);
+
+		Entity playerHp = new GameUi(this,10,10);
+		entities.add(playerHp);
 	}
 
 	/**기본 적 생성 **/
