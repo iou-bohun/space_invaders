@@ -101,5 +101,57 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
             UserDB.coin = UserDB.coin + 1000;
             System.out.println(UserDB.coin);
         }
+
+        //닉네임 변경 시스템
+        else if (e.getSource() == changeNick) {
+            String dupnic = "";
+
+            String changeNicLabel = JOptionPane.showInputDialog(this,"Write Nickname to Change", "");
+            if (changeNicLabel.length() > 10 || changeNicLabel.length() < 5) {
+                JOptionPane.showMessageDialog(this, "Nickname is too long or short!\nNickname must be at least 5 and not more than 10.");
+                return;
+            }
+
+            try {
+                String dupCheck = "SELECT nickname FROM userdata WHERE nickname = ?";
+                PreparedStatement dpstmt = conn.prepareStatement(dupCheck);
+
+                dpstmt.setString(1, changeNicLabel);
+
+                ResultSet dprs = dpstmt.executeQuery();
+                while (dprs.next()){
+                    dupnic = dprs.getString("nickname");
+                }
+                if(dupnic.equals("")){
+                    try {
+                        String query = "UPDATE userdata SET nickname = ? WHERE nickname = ?";
+                        PreparedStatement pstmt = conn.prepareStatement(query);
+
+                        pstmt.setString(1, changeNicLabel);
+                        pstmt.setString(2, UserDB.nickname);
+
+                        int result = pstmt.executeUpdate();
+
+                        if (result > 0) {
+                            JOptionPane.showMessageDialog(this, "Successfully Changed!");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Changing Failed.");
+                        }
+
+                        pstmt.close();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Same nickname exists.");
+                }
+
+            }
+            catch (SQLException ex){
+                ex.printStackTrace();
+            }
+
+        }
     }
 }
