@@ -56,6 +56,7 @@ public class ShopPanel extends JPanel implements ActionListener {
         g.setColor(Color.yellow);
         g.fillRect(0,0,800,600);
     }*/
+
     public void actionPerformed(ActionEvent e){
         coinLabel.setText(Integer.toString(UserDB.coin));
         //HP 포션 구입

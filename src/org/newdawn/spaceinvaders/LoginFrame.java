@@ -72,12 +72,7 @@ public class LoginFrame extends JFrame implements ActionListener{
                     while (rs2.next()) {
                         UserDB.userID = id;
                         UserDB.nickname = rs2.getString("nickname");
-                        UserDB.stage_process = rs2.getInt("stage_process");
-                        UserDB.stage1_best_score = rs2.getInt("stage1_best_score");
-                        UserDB.stage2_best_score = rs2.getInt("stage2_best_score");
-                        UserDB.stage3_best_score = rs2.getInt("stage3_best_score");
-                        UserDB.stage4_best_score = rs2.getInt("stage4_best_score");
-                        UserDB.stage5_best_score = rs2.getInt("stage5_best_score");
+                        UserDB.best_score = rs2.getInt("best_score");
                         UserDB.coin = rs2.getInt("coin");
                         UserDB.is_hard_ship = rs2.getBoolean("is_hard_ship");
                         UserDB.is_lucky_ship = rs2.getBoolean("is_lucky_ship");
