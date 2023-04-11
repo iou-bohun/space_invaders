@@ -44,7 +44,7 @@ public class Game extends Canvas
 	/** The speed at which the player's ship should move (pixels/sec) */
 	private Entity boss; //보스 생성
 
-	private Entity bossHpUi;
+	private  Entity[] bossHpUi = new Entity[100];
 	private Entity obstacle;
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
@@ -182,7 +182,7 @@ public class Game extends Canvas
 
 	public void AddBossHp(int bossHp){
 		for(int i=0; i<bossHp; i++){
-			bossHpUi = new GameUi(this,10+i,10);
+			bossHpUi[i] = new GameUi(this,10+i,10);
 			entities.add(bossHpUi);
 		}
 	}
@@ -543,7 +543,7 @@ public class Game extends Canvas
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
 			if(boss.getHit()){
-				bossHpUi.RemoveThis();
+
 			}
 			else{
 				boss.setHit(false);
