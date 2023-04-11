@@ -156,9 +156,8 @@ public class Game extends Canvas
 		entities.add(ship);
 		//AddAlien();
 		AddBoss(100);
+		AddBossHp(100);
 
-		Entity playerHp = new GameUi(this,10,10);
-		entities.add(playerHp);
 	}
 
 	/**기본 적 생성 **/
@@ -181,7 +180,12 @@ public class Game extends Canvas
 		boss.setHp(hp);
 	}
 
-
+	public void AddBossHp(int bossHp){
+		for(int i=0; i<bossHp; i++){
+			Entity playerHp = new GameUi(this,10+i,10);
+			entities.add(playerHp);
+		}
+	}
 	/**
 	 * Notification from a game entity that the logic of the game
 	 * should be run at the next opportunity (normally as a result of some
@@ -532,6 +536,7 @@ public class Game extends Canvas
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
+
 		}
 	}
 

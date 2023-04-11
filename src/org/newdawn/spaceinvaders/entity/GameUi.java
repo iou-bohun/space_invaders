@@ -32,7 +32,7 @@ public class GameUi extends Entity {
 	 */
 
 	public GameUi(Game game, int x, int y) {
-		super("sprites/alien.gif",x,y);
+		super("sprites/bossHpBar.png",x,y);
 		this.game = game;
 	}
 
