@@ -33,6 +33,9 @@ import org.newdawn.spaceinvaders.entity.*;
 public class Game extends Canvas
 {
 	int timer;
+	int timeCheck;
+	int min=0;
+	int second=0;
 	/** The stragey that allows us to use accelerate page flipping */
 	private BufferStrategy strategy;
 	/** True if the game is currently "running", i.e. the game loop is looping */
@@ -49,6 +52,7 @@ public class Game extends Canvas
 	private  Entity[] bossHpUi = new Entity[150];
 	private Entity[] playerHpUI = new Entity[10];
 	private Entity obstacle;
+	private Entity bossHpBar;
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
 	private double moveSpeed = 300;
@@ -172,7 +176,7 @@ public class Game extends Canvas
 	/**플레이어 HP IU**/
 	public void AddPlayerHp(int playerHp){
 		for(int i=0; i<playerHp; i++){
-			playerHpUI[i] = new GameUi(this,"sprites/heart.png",300+(33*i),10);
+			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
 		}
 	}
@@ -198,6 +202,8 @@ public class Game extends Canvas
 
 	/**보스 HP UI**/
 	public void AddBossHp(int bossHp){
+		bossHpBar = new GameUi(this,"sprites/gage_bar.png",225,80);
+		entities.add(bossHpBar);
 		for(int i=0; i<bossHp; i++){
 			bossHpUi[i] = new GameUi(this,"sprites/bossHpBar.png",10+i,10);
 			entities.add(bossHpUi[i]);
@@ -350,7 +356,6 @@ public class Game extends Canvas
 				shot2.shotXMove(coss*300*-1,200);
 			}
 		}
-		//CircleBossShot();
 	}
 	public void AddBossShot(int startX){
 		BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+startX,boss.getY()+100);
@@ -359,14 +364,6 @@ public class Game extends Canvas
 	}
 
 	public void SpawnItem(){
-
-
-
-
-
-
-
-
 	}
 	public void CircleBossShot(){
 
@@ -512,35 +509,32 @@ public class Game extends Canvas
 			}
 			/** 타이머**/
 			g.setColor(Color.white);
-			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 			g.drawString("타이머 "+String.valueOf(timer),720,30);
 
 			/** 스테이지 **/
 			g.setColor(Color.white);
-			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 			g.drawString("현제 스테이지  "+ String.valueOf(stage),30,580);
 
 			/** 미니언 수 **/
 			g.setColor(Color.white);
-			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 			g.drawString("남은 적 수 "+String.valueOf(alienCount),10,30);
 
 			/**플레이어 체력**/
 			g.setColor(Color.white);
-			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 			g.drawString("플레이어 체력 "+String.valueOf(ship.getHp()),700,580);
 
 			/** 스코어 **/
 			g.setColor(Color.white);
-			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 			g.drawString("스코어 "+score,30,300);
 
 			/**보스 체력**/
 			if(bossAlive){
 				g.setColor(Color.white);
-				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 				g.drawString("보스 체력  "+String.valueOf(boss.getHp()),10,100);
 			}
+			GetTime();
+			g.setColor(Color.white);
+			g.drawString(String.valueOf(min)+":"+String.valueOf(second),330,28);
 
 			strategy.show();
 
@@ -581,6 +575,7 @@ public class Game extends Canvas
 		}
 	}
 
+
 	public void shipGotHit(){
 		if(ship.getHit()){
 			removeEntity(playerHpUI[ship.getHp()]);
@@ -601,6 +596,18 @@ public class Game extends Canvas
 		}
 		else{
 			boss.setHit(false);
+		}
+	}
+
+	private void GetTime(){
+		timeCheck++;
+		if (timeCheck>100){
+			second++;
+			timeCheck =0;
+		}
+		if(second >60){
+			min++;
+			second=0;
 		}
 	}
 	/**
