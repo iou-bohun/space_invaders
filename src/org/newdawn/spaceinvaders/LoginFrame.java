@@ -1,15 +1,14 @@
 package org.newdawn.spaceinvaders;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.JPanel;
 
-public class LoginFrame extends JFrame implements ActionListener{
+public class LoginFrame extends JFrame implements ActionListener {
     CardLayout card = new CardLayout();
     LoginPanel login = new LoginPanel();
     RegisterPanel register = new RegisterPanel();
@@ -52,66 +51,85 @@ public class LoginFrame extends JFrame implements ActionListener{
             card.show(getContentPane(),"Lobby");
         }
     }
+    public void loginDB(){
+        Connection conn = UserDB.getConnection();
+        String id = login.idField.getText();
+        String pw = new String(login.pwField.getPassword());
+        //로그인 시도
+        try {
+            String query = "SELECT id,password FROM userdata WHERE id = ? AND password = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
 
-    public static void main(String[] args) throws Exception{
-        new LoginFrame();
+            pstmt.setString(1, id);
+            pstmt.setString(2, pw);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String dataLoad = "SELECT * FROM userdata WHERE id = ?";
+                PreparedStatement pstmt2 = conn.prepareStatement(dataLoad);
+
+                pstmt2.setString(1, id);
+
+                ResultSet rs2 = pstmt2.executeQuery();
+                //플레이어 데이터 로드 - 데이터베이스 테이블에서 데이터 로드, UserDB의 static 변수에 저장
+                while (rs2.next()) {
+                    UserDB.userID = id;
+                    UserDB.nickname = rs2.getString("nickname");
+                    UserDB.best_score = rs2.getInt("best_score");
+                    UserDB.coin = rs2.getInt("coin");
+                    UserDB.is_hard_ship = rs2.getBoolean("is_hard_ship");
+                    UserDB.is_lucky_ship = rs2.getBoolean("is_lucky_ship");
+                    UserDB.HP_potion = rs2.getInt("HP_potion");
+                    UserDB.speed_potion = rs2.getInt("speed_potion");
+                    UserDB.selected_ship = rs2.getInt("selected_ship");
+
+                    //데이터 로드 실험
+                    System.out.println(UserDB.coin + " " + UserDB.is_hard_ship + " " + UserDB.is_lucky_ship + " " + UserDB.HP_potion + "" + UserDB.speed_potion);
+                    JOptionPane.showMessageDialog(this, "Login successful!");
+                    card.show(getContentPane(), "Lobby");
+                    UserDB.loggedIn();
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Incorrect ID or password!");
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
     }
+
+    private class KeyInputHandler extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                System.out.println("yes");
+                loginDB();
+            }
+        }
+
+        public void keyTyped(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                System.out.println("no");
+                loginDB();
+            }
+        }
+
+        public void keyReleased(KeyEvent e) {
+        }
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e){
         //DB 커넥션 생성
         Connection conn = UserDB.getConnection();
-        //로그인 버튼 - 성공 시 로비패널 이동
+        //로그인 버튼
         if(e.getSource() == login.loginButton){
-
-            String id = login.idField.getText();
-            String pw = new String(login.pwField.getPassword());
-            //로그인 시도
-            try {
-                String query = "SELECT id,password FROM userdata WHERE id = ? AND password = ?";
-                PreparedStatement pstmt = conn.prepareStatement(query);
-
-                pstmt.setString(1, id);
-                pstmt.setString(2, pw);
-
-                ResultSet rs = pstmt.executeQuery();
-
-                if (rs.next()) {
-                    String dataLoad = "SELECT * FROM userdata WHERE id = ?";
-                    PreparedStatement pstmt2 = conn.prepareStatement(dataLoad);
-
-                    pstmt2.setString(1, id);
-
-                    ResultSet rs2 = pstmt2.executeQuery();
-                    //플레이어 데이터 로드 - 데이터베이스 테이블에서 데이터 로드, UserDB의 static 변수에 저장
-                    while (rs2.next()) {
-                        UserDB.userID = id;
-                        UserDB.nickname = rs2.getString("nickname");
-                        UserDB.best_score = rs2.getInt("best_score");
-                        UserDB.coin = rs2.getInt("coin");
-                        UserDB.is_hard_ship = rs2.getBoolean("is_hard_ship");
-                        UserDB.is_lucky_ship = rs2.getBoolean("is_lucky_ship");
-                        UserDB.HP_potion = rs2.getInt("HP_potion");
-                        UserDB.speed_potion = rs2.getInt("speed_potion");
-                        UserDB.selected_ship = rs2.getInt("selected_ship");
-
-                        //데이터 로드 실험
-                        System.out.println(UserDB.coin + " " + UserDB.is_hard_ship + " " + UserDB.is_lucky_ship + " " + UserDB.HP_potion + "" + UserDB.speed_potion);
-                        JOptionPane.showMessageDialog(this, "Login successful!");
-                        card.show(getContentPane(), "Lobby");
-                        UserDB.loggedIn();
-                    }
-
-                } else {
-                    JOptionPane.showMessageDialog(this, "Incorrect ID or password!");
-                }
-
-                rs.close();
-                pstmt.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-
+            loginDB();
         }
         //회원가입 버튼 - 회원가입 패널 이동
         else if(e.getSource() == login.registerButton){
@@ -229,6 +247,10 @@ public class LoginFrame extends JFrame implements ActionListener{
         else if (e.getSource() == shop.returnLobby) {
             card.show(getContentPane(), "Lobby");
         }
+    }
+
+    public static void main(String[] args) throws Exception{
+        new LoginFrame();
     }
 }
 

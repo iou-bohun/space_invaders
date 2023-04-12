@@ -562,7 +562,7 @@ public class Game extends Canvas
 			//게임 일시 정지 & 로비로 나가기
 			if(escPressed){
 				escPressed = false;
-				pauseGame("Game Stopped","",false);
+				pauseGame("Paused","",false);
 			}
 
 			if(ship.getHp()<=0 && !waitingForKeyPress){

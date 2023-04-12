@@ -11,8 +11,6 @@ public class MainUI {
     public MainUI(){
     }
     public void setFontNeo(JComponent jc,float size){
-        //File fontFile = new File();
-
         try {
             InputStream is = getClass().getResourceAsStream("fonts/NeoDunggeunmoPro-Regular.ttf");
             NeoDung = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.PLAIN,size);
