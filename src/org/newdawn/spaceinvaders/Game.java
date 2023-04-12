@@ -1,9 +1,6 @@
 package org.newdawn.spaceinvaders;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -74,6 +71,7 @@ public class Game extends Canvas
 	/** True if game logic needs to be applied this loop, normally as a result of a game event */
 	private boolean logicRequiredThisLoop = false;
 	/** The last time at which we recorded the frame rate */
+	private boolean escPressed = false;
 	private long lastFpsTime;
 	/** The current number of frames recorded */
 	private int fps;
@@ -81,15 +79,19 @@ public class Game extends Canvas
 	private String windowTitle = "Space Invaders 102";
 	/** The game window that we'll update with the frame count */
 	private JFrame container;
+	//private LoginFrame lf;
 
 	private Boolean bossAlive = false;
 	private int stage=2;
-
 
 	/**
 	 * Construct our game and set it running.
 	 */
 	public Game() {
+		/*GamePanel gp = (GamePanel) lf.getContentPane();
+		gp.setPreferredSize(new Dimension(800,600));
+		setBounds(0,0,800,600);
+		gp.add(this);*/
 		// create a frame to contain our game
 		container = new JFrame("Space Invaders 102");
 
@@ -108,6 +110,8 @@ public class Game extends Canvas
 
 		// finally make the window visible
 		container.pack();
+		if(!UserDB.is_logged_in) {container.setLocationRelativeTo(null);}
+		else {container.setLocation(LoginFrame.frameLocation);}
 		container.setResizable(false);
 		container.setVisible(true);
 
@@ -149,6 +153,7 @@ public class Game extends Canvas
 		leftPressed = false;
 		rightPressed = false;
 		firePressed = false;
+		escPressed= false;
 	}
 
 
@@ -226,13 +231,11 @@ public class Game extends Canvas
 	/**
 	 * Notification that the player has died.
 	 */
-	public void notifyDeath() {
+	public void  notifyDeath() {
 		//message = "Oh no! They got you, try again?";
-		waitingForKeyPress = true;
 		stage = 1;
-		container.dispose();
-		LoginFrame lf = new LoginFrame();
-
+		//게임오버 시 다시 할지 나갈지 결정(임시)
+		pauseGame("You Died! Wanna Quit?","",true);
 	}
 
 	/**
@@ -555,8 +558,13 @@ public class Game extends Canvas
 				AddObstacle();
 				BossFire();
 			}
+			//게임 일시 정지 & 로비로 나가기
+			if(escPressed){
+				escPressed = false;
+				pauseGame("Game Stopped","",false);
+			}
 
-			if(ship.getHp()<=0){
+			if(ship.getHp()<=0 && !waitingForKeyPress){
 				notifyDeath();
 			}
 
@@ -591,6 +599,21 @@ public class Game extends Canvas
 		}
 		else{
 			boss.setHit(false);
+		}
+	}
+
+	//게임 일시정지(미완)
+	public void pauseGame(String dialog_message, String title, boolean waitingTrue){
+		gameRunning = false;
+		int exitGame = JOptionPane.showConfirmDialog(this, dialog_message,title,JOptionPane.YES_NO_OPTION);
+		if (exitGame == JOptionPane.YES_OPTION) {
+			LoginFrame.frameLocation = container.getLocationOnScreen();
+			container.dispose();
+			new LoginFrame();
+		}
+		else {
+			if(waitingTrue) {waitingForKeyPress = true;}
+			gameRunning = true;
 		}
 	}
 	/**
@@ -633,6 +656,9 @@ public class Game extends Canvas
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				firePressed = true;
 			}
+			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+				escPressed = true;
+			}
 		}
 
 		/**
@@ -655,6 +681,9 @@ public class Game extends Canvas
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				firePressed = false;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+				escPressed = false;
 			}
 		}
 
@@ -700,11 +729,12 @@ public class Game extends Canvas
 	 * @param argv The arguments that are passed into our game
 	 */
 	public static void main(String argv[]) {
+		//UserDB.is_logged_in = true;
 		Game g = new Game();
 		// Start the main game loop, note: this method will not
 		// return until the game has finished running. Hence we are
 		// using the actual main thread to run the game.
 		g.gameLoop();
-
+		UserDB.is_logged_in = true;
 	}
 }

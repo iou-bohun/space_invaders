@@ -13,12 +13,15 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
     JLabel logo;
     JButton gameStart, selectShip, goShop, changeNick, record, exitGame;
 
+    LoginFrame lf;
+
     public GameLobbyPanel(){
         setLayout(null);
         setBackground(Color.black);
 
         logo = new JLabel("SPACE INVADERS");
-        logo.setFont(new Font("Arial", Font.BOLD, 30));
+        //Font spFont = lf.NeoDung;
+        //logo.setFont(spFont);
 
         gameStart = new JButton("Game Start");
         selectShip = new JButton("Select Ship");
@@ -52,7 +55,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
     }
     public void actionPerformed(ActionEvent e){
         Connection conn = UserDB.getConnection();
-        //게임 데이터 DB에 저장 후 종료 메세지 출력
+        //진행도 저장 후 종료
         if(e.getSource() == exitGame){
             try {
                 String dataSave = "UPDATE userdata SET nickname = ?, best_score = ?, coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ? WHERE id = ?";
@@ -86,13 +89,9 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
             catch (SQLException ex){
                 ex.printStackTrace();
             }
-        } /*else if (e.getSource() == gameStart) {
-            LoginFrame lf = new LoginFrame();
-            lf.card.show(lf.getContentPane(), "Game");
-            Game g = new Game();
-            g.gameLoop();
+        }
 
-        }*/
+        //임시 코인 테스트용
         else if (e.getSource() == selectShip){
             UserDB.coin = UserDB.coin + 1000;
             System.out.println(UserDB.coin);

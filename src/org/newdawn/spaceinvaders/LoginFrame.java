@@ -3,6 +3,8 @@ package org.newdawn.spaceinvaders;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.JPanel;
@@ -14,8 +16,14 @@ public class LoginFrame extends JFrame implements ActionListener{
     GameLobbyPanel lobby = new GameLobbyPanel();
     ShopPanel shop = new ShopPanel();
     GamePanel gameP = new GamePanel();
+    Font NeoDung;
+    public static Point frameLocation;
     public LoginFrame(){
-        super("Space Invaders 102");
+        setMainFrame();
+    }
+
+    public void setMainFrame(){
+        setTitle("Space Invaders");
         setLayout(card);
 
         add("Login",login);
@@ -24,7 +32,11 @@ public class LoginFrame extends JFrame implements ActionListener{
         add("Game",gameP);
         add("Shop",shop);
 
-        setSize(800,600);
+        setPreferredSize(new Dimension(800,600));
+        pack();
+
+        if(!UserDB.is_logged_in) {setLocationRelativeTo(null);}
+        else {setLocation(frameLocation);}
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -37,8 +49,17 @@ public class LoginFrame extends JFrame implements ActionListener{
         lobby.goShop.addActionListener(this);
         shop.returnLobby.addActionListener(this);
 
-        if(UserDB.is_logged_in == true){
+        if(UserDB.is_logged_in){
             card.show(getContentPane(),"Lobby");
+        }
+        //폰트 설정 - 네오둥근모
+        try {
+            InputStream is = getClass().getResourceAsStream("/fonts/NeoDunggeunmoPro-Regular.ttf");
+            NeoDung = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (FontFormatException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -50,7 +71,7 @@ public class LoginFrame extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e){
         //DB 커넥션 생성
         Connection conn = UserDB.getConnection();
-
+        //로그인 버튼 - 성공 시 로비패널 이동
         if(e.getSource() == login.loginButton){
 
             String id = login.idField.getText();
@@ -88,6 +109,7 @@ public class LoginFrame extends JFrame implements ActionListener{
                         System.out.println(UserDB.coin + " " + UserDB.is_hard_ship + " " + UserDB.is_lucky_ship + " " + UserDB.HP_potion + "" + UserDB.speed_potion);
                         JOptionPane.showMessageDialog(this, "Login successful!");
                         card.show(getContentPane(), "Lobby");
+                        UserDB.is_logged_in = true;
                     }
 
                 } else {
@@ -196,6 +218,9 @@ public class LoginFrame extends JFrame implements ActionListener{
         }
         //로비 패널 - 게임 시작
         else if (e.getSource() == lobby.gameStart) {
+            //card.show(getContentPane(),"Game");
+            //프레임 위치 확인
+            frameLocation = getLocationOnScreen();
             Thread gameThread = new Thread(new Runnable() {
                 public void run() {
                     Game g = new Game();

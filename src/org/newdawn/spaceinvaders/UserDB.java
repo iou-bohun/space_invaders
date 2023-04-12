@@ -1,6 +1,9 @@
 package org.newdawn.spaceinvaders;
 
 
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 
 
@@ -36,6 +39,7 @@ public final class UserDB {
             e.printStackTrace();
         }
     }
+
     public static Connection getConnection() {
         return conn;
     }
