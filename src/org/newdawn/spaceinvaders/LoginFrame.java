@@ -12,9 +12,9 @@ public class LoginFrame extends JFrame implements ActionListener {
     CardLayout card = new CardLayout();
     LoginPanel login = new LoginPanel();
     RegisterPanel register = new RegisterPanel();
-    GameLobbyPanel lobby = new GameLobbyPanel();
-    ShopPanel shop = new ShopPanel();
-    GamePanel gameP = new GamePanel();
+    //GameLobbyPanel lobby = new GameLobbyPanel();
+    //ShopPanel shop = new ShopPanel();
+    //GamePanel gameP = new GamePanel();
     public static Point frameLocation;
     public LoginFrame(){
         setMainFrame();
@@ -26,9 +26,9 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         add("Login",login);
         add("Register",register);
-        add("Lobby",lobby);
-        add("Game",gameP);
-        add("Shop",shop);
+        //add("Lobby",lobby);
+        //add("Game",gameP);
+        //add("Shop",shop);
 
         setPreferredSize(new Dimension(800,600));
         pack();
@@ -43,12 +43,12 @@ public class LoginFrame extends JFrame implements ActionListener {
         login.registerButton.addActionListener(this);
         register.cancel.addActionListener(this);
         register.registerButton.addActionListener(this);
-        lobby.gameStart.addActionListener(this);
-        lobby.goShop.addActionListener(this);
-        shop.returnLobby.addActionListener(this);
+        //lobby.gameStart.addActionListener(this);
+        //lobby.goShop.addActionListener(this);
+        //shop.returnLobby.addActionListener(this);
 
         if(UserDB.is_logged_in){
-            card.show(getContentPane(),"Lobby");
+            new GameLobbyPanel();
         }
     }
     public void loginDB(){
@@ -87,7 +87,10 @@ public class LoginFrame extends JFrame implements ActionListener {
                     //데이터 로드 실험
                     System.out.println(UserDB.coin + " " + UserDB.is_hard_ship + " " + UserDB.is_lucky_ship + " " + UserDB.HP_potion + "" + UserDB.speed_potion);
                     JOptionPane.showMessageDialog(this, "Login successful!");
-                    card.show(getContentPane(), "Lobby");
+                    frameLocation = getLocationOnScreen();
+                    new MainFrame();
+                    dispose();
+                    //card.show(getContentPane(), "Lobby");
                     UserDB.loggedIn();
                 }
 
@@ -225,7 +228,7 @@ public class LoginFrame extends JFrame implements ActionListener {
             }
         }
         //로비 패널 - 게임 시작
-        else if (e.getSource() == lobby.gameStart) {
+        /*else if (e.getSource() == lobby.gameStart) {
             //card.show(getContentPane(),"Game");
             //프레임 위치 확인
             frameLocation = getLocationOnScreen();
@@ -246,7 +249,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         //로비 복귀
         else if (e.getSource() == shop.returnLobby) {
             card.show(getContentPane(), "Lobby");
-        }
+        }*/
     }
 
     public static void main(String[] args) throws Exception{

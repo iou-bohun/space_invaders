@@ -11,7 +11,7 @@ public class LoginPanel extends JPanel {
     JTextField idField;
     JPasswordField pwField;
     JButton loginButton, registerButton;
-    MainUI mu = new MainUI();
+    //MainUI mu = new MainUI();
 
     public LoginPanel(){
 
@@ -30,7 +30,7 @@ public class LoginPanel extends JPanel {
         registerButton = new JButton("Register");
 
         titleLabel = new JLabel("SPACE INVADERS");
-        mu.setFontNeo(titleLabel,40f);
+       //mu.setFontNeo(titleLabel,40f);
 
         //setBounds로 컴포넌트 크기, 위치 조정
         idLabel.setBounds(275,225,50,25);

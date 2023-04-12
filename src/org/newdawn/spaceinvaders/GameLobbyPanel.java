@@ -4,20 +4,37 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
+
 public class GameLobbyPanel extends JPanel implements ActionListener {
     JLabel logo;
     JButton gameStart, selectShip, goShop, changeNick, record, exitGame;
-    MainUI mu = new MainUI();
+    JFrame lobbyFrame;
+    int gameState = 1;
+    final int titleState = 1;
+    final int shopState = 2;
+    final int selectShipState = 3;
+    final int scoreRecordState = 4;
+    public MainUI mu = new MainUI(this);
+    Graphics g;
+
 
     LoginFrame lf;
 
     public GameLobbyPanel(){
-        setLayout(null);
+        //addFrame();
+        this.setPreferredSize(new Dimension(800,600));
+        this.setBackground(Color.black);
+        this.setDoubleBuffered(true);
+        this.setFocusable(true);
+        //paintComponent(g);
+        /*setLayout(null);
         setBackground(Color.black);
 
         logo = new JLabel("SPACE INVADERS");
@@ -51,8 +68,26 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         add(goShop);
         add(changeNick);
         add(record);
-        add(exitGame);
+        add(exitGame);*/
     }
+    public void addFrame(){
+        lobbyFrame = new JFrame("Space Invaders");
+        lobbyFrame.add(this);
+        lobbyFrame.setPreferredSize(new Dimension(800,600));
+        lobbyFrame.pack();
+        lobbyFrame.setLocation(LoginFrame.frameLocation);
+        lobbyFrame.setVisible(true);
+        lobbyFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        lobbyFrame.setResizable(false);
+    }
+
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        mu.draw(g2);
+        g2.dispose();
+    }
+
     public void actionPerformed(ActionEvent e){
         Connection conn = UserDB.getConnection();
         //진행도 저장 후 종료
