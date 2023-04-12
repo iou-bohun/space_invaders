@@ -36,7 +36,8 @@ public class Game extends Canvas
 	int timeCheck;
 	int min=0;
 	int second=0;
-
+	int healPotionLeft = 3;
+	int speedPotionLeft = 10;
 	public int coinCount=0;
 
 
@@ -60,6 +61,8 @@ public class Game extends Canvas
 	private Entity obstacle;
 	private Entity bossHpBar;
 	private Entity alien;
+
+	private Entity[] KeyUi = new Entity[2];
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
 	private double moveSpeed = 300;
@@ -173,6 +176,7 @@ public class Game extends Canvas
 		//AddBossHp(100);
 		AddPlayerHp(ship.getHp());
 		AddCoidUI();
+		Addicon();
 	}
 
 	/**플레이어 생성**/
@@ -187,6 +191,14 @@ public class Game extends Canvas
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
 		}
+	}
+
+	/**아이콘 생성**/
+	public void Addicon(){
+		KeyUi[0] = new GameUi(this,"sprites/heal_potion.png",20,550);
+		entities.add(KeyUi[0]);
+		KeyUi[0] = new GameUi(this,"sprites/speed_potion.png",50,550);
+		entities.add(KeyUi[0]);
 	}
 
 	/**기본 적 생성 **/
@@ -473,6 +485,8 @@ public class Game extends Canvas
 			// Get hold of a graphics context for the accelerated
 			// surface and blank it out
 			Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+			Graphics2D gi = (Graphics2D) strategy.getDrawGraphics();
+			Graphics2D ggi = (Graphics2D) strategy.getDrawGraphics();
 			g.setColor(Color.black);
 			g.fillRect(0,0,800,600);
 
@@ -531,12 +545,14 @@ public class Game extends Canvas
 				g.drawString("Press any key",(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
 			}
 
-			/** 스테이지 **/
-			g.setColor(Color.white);
-			g.drawString("현제 스테이지  "+ String.valueOf(stage),30,580);
+			/**물약 남은 수**/
+			ggi.setColor(Color.white);
+			Font font1 = new Font("OCR A Extended",Font.PLAIN,15);
+			ggi.setFont(font1);
+			ggi.drawString(String.valueOf(healPotionLeft),33,580);
+			ggi.drawString(String.valueOf(speedPotionLeft),66,580);
 
 
-			Graphics2D gi = (Graphics2D) strategy.getDrawGraphics();
 			Font font = new Font("HY얕은샘물M",Font.PLAIN,25);
 
 			/** 시간**/
@@ -601,6 +617,10 @@ public class Game extends Canvas
 		else{ship.setHit(false);}
 	}
 	public  void UseItem(int i){
+		if(healPotionLeft<1){
+			return;
+		}
+			healPotionLeft--;
 			ship.setHp(1);
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
