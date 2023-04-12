@@ -22,6 +22,8 @@ public class AlienEntity extends Entity {
 	private long frameDuration = 250;
 	/** The current frame of animation being displayed */
 	private int frameNumber;
+
+	private boolean gotHit = false;
 	
 	/**
 	 * Create a new alien entity
@@ -98,6 +100,8 @@ public class AlienEntity extends Entity {
 			game.notifyDeath();
 		}
 	}
+
+	public boolean getHit(){return  gotHit;}
 	
 	/**
 	 * Notification that this alien has collided with another entity
@@ -105,6 +109,9 @@ public class AlienEntity extends Entity {
 	 * @param other The other entity
 	 */
 	public void collidedWith(Entity other) {
+		if(other instanceof ShotEntity){
+			gotHit = true;
+		}
 		// collisions with aliens are handled elsewhere
 	}
 }

@@ -82,8 +82,8 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage=2;
-
+	private int stage=2; /** 게임 스테이지 **/
+	private int score; /** 게임 스코어 **/
 
 	/**
 	 * Construct our game and set it running.
@@ -158,9 +158,9 @@ public class Game extends Canvas
 	private void initEntities() {
 		// create the player ship and place it roughly in the center of the screen
 		AddShip();
-		AddAlien();
-		//AddBoss(100);
-		//AddBossHp(100);
+		//AddAlien();
+		AddBoss(100);
+		AddBossHp(100);
 		AddPlayerHp(ship.getHp());
 	}
 
@@ -246,27 +246,28 @@ public class Game extends Canvas
 	public void notifyAlienKilled() {
 		// reduce the alient count, if there are none left, the player has won!
 		alienCount--;
+		score +=100;
 		if (alienCount == 0) {
 			switch (stage){
 				case 1:
 					AddBoss(100);
-					//AddBossHp(100);
+					AddBossHp(100);
 					break;
 				case 2:
 					AddBoss(110);
-					//AddBossHp(110);
+					AddBossHp(110);
 					break;
 				case 3:
 					AddBoss(120);
-					//AddBossHp(120);
+					AddBossHp(120);
 					break;
 				case 4:
 					AddBoss(130);
-					//AddBossHp(130);
+					AddBossHp(130);
 					break;
 				case 5:
 					AddBoss(140);
-					//AddBossHp(140);
+					AddBossHp(140);
 					break;
 			}
 		}
@@ -285,6 +286,7 @@ public class Game extends Canvas
 		bossAlive = false;
 		bossCount--;
 		stage++;
+		score +=1000;
 		if(bossCount ==0){
 			AddAlien();
 		}
@@ -355,7 +357,19 @@ public class Game extends Canvas
 		entities.add(shot);
 		shot.shotXMove(0,200);
 	}
+
+	public void SpawnItem(){
+
+
+
+
+
+
+
+
+	}
 	public void CircleBossShot(){
+
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
 			switch (timer){
 				case 100:
@@ -516,18 +530,16 @@ public class Game extends Canvas
 			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 			g.drawString("플레이어 체력 "+String.valueOf(ship.getHp()),700,580);
 
+			/** 스코어 **/
+			g.setColor(Color.white);
+			g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+			g.drawString("스코어 "+score,30,300);
 
 			/**보스 체력**/
 			if(bossAlive){
 				g.setColor(Color.white);
 				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 				g.drawString("보스 체력  "+String.valueOf(boss.getHp()),10,100);
-			}
-
-			if(bossAlive){
-				g.setColor(Color.white);
-				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-				g.drawString("보스 피격  "+String.valueOf(boss.getHit()),10,400);
 			}
 
 			strategy.show();
@@ -558,27 +570,29 @@ public class Game extends Canvas
 
 			BossGodMode(timer); /**보스 무적**/
 			BossReflectMode(timer); /**보스 데미지 반사**/
+			BossHpDeal();/**보스 hp ui**/
+			shipGotHit();/** 플레이어 피격**/
 			// we want each frame to take 10 milliseconds, to do this
 			// we've recorded when we started the frame. We add 10 milliseconds
 			// to this and then factor in the current time to give
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
-
-			BossHpDeal();
-
-			if(ship.getHit()){
-				removeEntity(playerHpUI[ship.getHp()]);
-			}
-			else{ship.setHit(false);}
 		}
+	}
+
+	public void shipGotHit(){
+		if(ship.getHit()){
+			removeEntity(playerHpUI[ship.getHp()]);
+		}
+		else{ship.setHit(false);}
 	}
 	public  void UseItem(int i){
 			ship.setHp(1);
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",300+(33*i),10);
 			entities.add(playerHpUI[i]);
 	}
-	public void BossHpDeal(){
+	public void BossHpDeal(){/**보스 hp ui 동작 **/
 		if(!bossAlive){return;}
 		if(boss.getHit()){
 			int num = boss.getHp();

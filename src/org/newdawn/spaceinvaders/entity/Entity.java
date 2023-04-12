@@ -35,7 +35,6 @@ public abstract class Entity {
 	/** The rectangle used for other entities during collision resolution */
 	private Rectangle him = new Rectangle();
 	private int hp;
-
 	private boolean gotHit;
 
 
