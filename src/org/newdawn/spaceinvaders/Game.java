@@ -1,15 +1,15 @@
 package org.newdawn.spaceinvaders;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+
 
 import javax.swing.*;
 
@@ -36,6 +36,10 @@ public class Game extends Canvas
 	int timeCheck;
 	int min=0;
 	int second=0;
+
+	public int coinCount=0;
+
+
 	/** The stragey that allows us to use accelerate page flipping */
 	private BufferStrategy strategy;
 	/** True if the game is currently "running", i.e. the game loop is looping */
@@ -48,11 +52,14 @@ public class Game extends Canvas
 	private Entity ship;
 	/** The speed at which the player's ship should move (pixels/sec) */
 	private Entity boss; //보스 생성
+	private Entity coidUI;
+	private Entity coinPrefab;
 
 	private  Entity[] bossHpUi = new Entity[150];
 	private Entity[] playerHpUI = new Entity[10];
 	private Entity obstacle;
 	private Entity bossHpBar;
+	private Entity alien;
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
 	private double moveSpeed = 300;
@@ -154,7 +161,6 @@ public class Game extends Canvas
 		firePressed = false;
 	}
 
-
 	/**
 	 * Initialise the starting state of the entities (ship and aliens). Each
 	 * entitiy will be added to the overall list of entities in the game.
@@ -162,10 +168,11 @@ public class Game extends Canvas
 	private void initEntities() {
 		// create the player ship and place it roughly in the center of the screen
 		AddShip();
-		//AddAlien();
-		AddBoss(100);
-		AddBossHp(100);
+		AddAlien();
+		//AddBoss(100);
+		//AddBossHp(100);
 		AddPlayerHp(ship.getHp());
+		AddCoidUI();
 	}
 
 	/**플레이어 생성**/
@@ -173,6 +180,7 @@ public class Game extends Canvas
 		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		entities.add(ship);
 	}
+
 	/**플레이어 HP IU**/
 	public void AddPlayerHp(int playerHp){
 		for(int i=0; i<playerHp; i++){
@@ -180,21 +188,23 @@ public class Game extends Canvas
 			entities.add(playerHpUI[i]);
 		}
 	}
+
 	/**기본 적 생성 **/
 	public void AddAlien(){
 		alienCount = 0;
 		for (int row=0;row<5;row++) {
 			for (int x=0;x<12;x++) {
-				Entity alien = new AlienEntity(this,100+(x*50),(50)+row*30);
+				alien = new AlienEntity(this,100+(x*50),(50)+row*30);
 				entities.add(alien);
 				alienCount++;
 			}
 		}
 	}
+
 	/**보스 생성**/
 	public  void AddBoss(int hp){
 		bossCount = 1;
-		boss = new BossEntity(this,350,100);
+		boss = new BossEntity(this,350,130);
 		entities.add(boss);
 		bossAlive = true;
 		boss.setHp(hp);
@@ -205,10 +215,23 @@ public class Game extends Canvas
 		bossHpBar = new GameUi(this,"sprites/gage_bar.png",225,80);
 		entities.add(bossHpBar);
 		for(int i=0; i<bossHp; i++){
-			bossHpUi[i] = new GameUi(this,"sprites/bossHpBar.png",10+i,10);
+			bossHpUi[i] = new GameUi(this,"sprites/BossHp3.png",227+(i*3),83);
 			entities.add(bossHpUi[i]);
 		}
 	}
+
+	/** 코인UI 생성 **/
+	public void AddCoidUI(){
+		coidUI = new GameUi(this,"sprites/coin.png",725,50);
+		entities.add(coidUI);
+	}
+
+	/** 코인 생성**/
+	public void AddCoin(int x,int y){
+		coinPrefab = new ItemUi(this,"sprites/coin.png",x,y);
+		entities.add(coinPrefab);
+	}
+
 	/**
 	 * Notification from a game entity that the logic of the game
 	 * should be run at the next opportunity (normally as a result of some
@@ -507,34 +530,28 @@ public class Game extends Canvas
 				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
 				g.drawString("Press any key",(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
 			}
-			/** 타이머**/
-			g.setColor(Color.white);
-			g.drawString("타이머 "+String.valueOf(timer),720,30);
 
 			/** 스테이지 **/
 			g.setColor(Color.white);
 			g.drawString("현제 스테이지  "+ String.valueOf(stage),30,580);
 
-			/** 미니언 수 **/
-			g.setColor(Color.white);
-			g.drawString("남은 적 수 "+String.valueOf(alienCount),10,30);
 
-			/**플레이어 체력**/
-			g.setColor(Color.white);
-			g.drawString("플레이어 체력 "+String.valueOf(ship.getHp()),700,580);
+			Graphics2D gi = (Graphics2D) strategy.getDrawGraphics();
+			Font font = new Font("HY얕은샘물M",Font.PLAIN,25);
+
+			/** 시간**/
+			GetTime();
+			gi.setColor(Color.white);
+			gi.setFont(font);
+			gi.drawString(String.valueOf(min)+":"+String.valueOf(second),377,35);
 
 			/** 스코어 **/
-			g.setColor(Color.white);
-			g.drawString("스코어 "+score,30,300);
+			gi.drawString("Score "+score,29,35);
 
-			/**보스 체력**/
-			if(bossAlive){
-				g.setColor(Color.white);
-				g.drawString("보스 체력  "+String.valueOf(boss.getHp()),10,100);
-			}
-			GetTime();
-			g.setColor(Color.white);
-			g.drawString(String.valueOf(min)+":"+String.valueOf(second),330,28);
+			/**코인 **/
+			gi.drawString(String.valueOf(coinCount),755,80);
+
+
 
 			strategy.show();
 
@@ -572,6 +589,7 @@ public class Game extends Canvas
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
+
 		}
 	}
 
@@ -584,7 +602,7 @@ public class Game extends Canvas
 	}
 	public  void UseItem(int i){
 			ship.setHp(1);
-			playerHpUI[i] = new GameUi(this,"sprites/heart.png",300+(33*i),10);
+			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
 	}
 	public void BossHpDeal(){/**보스 hp ui 동작 **/
@@ -640,7 +658,6 @@ public class Game extends Canvas
 				return;
 			}
 
-
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				leftPressed = true;
 			}
@@ -649,6 +666,9 @@ public class Game extends Canvas
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				firePressed = true;
+			}
+			if (e.getKeyChar() == 'z'){
+				UseItem(ship.getHp());
 			}
 		}
 
@@ -709,19 +729,9 @@ public class Game extends Canvas
 
 
 
-	/**
-	 * The entry point into the game. We'll simply create an
-	 * instance of class which will start the display and game
-	 * loop.
-	 *
-	 * @param argv The arguments that are passed into our game
-	 */
-	public static void main(String argv[]) {
-		Game g = new Game();
-		// Start the main game loop, note: this method will not
-		// return until the game has finished running. Hence we are
-		// using the actual main thread to run the game.
-		g.gameLoop();
 
+	public static void main(String[] args) {
+		Game g = new Game();
+		g.gameLoop();
 	}
 }

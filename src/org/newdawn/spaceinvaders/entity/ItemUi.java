@@ -7,6 +7,7 @@ import org.newdawn.spaceinvaders.Game;
  *
  * @author Kevin Glass
  */
+
 public class ItemUi extends Entity {
     /** The vertical speed at which the players shot moves */
     private double moveSpeed = 300;
@@ -14,8 +15,9 @@ public class ItemUi extends Entity {
     private Game game;
     /** True if this shot has been "used", i.e. its hit something */
     private boolean used = false;
+    enum Item{coin, other}
+    Item item = Item.coin;
 
-    private enum item{coin, other}
 
     /**
      * Create a new shot from the player
@@ -38,6 +40,8 @@ public class ItemUi extends Entity {
      * @param delta The time that has elapsed since last move
      */
     public void move(long delta) {
+
+        dy = moveSpeed;
         // proceed with normal move
         super.move(delta);
 
@@ -58,6 +62,14 @@ public class ItemUi extends Entity {
             return;
         }
         if (other instanceof ShipEntity) {
+                switch (item){
+                    case coin:
+                        game.coinCount++;
+                        break;
+                    case other:
+
+                        break;
+            }
             game.removeEntity(this);
             used =true;
         }

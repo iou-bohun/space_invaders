@@ -84,7 +84,10 @@ public class AlienEntity extends Entity {
 		// proceed with normal move
 		super.move(delta);
 	}
-	
+	public int getX(){return (int)x;}
+	public int getY(){return (int)y;}
+	public void setX(int xx){this.x = xx;}
+	public void setY(int yy){this.y =yy;}
 	/**
 	 * Update the game logic related to aliens
 	 */
@@ -111,6 +114,7 @@ public class AlienEntity extends Entity {
 	public void collidedWith(Entity other) {
 		if(other instanceof ShotEntity){
 			gotHit = true;
+			game.AddCoin(this.getX(), this.getY());
 		}
 		// collisions with aliens are handled elsewhere
 	}
