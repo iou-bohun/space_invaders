@@ -16,7 +16,6 @@ public class LoginFrame extends JFrame implements ActionListener{
     GameLobbyPanel lobby = new GameLobbyPanel();
     ShopPanel shop = new ShopPanel();
     GamePanel gameP = new GamePanel();
-    Font NeoDung;
     public static Point frameLocation;
     public LoginFrame(){
         setMainFrame();
@@ -51,15 +50,6 @@ public class LoginFrame extends JFrame implements ActionListener{
 
         if(UserDB.is_logged_in){
             card.show(getContentPane(),"Lobby");
-        }
-        //폰트 설정 - 네오둥근모
-        try {
-            InputStream is = getClass().getResourceAsStream("/fonts/NeoDunggeunmoPro-Regular.ttf");
-            NeoDung = Font.createFont(Font.TRUETYPE_FONT, is);
-        } catch (FontFormatException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -109,7 +99,7 @@ public class LoginFrame extends JFrame implements ActionListener{
                         System.out.println(UserDB.coin + " " + UserDB.is_hard_ship + " " + UserDB.is_lucky_ship + " " + UserDB.HP_potion + "" + UserDB.speed_potion);
                         JOptionPane.showMessageDialog(this, "Login successful!");
                         card.show(getContentPane(), "Lobby");
-                        UserDB.is_logged_in = true;
+                        UserDB.loggedIn();
                     }
 
                 } else {

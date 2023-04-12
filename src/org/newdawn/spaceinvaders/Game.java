@@ -88,6 +88,7 @@ public class Game extends Canvas
 	 * Construct our game and set it running.
 	 */
 	public Game() {
+		UserDB.loggedIn();
 		/*GamePanel gp = (GamePanel) lf.getContentPane();
 		gp.setPreferredSize(new Dimension(800,600));
 		setBounds(0,0,800,600);
@@ -735,6 +736,5 @@ public class Game extends Canvas
 		// return until the game has finished running. Hence we are
 		// using the actual main thread to run the game.
 		g.gameLoop();
-		UserDB.is_logged_in = true;
 	}
 }

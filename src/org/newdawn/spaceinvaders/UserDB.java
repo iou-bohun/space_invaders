@@ -43,6 +43,7 @@ public final class UserDB {
     public static Connection getConnection() {
         return conn;
     }
+    public static void loggedIn(){is_logged_in = true;}
     private UserDB() {
 
     }

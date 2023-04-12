@@ -12,6 +12,7 @@ import java.sql.SQLException;
 public class GameLobbyPanel extends JPanel implements ActionListener {
     JLabel logo;
     JButton gameStart, selectShip, goShop, changeNick, record, exitGame;
+    MainUI mu = new MainUI();
 
     LoginFrame lf;
 
@@ -20,8 +21,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         setBackground(Color.black);
 
         logo = new JLabel("SPACE INVADERS");
-        //Font spFont = lf.NeoDung;
-        //logo.setFont(spFont);
+        mu.setFontNeo(logo,50f);
 
         gameStart = new JButton("Game Start");
         selectShip = new JButton("Select Ship");
@@ -30,7 +30,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         record = new JButton("<html><body style='text-align:center;'>Score<br />Record</body></html>");
         exitGame = new JButton("Save & Exit");
 
-        logo.setBounds(265,100,300,50);
+        logo.setBounds(225,100,400,50);
         gameStart.setBounds(200,300,100,75);
         selectShip.setBounds(350,300,100,75);
         goShop.setBounds(500,300,100,75);
