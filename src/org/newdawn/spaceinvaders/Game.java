@@ -240,7 +240,7 @@ public class Game extends Canvas
 	}
 
 	/** 코인 생성**/
-	public void AddCoin(int x,int y){
+	public void SpawnCoin(int x,int y){
 		coinPrefab = new ItemUi(this,"sprites/coin.png",x,y);
 		entities.add(coinPrefab);
 	}
@@ -399,8 +399,7 @@ public class Game extends Canvas
 		shot.shotXMove(0,200);
 	}
 
-	public void SpawnItem(){
-	}
+
 	public void CircleBossShot(){
 
 		if((stage ==2)||(stage ==4) ||(stage==5) ){

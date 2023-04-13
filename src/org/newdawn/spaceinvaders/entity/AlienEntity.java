@@ -114,7 +114,11 @@ public class AlienEntity extends Entity {
 	public void collidedWith(Entity other) {
 		if(other instanceof ShotEntity){
 			gotHit = true;
-			game.AddCoin(this.getX(), this.getY());
+			double a = Math.random();
+			if(a>0.5){
+				game.SpawnCoin(this.getX(), this.getY());
+			}
+
 		}
 		// collisions with aliens are handled elsewhere
 	}
