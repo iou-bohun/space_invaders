@@ -18,11 +18,13 @@ public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
     JLabel logo;
     JButton gameStart, selectShip, goShop, changeNick, record, exitGame;
     JFrame lobbyFrame;
-    int gameState = 1;
-    final int titleState = 1;
-    final int shopState = 2;
-    final int selectShipState = 3;
-    final int scoreRecordState = 4;
+    //게임 상태(타이틀 화면인지, 상점인지)
+    int gameState = 0;
+    final int titleState = 0;
+    final int shopState = 1;
+    final int selectShipState = 2;
+    final int scoreRecordState = 3;
+    final int startGameState = 4;
     final int screenWidth = 800;
     final int screenHeight = 600;
     public MainUI mu = new MainUI(this);
@@ -96,7 +98,8 @@ public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
             update();
             repaint();
             try {
-                Thread.sleep(16);
+                //로비 화면은 15프레임 고정. 리소스를 덜 먹기 위함
+                Thread.sleep(32);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

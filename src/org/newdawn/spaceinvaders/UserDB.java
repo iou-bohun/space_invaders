@@ -13,11 +13,11 @@ public final class UserDB {
 
     //DB 저장용 데이터 변수
     public static String userID;
-    public static String nickname = "guest1"; //임시 초기닉네임
+    public static String nickname = "GoldenPigy"; //임시 초기닉네임
     //각 스테이지 당 최고 스코어 기록
-    public static int best_score = 250002;
+    public static int best_score = 265461;
     //상점관련, 보유 코인 수
-    public static int coin = 0;
+    public static int coin = 3000;
     //우주선 보유 여부
     public static boolean is_hard_ship = false;
     public static boolean is_lucky_ship = false;
