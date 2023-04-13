@@ -14,8 +14,10 @@ public class MainFrame {
 
         window.pack();
 
-        window.setLocation(LoginFrame.frameLocation);
+        window.setLocationRelativeTo(null);
+        //window.setLocation(LoginFrame.frameLocation);
         window.setVisible(true);
+        glp.startGameThread();
     }
 
     public static void main(String[] args) {

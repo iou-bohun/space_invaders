@@ -12,7 +12,9 @@ import java.sql.SQLException;
 
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
-public class GameLobbyPanel extends JPanel implements ActionListener {
+public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
+
+    Thread gameThread;
     JLabel logo;
     JButton gameStart, selectShip, goShop, changeNick, record, exitGame;
     JFrame lobbyFrame;
@@ -24,7 +26,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
     final int screenWidth = 800;
     final int screenHeight = 600;
     public MainUI mu = new MainUI(this);
-    Graphics g;
+    public UIKeyHandler key = new UIKeyHandler(this);
 
 
     LoginFrame lf;
@@ -34,6 +36,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(800,600));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
+        this.addKeyListener(key);
         this.setFocusable(true);
         //paintComponent(g);
         /*setLayout(null);
@@ -81,6 +84,27 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         lobbyFrame.setVisible(true);
         lobbyFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         lobbyFrame.setResizable(false);
+    }
+
+    public void startGameThread(){
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
+
+    public void run(){
+        while (gameThread != null){
+            update();
+            repaint();
+            try {
+                Thread.sleep(16);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void update(){
+
     }
 
     public void paintComponent(Graphics g){
