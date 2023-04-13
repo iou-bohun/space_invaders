@@ -56,9 +56,9 @@ public class MainUI extends JPanel {
     }
 
     public void drawTitleScreen(){
-        /*try{
-            background = ImageIO.read(getClass().getResourceAsStream("sprites/alien3.gif"));
-            gameLogo = ImageIO.read(getClass().getResourceAsStream("sprites/alien.gif"));
+        try{
+            background = ImageIO.read(getClass().getResourceAsStream("/sprites/alien3.gif"));
+            gameLogo = ImageIO.read(getClass().getResourceAsStream("/sprites/alien.gif"));
         }
         catch (IOException e){
             e.printStackTrace();
@@ -66,12 +66,12 @@ public class MainUI extends JPanel {
         g2.drawImage(background,0,0,null);
         g2.drawImage(gameLogo,225,157,null);*/
         String text = "";
-        int x = getXforCenteredText(text);
-        int y = 300;
+        //int x = getXforCenteredText(text);
+        //int y = 300;
         g2.setFont(g2.getFont().deriveFont(Font.BOLD,48f));
         text = "Game Start";
         //x = getXforCenteredText(text);
-        y += 50;
+        //y += 50;
         g2.drawString(text,x,y);
     }
 

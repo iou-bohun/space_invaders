@@ -21,6 +21,8 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
     final int shopState = 2;
     final int selectShipState = 3;
     final int scoreRecordState = 4;
+    final int screenWidth = 800;
+    final int screenHeight = 600;
     public MainUI mu = new MainUI(this);
     Graphics g;
 
