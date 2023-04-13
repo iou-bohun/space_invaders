@@ -36,9 +36,11 @@ public class Game extends Canvas
 	int timeCheck;
 	int min=0;
 	int second=0;
-	int healPotionLeft = 3;
-	int speedPotionLeft = 10;
-	public int coinCount=0;
+	int healPotionLeft = 3; /**힐 포션**/
+	int speedPotionLeft = 10;/**스피드 포션**/
+	public int coinCount=0;/**코인 수**/
+
+	private int score; /** 게임 스코어 **/
 
 
 	/** The stragey that allows us to use accelerate page flipping */
@@ -97,7 +99,6 @@ public class Game extends Canvas
 
 	private Boolean bossAlive = false;
 	private int stage=2; /** 게임 스테이지 **/
-	private int score; /** 게임 스코어 **/
 
 	/**
 	 * Construct our game and set it running.
