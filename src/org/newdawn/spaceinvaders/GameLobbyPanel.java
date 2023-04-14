@@ -19,12 +19,13 @@ public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
     JButton gameStart, selectShip, goShop, changeNick, record, exitGame;
     JFrame lobbyFrame;
     //게임 상태(타이틀 화면인지, 상점인지)
-    int gameState = 0;
+    int gameState = 3;
     final int titleState = 0;
     final int shopState = 1;
-    final int selectShipState = 2;
-    final int scoreRecordState = 3;
-    final int startGameState = 4;
+    final int userState = 2;
+    final int initialState = 3;
+    final int signInState = 4;
+    final int signUpState = 5;
     final int screenWidth = 800;
     final int screenHeight = 600;
     public MainUI mu = new MainUI(this);
