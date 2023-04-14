@@ -32,6 +32,7 @@ import org.newdawn.spaceinvaders.entity.*;
  */
 public class Game extends Canvas
 {
+	private long coolTime = 3000;
 	int timer;
 	int timeCheck;
 	int min=0;
@@ -70,7 +71,7 @@ public class Game extends Canvas
 	private double moveSpeed = 300;
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
-	private long bossLastFire = 0;
+	private long lastUseitem= 0;
 	/** The interval between our players shot (ms) */
 	private long firingInterval = 200;
 	/** The number of aliens left on the screen */
@@ -175,7 +176,7 @@ public class Game extends Canvas
 		AddAlien();
 		//AddBoss(100);
 		//AddBossHp(100);
-		AddPlayerHp(ship.getHp());
+		AddPlayerHpUI(ship.getHp());
 		AddCoidUI();
 		Addicon();
 	}
@@ -187,7 +188,7 @@ public class Game extends Canvas
 	}
 
 	/**플레이어 HP IU**/
-	public void AddPlayerHp(int playerHp){
+	public void AddPlayerHpUI(int playerHp){
 		for(int i=0; i<playerHp; i++){
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
@@ -605,10 +606,8 @@ public class Game extends Canvas
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
-
 		}
 	}
-
 
 	public void shipGotHit(){
 		if(ship.getHit()){
@@ -620,6 +619,10 @@ public class Game extends Canvas
 		if(healPotionLeft<1){
 			return;
 		}
+		if ((System.currentTimeMillis() - lastUseitem) < coolTime) {
+			return;
+		}
+		lastUseitem = System.currentTimeMillis();
 			healPotionLeft--;
 			ship.setHp(1);
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);

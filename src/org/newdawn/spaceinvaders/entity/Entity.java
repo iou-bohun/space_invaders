@@ -139,6 +139,7 @@ public abstract class Entity {
 
 	public boolean getHit(){return  gotHit;}
 	public void setHit(boolean hit){this.gotHit = hit;}
+
 	/**
 	 * Check if this entity collised with another.
 	 * 
@@ -148,7 +149,6 @@ public abstract class Entity {
 	public boolean collidesWith(Entity other) {
 		me.setBounds((int) x,(int) y,sprite.getWidth(),sprite.getHeight());
 		him.setBounds((int) other.x,(int) other.y,other.sprite.getWidth(),other.sprite.getHeight());
-
 		return me.intersects(him);
 	}
 	
