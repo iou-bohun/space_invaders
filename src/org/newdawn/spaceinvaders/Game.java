@@ -88,7 +88,7 @@ public class Game extends Canvas
 	 * Construct our game and set it running.
 	 */
 	public Game() {
-		UserDB.loggedIn();
+		//UserDB.loggedIn();
 		/*GamePanel gp = (GamePanel) lf.getContentPane();
 		gp.setPreferredSize(new Dimension(800,600));
 		setBounds(0,0,800,600);

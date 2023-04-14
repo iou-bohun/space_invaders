@@ -23,6 +23,11 @@ public class MainUI extends JPanel {
     public boolean purchaseState = false;
     public boolean equipState = false;
     public boolean unableLoginState = false;
+    public boolean outOfLengthState = false;
+    public boolean idpwEqualState = false;
+    public boolean pwConfirmErrorState = false;
+    public boolean registerSuccessState = false;
+    public boolean inputExistState = false;
 
     //상점 가격
     public static int hpcoin = 50;
@@ -130,15 +135,30 @@ public class MainUI extends JPanel {
             showExplanation(additionalText);
         }
 
-        text = "sign out";
-        x = 575;
-        y = 88;
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,20f));
-        g2.drawString(text, x,y);
-        if(commandNum == 4){
-            selectOption(x,y,text,true);
-            additionalText = "Save the game and sign out.";
-            showExplanation(additionalText);
+        if (UserDB.is_logged_in) {
+            text = "sign out";
+            x = 575;
+            y = 88;
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN,20f));
+            g2.drawString(text, x,y);
+            if(commandNum == 4){
+                selectOption(x,y,text,true);
+                additionalText = "Save the game and sign out.";
+                showExplanation(additionalText);
+            }
+        }
+
+        else {
+            text = "to main";
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN,20f));
+            x = 575;
+            y = 88;
+            g2.drawString(text, x,y);
+            if(commandNum == 4){
+                selectOption(x,y,text,true);
+                additionalText = "Go back to the lobby to sign in or sign up.";
+                showExplanation(additionalText);
+            }
         }
 
         text = UserDB.nickname;
@@ -571,7 +591,7 @@ public class MainUI extends JPanel {
         if(commandNum == 1){ selectOptionOnlyImg(x,y); }
 
         text = glp.key.idString;
-        x += 50;
+        x += 53;
         y = 235;
         g2.drawString(text,x, y);
 
@@ -599,7 +619,98 @@ public class MainUI extends JPanel {
     }
 
     public void drawSignUpScreen(){
+        g2.drawImage(background,0,0,null);
 
+        g2.setFont(NeoDung);
+
+        String text = "";
+        String additionalText = "";
+        int x,y;
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,50f));
+        g2.setColor(Color.white);
+        text = "sign up";
+        x = getXforCenteredText(text);
+        y = 145;
+        g2.drawString(text,x, y);
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,30f));
+        text = "ID :";
+        x = 250;
+        y = 210;
+        g2.drawString(text,x, y);
+        if(commandNum == 0){ selectOptionOnlyImg(x,y); }
+
+        text = "PW :";
+        x -= 5;
+        y += 50;
+        g2.drawString(text,x, y);
+        if(commandNum == 1){ selectOptionOnlyImg(x,y); }
+
+        text = "reconfirm PW :";
+        x -= 135;
+        y += 50;
+        g2.drawString(text,x, y);
+        if(commandNum == 2){ selectOptionOnlyImg(x,y); }
+
+        text = "nickname :";
+        x += 53;
+        y += 50;
+        g2.drawString(text,x, y);
+        if(commandNum == 3){ selectOptionOnlyImg(x,y); }
+
+        text = glp.key.idString;
+        x = 300;
+        y = 210;
+        g2.drawString(text,x, y);
+
+        text = glp.key.pwString;
+        String passwordField = new String(new char[text.length()]).replace("\0","*");
+        y += 50;
+        g2.drawString(passwordField,x, y);
+
+        text = glp.key.recPwString;
+        passwordField = new String(new char[text.length()]).replace("\0","*");
+        y += 50;
+        g2.drawString(passwordField,x, y);
+
+        text = glp.key.nicString;
+        y += 50;
+        g2.drawString(text,x, y);
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,30f));
+        text = "OK!";
+        x = getXforCenteredText(text);
+        y = 430;
+        g2.drawString(text,x, y);
+        if(commandNum == 4){ selectOption(x,y,text);}
+
+        text = "back to title";
+        x = getXforCenteredText(text);
+        y += 50;
+        g2.drawString(text,x, y);
+        if(commandNum == 5){selectOption(x,y,text);}
+
+        if(outOfLengthState) {
+            additionalText = "Input must be 8 to 12 characters.";
+            showExplanation(25f, 20f, lightRed, 395, additionalText);
+        }
+        if(idpwEqualState) {
+            additionalText = "ID and password are the same.";
+            showExplanation(25f, 20f, lightRed, 395, additionalText);
+        }
+        if(pwConfirmErrorState) {
+            additionalText = "Password does not match.";
+            showExplanation(25f, 20f, lightRed, 395, additionalText);
+        }
+        if(inputExistState) {
+            additionalText = "The same ID, password, or nickname exists.";
+            showExplanation(25f, 20f, lightRed, 395, additionalText);
+        }
+        if(registerSuccessState) {
+            additionalText = "Register Successful!";
+            showExplanation(25f, 20f, Color.green, 395, additionalText);
+        }
     }
 
     public int getXforCenteredText(String text){

@@ -12,6 +12,8 @@ public class UIKeyHandler extends KeyAdapter {
     GameLobbyPanel glp;
     String idString = "";
     String pwString = "";
+    String recPwString = "";
+    String nicString = "";
 
     public UIKeyHandler(GameLobbyPanel glp) {
         this.glp = glp;
@@ -52,7 +54,9 @@ public class UIKeyHandler extends KeyAdapter {
                     glp.mu.commandNum = 4;
                 }
                 if (glp.mu.commandNum == 1 || glp.mu.commandNum == 2) {
-                    glp.mu.commandNum = 5;
+                    if(UserDB.is_logged_in) {
+                        glp.mu.commandNum = 5;
+                    }
                 }
             }
 
@@ -82,10 +86,16 @@ public class UIKeyHandler extends KeyAdapter {
                 }
 
                 if (glp.mu.commandNum == 3) {
+                    saveGame();
                     System.exit(0);
                 }
 
                 if (glp.mu.commandNum == 4) {
+                    if(UserDB.is_logged_in) {
+                        saveGame();
+                        UserDB.loggedOut();
+                        UserDB.initializeDB();
+                    }
                     glp.gameState = glp.initialState;
                     glp.mu.commandNum = -1;
                 }
@@ -279,14 +289,14 @@ public class UIKeyHandler extends KeyAdapter {
             if (code == KeyEvent.VK_DOWN) {
                     glp.mu.commandNum++;
                     if (glp.mu.commandNum > 3) {
-                        glp.mu.commandNum = 0;
+                        glp.mu.commandNum = 3;
                     }
             }
 
             if (code == KeyEvent.VK_UP) {
                     glp.mu.commandNum--;
                     if (glp.mu.commandNum < 0) {
-                        glp.mu.commandNum = 3;
+                        glp.mu.commandNum = 0;
                     }
             }
 
@@ -298,6 +308,7 @@ public class UIKeyHandler extends KeyAdapter {
                 }
 
                 if (glp.mu.commandNum == 1) {
+                    glp.mu.commandNum = -1;
                     glp.gameState = glp.signUpState;
                 }
 
@@ -335,6 +346,8 @@ public class UIKeyHandler extends KeyAdapter {
                     if (UserDB.is_logged_in) {
                         glp.gameState = glp.titleState;
                         glp.mu.commandNum = -2;
+                        idString = "";
+                        pwString = "";
                     }
                 }
 
@@ -343,6 +356,8 @@ public class UIKeyHandler extends KeyAdapter {
                     if (UserDB.is_logged_in) {
                         glp.gameState = glp.titleState;
                         glp.mu.commandNum = -2;
+                        idString = "";
+                        pwString = "";
                     }
                 }
 
@@ -360,27 +375,110 @@ public class UIKeyHandler extends KeyAdapter {
                 }
             }
         }
+
+        if(glp.gameState == glp.signUpState){
+            glp.mu.outOfLengthState = false;
+            glp.mu.idpwEqualState = false;
+            glp.mu.pwConfirmErrorState = false;
+            glp.mu.registerSuccessState = false;
+            glp.mu.inputExistState = false;
+
+            if (code == KeyEvent.VK_DOWN) {
+                glp.mu.commandNum++;
+                if (glp.mu.commandNum > 5) {
+                    glp.mu.commandNum = 5;
+                }
+            }
+
+            if (code == KeyEvent.VK_UP) {
+                glp.mu.commandNum--;
+                if (glp.mu.commandNum < 0) {
+                    glp.mu.commandNum = 0;
+                }
+            }
+
+            if (code == KeyEvent.VK_ENTER) {
+
+                if (glp.mu.commandNum == 3) {
+                   registerDB();
+                }
+
+                if (glp.mu.commandNum == 4) {
+                    registerDB();
+                }
+
+                if (glp.mu.commandNum == 5) {
+                    idString = "";
+                    pwString = "";
+                    recPwString = "";
+                    nicString = "";
+                    glp.gameState = glp.initialState;
+                    glp.mu.commandNum = 0;
+                }
+            }
+
+            /*if (code == KeyEvent.VK_TAB) {
+                if(glp.mu.commandNum == 0){
+                    glp.mu.commandNum++;
+                }
+            }*/
+        }
     }
 
     public void keyTyped(KeyEvent e){
         char inputChar = e.getKeyChar();
 
+        //로그인 창 타이핑 조작
         if(glp.gameState == glp.signInState){
-            if(glp.mu.commandNum == 0 && inputChar != KeyEvent.VK_BACK_SPACE){
+            if(glp.mu.commandNum == 0 && inputChar != KeyEvent.VK_BACK_SPACE && inputChar != KeyEvent.VK_ENTER){
                 if(idString.length() < 12) {
                     idString += inputChar;
                 }
             }
             
-            if(glp.mu.commandNum == 1 && inputChar != KeyEvent.VK_BACK_SPACE){
+            if(glp.mu.commandNum == 1 && inputChar != KeyEvent.VK_BACK_SPACE && inputChar != KeyEvent.VK_ENTER){
                 if(pwString.length() < 12) {
                     pwString += inputChar;
                 }
             }
-            
+
             if(inputChar == KeyEvent.VK_BACK_SPACE){
                 if(glp.mu.commandNum == 0 && idString.length() != 0) idString = idString.substring(0,idString.length()-1);
                 if(glp.mu.commandNum == 1 && pwString.length() != 0) pwString = pwString.substring(0,pwString.length()-1);
+            }
+        }
+
+        //회원가입 창 타이핑 조작
+        if(glp.gameState == glp.signUpState){
+            if(glp.mu.commandNum == 0 && inputChar != KeyEvent.VK_BACK_SPACE && inputChar != KeyEvent.VK_ENTER){
+                if(idString.length() < 12) {
+                    idString += inputChar;
+                }
+            }
+
+            if(glp.mu.commandNum == 1 && inputChar != KeyEvent.VK_BACK_SPACE && inputChar != KeyEvent.VK_ENTER){
+                if(pwString.length() < 12) {
+                    pwString += inputChar;
+                }
+            }
+
+            if(glp.mu.commandNum == 2 && inputChar != KeyEvent.VK_BACK_SPACE && inputChar != KeyEvent.VK_ENTER){
+                if(recPwString.length() < 12) {
+                    recPwString += inputChar;
+                }
+            }
+
+            if(glp.mu.commandNum == 3 && inputChar != KeyEvent.VK_BACK_SPACE && inputChar != KeyEvent.VK_ENTER){
+                if(nicString.length() < 12) {
+                    nicString += inputChar;
+                }
+            }
+
+            if(inputChar == KeyEvent.VK_BACK_SPACE){
+                if(glp.mu.commandNum == 0 && idString.length() != 0) idString = idString.substring(0,idString.length()-1);
+                if(glp.mu.commandNum == 1 && pwString.length() != 0) pwString = pwString.substring(0,pwString.length()-1);
+                if(glp.mu.commandNum == 2 && recPwString.length() != 0) recPwString = recPwString.substring(0,recPwString.length()-1);
+                if(glp.mu.commandNum == 3 && nicString.length() != 0) nicString = nicString.substring(0,nicString.length()-1);
             }
         }
     }
@@ -426,4 +524,151 @@ public class UIKeyHandler extends KeyAdapter {
             ex.printStackTrace();
         }
     }
+
+    public void registerDB(){
+        Connection conn = UserDB.getConnection();
+        //중복체크용 문자열
+        String dupid = "";
+
+        //부적절한 입력정보 감지
+        if (nicString.length() < 5 || nicString.length() > 10 || idString.length() < 8  || idString.length() > 12 || pwString.length() < 8 || pwString.length() > 12) {
+            glp.mu.outOfLengthState = true;
+        }
+
+        else if (idString.equals(pwString)) {
+            glp.mu.idpwEqualState = true;
+        }
+
+        else if (!pwString.equals(recPwString)) {
+            glp.mu.pwConfirmErrorState = true;
+        }
+
+        //데이터베이스 접속, 중복된 ID, 패스워드, 닉네임 있는지 확인
+        else {
+            try {
+                String dupCheck = "SELECT id,password,nickname FROM userdata WHERE id = ? OR password = ? OR nickname = ?";
+                PreparedStatement dpstmt = conn.prepareStatement(dupCheck);
+
+                dpstmt.setString(1, idString);
+                dpstmt.setString(2, pwString);
+                dpstmt.setString(3, nicString);
+
+                ResultSet dprs = dpstmt.executeQuery();
+
+                while (dprs.next()){
+                    dupid = dprs.getString("id");
+                }
+
+                if (dupid.equals("")) {
+                    try {
+                        String query = "INSERT INTO userdata (id, password, nickname) VALUES (?, ?, ?)";
+                        PreparedStatement pstmt = conn.prepareStatement(query);
+
+                        pstmt.setString(1, idString);
+                        pstmt.setString(2, pwString);
+                        pstmt.setString(3, nicString);
+
+                        int result = pstmt.executeUpdate();
+
+                        if (result > 0) {
+                            glp.mu.registerSuccessState = true;
+                            idString = "";
+                            pwString = "";
+                            recPwString = "";
+                            nicString = "";
+                        }
+                        pstmt.close();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else {
+                    glp.mu.inputExistState = true;
+                }
+            }
+            catch (SQLException ex){
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void saveGame() {
+        Connection conn = UserDB.getConnection();
+        try {
+            String dataSave = "UPDATE userdata SET nickname = ?, best_score = ?, coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ? WHERE id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(dataSave);
+
+            pstmt.setString(1, UserDB.nickname);
+            pstmt.setInt(2, UserDB.best_score);
+            pstmt.setInt(3, UserDB.coin);
+            pstmt.setBoolean(4, UserDB.is_hard_ship);
+            pstmt.setBoolean(5, UserDB.is_lucky_ship);
+            pstmt.setInt(6, UserDB.HP_potion);
+            pstmt.setInt(7, UserDB.speed_potion);
+            pstmt.setInt(8, UserDB.selected_ship);
+            pstmt.setString(9, UserDB.userID);
+
+            int updateResult = pstmt.executeUpdate();
+
+            //종료 메세지 출력
+            if (updateResult > 0) {
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+/*    public void changeNick(){
+        Connection conn = UserDB.getConnection();
+
+        String dupnic = "";
+
+        String changeNicLabel = JOptionPane.showInputDialog(this,"Write Nickname to Change", "");
+        if (changeNicLabel.length() > 10 || changeNicLabel.length() < 5) {
+            JOptionPane.showMessageDialog(this, "Nickname is too long or short!\nNickname must be at least 5 and not more than 10.");
+            return;
+        }
+
+        try {
+            String dupCheck = "SELECT nickname FROM userdata WHERE nickname = ?";
+            PreparedStatement dpstmt = conn.prepareStatement(dupCheck);
+
+            dpstmt.setString(1, changeNicLabel);
+
+            ResultSet dprs = dpstmt.executeQuery();
+            while (dprs.next()){
+                dupnic = dprs.getString("nickname");
+            }
+            if(dupnic.equals("")){
+                try {
+                    String query = "UPDATE userdata SET nickname = ? WHERE nickname = ?";
+                    PreparedStatement pstmt = conn.prepareStatement(query);
+
+                    pstmt.setString(1, changeNicLabel);
+                    pstmt.setString(2, UserDB.nickname);
+
+                    int result = pstmt.executeUpdate();
+
+                    if (result > 0) {
+                        JOptionPane.showMessageDialog(this, "Successfully Changed!");
+                        UserDB.nickname = changeNicLabel;
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Changing Failed.");
+                    }
+
+                    pstmt.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Same nickname exists.");
+            }
+
+        }
+        catch (SQLException ex){
+            ex.printStackTrace();
+        }
+
+    }*/
 }

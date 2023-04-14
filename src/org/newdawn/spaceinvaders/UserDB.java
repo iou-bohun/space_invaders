@@ -46,6 +46,18 @@ public final class UserDB {
         return conn;
     }
     public static void loggedIn(){is_logged_in = true;}
+    public static void loggedOut(){is_logged_in = false;}
+    public static void initializeDB(){
+        userID = null;
+        nickname = "guest"; //임시 초기닉네임
+        best_score = 0;
+        coin = 0;
+        is_hard_ship = false;
+        is_lucky_ship = false;
+        HP_potion = 0;
+        speed_potion = 0;
+        selected_ship = 0;
+    }
     private UserDB() {
 
     }
