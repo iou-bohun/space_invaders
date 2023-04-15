@@ -100,6 +100,8 @@ public class Game extends Canvas
 	/** The game window that we'll update with the frame count */
 	private JFrame container;
 
+	GameLobbyPanel glp;
+
 	private Boolean bossAlive = false;
 	private int stage=2;
 
@@ -107,7 +109,8 @@ public class Game extends Canvas
 	/**
 	 * Construct our game and set it running.
 	 */
-	public Game() {
+	public Game(GameLobbyPanel glp) {
+		this.glp = glp;
 		// create a frame to contain our game
 		container = new JFrame("Space Invaders 102");
 
@@ -438,159 +441,161 @@ public class Game extends Canvas
 	public void gameLoop() {
 		long lastLoopTime = SystemTimer.getTime();
 		// keep looping round til the game ends
-		while (gameRunning) {
-			// work out how long its been since the last update, this
-			// will be used to calculate how far the entities should
-			// move this loop
-			long delta = SystemTimer.getTime() - lastLoopTime;
-			lastLoopTime = SystemTimer.getTime();
+		if (glp.gameState == glp.inGameState) {
+			while (gameRunning) {
+				// work out how long its been since the last update, this
+				// will be used to calculate how far the entities should
+				// move this loop
+				long delta = SystemTimer.getTime() - lastLoopTime;
+				lastLoopTime = SystemTimer.getTime();
 
-			// update the frame counter
-			lastFpsTime += delta;
-			fps++;
-			timer ++;
-			if(timer>1000)
-			{
-				timer = 1;
-			}
-			// update our FPS counter if a second has passed since
-			// we last recorded
-			if (lastFpsTime >= 1000) {
-				container.setTitle(windowTitle+" (FPS: "+fps+")");
-				lastFpsTime = 0;
-				fps = 0;
-			}
-
-			// Get hold of a graphics context for the accelerated
-			// surface and blank it out
-			Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-			Graphics2D gi = (Graphics2D) strategy.getDrawGraphics();
-			Graphics2D ggi = (Graphics2D) strategy.getDrawGraphics();
-			g.setColor(Color.black);
-			g.fillRect(0,0,800,600);
-
-			// cycle round asking each entity to move itself
-			if (!waitingForKeyPress) {
-				for (int i=0;i<entities.size();i++) {
-					Entity entity = (Entity) entities.get(i);
-
-					entity.move(delta);
+				// update the frame counter
+				lastFpsTime += delta;
+				fps++;
+				timer ++;
+				if(timer>1000)
+				{
+					timer = 1;
 				}
-			}
+				// update our FPS counter if a second has passed since
+				// we last recorded
+				if (lastFpsTime >= 1000) {
+					container.setTitle(windowTitle+" (FPS: "+fps+")");
+					lastFpsTime = 0;
+					fps = 0;
+				}
 
-			// cycle round drawing all the entities we have in the game
-			for (int i=0;i<entities.size();i++) {
-				Entity entity = (Entity) entities.get(i);
+				// Get hold of a graphics context for the accelerated
+				// surface and blank it out
+				Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+				Graphics2D gi = (Graphics2D) strategy.getDrawGraphics();
+				Graphics2D ggi = (Graphics2D) strategy.getDrawGraphics();
+				g.setColor(Color.black);
+				g.fillRect(0,0,800,600);
 
-				entity.draw(g);
-			}
+				// cycle round asking each entity to move itself
+				if (!waitingForKeyPress) {
+					for (int i=0;i<entities.size();i++) {
+						Entity entity = (Entity) entities.get(i);
 
-			// brute force collisions, compare every entity against
-			// every other entity. If any of them collide notify
-			// both entities that the collision has occured
-			for (int p=0;p<entities.size();p++) {
-				for (int s=p+1;s<entities.size();s++) {
-					Entity me = (Entity) entities.get(p);
-					Entity him = (Entity) entities.get(s);
-
-					if (me.collidesWith(him)) {
-						me.collidedWith(him);
-						him.collidedWith(me);
+						entity.move(delta);
 					}
 				}
-			}
 
-			// remove any entity that has been marked for clear up
-			entities.removeAll(removeList);
-			removeList.clear();
-
-			// if a game event has indicated that game logic should
-			// be resolved, cycle round every entity requesting that
-			// their personal logic should be considered.
-			if (logicRequiredThisLoop) {
+				// cycle round drawing all the entities we have in the game
 				for (int i=0;i<entities.size();i++) {
 					Entity entity = (Entity) entities.get(i);
-					entity.doLogic();
+
+					entity.draw(g);
 				}
 
-				logicRequiredThisLoop = false;
+				// brute force collisions, compare every entity against
+				// every other entity. If any of them collide notify
+				// both entities that the collision has occured
+				for (int p=0;p<entities.size();p++) {
+					for (int s=p+1;s<entities.size();s++) {
+						Entity me = (Entity) entities.get(p);
+						Entity him = (Entity) entities.get(s);
+
+						if (me.collidesWith(him)) {
+							me.collidedWith(him);
+							him.collidedWith(me);
+						}
+					}
+				}
+
+				// remove any entity that has been marked for clear up
+				entities.removeAll(removeList);
+				removeList.clear();
+
+				// if a game event has indicated that game logic should
+				// be resolved, cycle round every entity requesting that
+				// their personal logic should be considered.
+				if (logicRequiredThisLoop) {
+					for (int i=0;i<entities.size();i++) {
+						Entity entity = (Entity) entities.get(i);
+						entity.doLogic();
+					}
+
+					logicRequiredThisLoop = false;
+				}
+
+				// if we're waiting for an "any key" press then draw the
+				// current message
+				if (waitingForKeyPress) {
+					g.setColor(Color.white);
+					g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
+					g.drawString("Press any key",(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
+				}
+
+				/**물약 남은 수**/
+				ggi.setColor(Color.white);
+				Font font1 = new Font("OCR A Extended",Font.PLAIN,15);
+				ggi.setFont(font1);
+				ggi.drawString(String.valueOf(healPotionLeft),33,580);
+				ggi.drawString(String.valueOf(speedPotionLeft),66,580);
+
+
+				Font font = new Font("HY얕은샘물M",Font.PLAIN,25);
+
+				/** 시간**/
+				GetTime();
+				gi.setColor(Color.white);
+				gi.setFont(font);
+				gi.drawString(String.valueOf(min)+":"+String.valueOf(second),377,35);
+
+				/** 스코어 **/
+				gi.drawString("Score "+score,29,35);
+
+				/**코인 **/
+				gi.drawString(String.valueOf(coinCount),755,80);
+
+
+
+				strategy.show();
+
+
+				// resolve the movement of the ship. First assume the ship
+				// isn't moving. If either cursor key is pressed then
+				// update the movement appropraitely
+				ship.setHorizontalMovement(0);
+
+				if ((leftPressed) && (!rightPressed)) {
+					ship.setHorizontalMovement(-moveSpeed);
+				} else if ((rightPressed) && (!leftPressed)) {
+					ship.setHorizontalMovement(moveSpeed);
+				}
+				// if we're pressing fire, attempt to fire
+				if (firePressed) {
+					tryToFire();
+				}
+				if(timer%100== 0){
+					AddObstacle();
+					BossFire();
+				}
+				//게임 일시 정지 & 로비로 나가기
+				if(escPressed){
+					escPressed = false;
+					pauseGame("Paused","",false);
+				}
+
+				if(ship.getHp()<=0 && !waitingForKeyPress){
+					notifyDeath();
+				}
+
+				BossGodMode(timer); /**보스 무적**/
+				BossReflectMode(timer); /**보스 데미지 반사**/
+				BossHpDeal();/**보스 hp ui**/
+				shipGotHit();/** 플레이어 피격**/
+				// we want each frame to take 10 milliseconds, to do this
+				// we've recorded when we started the frame. We add 10 milliseconds
+				// to this and then factor in the current time to give
+				// us our final value to wait for
+				SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
+				BossUlti(timer);
+				ChangePotionIcon();
+				ReturnMoveSpeed();
 			}
-
-			// if we're waiting for an "any key" press then draw the
-			// current message
-			if (waitingForKeyPress) {
-				g.setColor(Color.white);
-				g.drawString(message,(800-g.getFontMetrics().stringWidth(message))/2,250);
-				g.drawString("Press any key",(800-g.getFontMetrics().stringWidth("Press any key"))/2,300);
-			}
-
-			/**물약 남은 수**/
-			ggi.setColor(Color.white);
-			Font font1 = new Font("OCR A Extended",Font.PLAIN,15);
-			ggi.setFont(font1);
-			ggi.drawString(String.valueOf(healPotionLeft),33,580);
-			ggi.drawString(String.valueOf(speedPotionLeft),66,580);
-
-
-			Font font = new Font("HY얕은샘물M",Font.PLAIN,25);
-
-			/** 시간**/
-			GetTime();
-			gi.setColor(Color.white);
-			gi.setFont(font);
-			gi.drawString(String.valueOf(min)+":"+String.valueOf(second),377,35);
-
-			/** 스코어 **/
-			gi.drawString("Score "+score,29,35);
-
-			/**코인 **/
-			gi.drawString(String.valueOf(coinCount),755,80);
-
-
-
-			strategy.show();
-
-
-			// resolve the movement of the ship. First assume the ship
-			// isn't moving. If either cursor key is pressed then
-			// update the movement appropraitely
-			ship.setHorizontalMovement(0);
-
-			if ((leftPressed) && (!rightPressed)) {
-				ship.setHorizontalMovement(-moveSpeed);
-			} else if ((rightPressed) && (!leftPressed)) {
-				ship.setHorizontalMovement(moveSpeed);
-			}
-			// if we're pressing fire, attempt to fire
-			if (firePressed) {
-				tryToFire();
-			}
-			if(timer%100== 0){
-				AddObstacle();
-				BossFire();
-			}
-			//게임 일시 정지 & 로비로 나가기
-			if(escPressed){
-				escPressed = false;
-				pauseGame("Paused","",false);
-			}
-
-			if(ship.getHp()<=0 && !waitingForKeyPress){
-				notifyDeath();
-			}
-
-			BossGodMode(timer); /**보스 무적**/
-			BossReflectMode(timer); /**보스 데미지 반사**/
-			BossHpDeal();/**보스 hp ui**/
-			shipGotHit();/** 플레이어 피격**/
-			// we want each frame to take 10 milliseconds, to do this
-			// we've recorded when we started the frame. We add 10 milliseconds
-			// to this and then factor in the current time to give
-			// us our final value to wait for
-			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
-			BossUlti(timer);
-			ChangePotionIcon();
-			ReturnMoveSpeed();
 		}
 	}
 
@@ -797,7 +802,7 @@ public class Game extends Canvas
 
 
 	public static void main(String[] args) {
-		Game g = new Game();
+		Game g = new Game(new GameLobbyPanel());
 		g.gameLoop();
 	}
 }

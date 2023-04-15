@@ -72,7 +72,14 @@ public class UIKeyHandler extends KeyAdapter {
             if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE) {
 
                 if (glp.mu.commandNum == 0) {
-
+                    glp.gameState = glp.inGameState;
+                    Thread gameThread = new Thread(new Runnable() {
+                        public void run() {
+                            Game g = new Game(glp);
+                            g.gameLoop();
+                        }
+                    });
+                    gameThread.start();
                 }
 
                 if (glp.mu.commandNum == 1) {
