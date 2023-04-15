@@ -609,8 +609,15 @@ public class Game extends Canvas
 				// us our final value to wait for
 				SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 				BossUlti(timer);
-				//ChangePotionIcon();
-				//ReturnMoveSpeed();
+				if ((System.currentTimeMillis() - lastUseHealPotion) > coolTime){
+					ChangeHealPotionIcon();
+				}
+				if ((System.currentTimeMillis() - lastUseSpeedPotion) > coolTime){
+					ChangeSpeedPotionIcon();
+				}
+				if ((System.currentTimeMillis() - lastUseSpeedPotion) > 2000){
+					ReturnMoveSpeed();
+				}
 			}
 		}
 	}
@@ -638,15 +645,14 @@ public class Game extends Canvas
 			itemUi[1] = new GameUi(this,"sprites/heart.png",20,550);
 			entities.add(itemUi[1]);
 	}
-	public void ChangePotionIcon(){
-		if ((System.currentTimeMillis() - lastUseHealPotion) > coolTime) {
+	public void ChangeHealPotionIcon(){
 			removeEntity(itemUi[1]);
 			entities.add(itemUi[0]);
-		}
-		if ((System.currentTimeMillis() - lastUseSpeedPotion) > coolTime) {
-			removeEntity(itemUi[3]);
-			entities.add(itemUi[2]);
-		}
+	}
+
+	public void ChangeSpeedPotionIcon(){
+		removeEntity(itemUi[3]);
+		entities.add(itemUi[2]);
 	}
 
 	public void UseSpeedPotion(){
@@ -664,9 +670,7 @@ public class Game extends Canvas
 		entities.add(itemUi[3]);
 	}
 	public void ReturnMoveSpeed(){
-		if ((System.currentTimeMillis() - lastUseSpeedPotion) > 2000) {
 			moveSpeed = 300;
-		}
 	}
 
 
