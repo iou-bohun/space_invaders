@@ -9,6 +9,10 @@ public class ShopPanel extends JPanel implements ActionListener {
 
     JButton buyHardShip, buyLuckyShip, buyHpPotion, buySpeedPotion, returnLobby;
     JLabel shopLogo,coinLabel;
+    public static int hpcoin = 50;
+    public static int spcoin = 50;
+    public static int hscoin = 1000;
+    public static int lscoin = 1500;
 
     public ShopPanel(){
         setLayout(null);
@@ -56,13 +60,15 @@ public class ShopPanel extends JPanel implements ActionListener {
         g.setColor(Color.yellow);
         g.fillRect(0,0,800,600);
     }*/
+
     public void actionPerformed(ActionEvent e){
+
         coinLabel.setText(Integer.toString(UserDB.coin));
         //HP 포션 구입
         if(e.getSource() == buyHpPotion){
             if(UserDB.coin > 50) {
                 UserDB.HP_potion++;
-                UserDB.coin = UserDB.coin - 50;
+                UserDB.coin = UserDB.coin - hpcoin;
             }
             else {
                 JOptionPane.showMessageDialog(this, "You don't have enough Coin.");
@@ -72,22 +78,23 @@ public class ShopPanel extends JPanel implements ActionListener {
         else if(e.getSource() == buySpeedPotion){
             if(UserDB.coin > 50) {
                 UserDB.speed_potion++;
-                UserDB.coin = UserDB.coin - 50;
+                UserDB.coin = UserDB.coin - spcoin;
             }
             else {
                 JOptionPane.showMessageDialog(this, "You don't have enough Coin.");
             }
         }
+        //단단한 우주선 구입
         else if(e.getSource() == buyHardShip){
-            if(UserDB.is_hard_ship == false && UserDB.coin > 1000) {
+            if(!UserDB.is_hard_ship && UserDB.coin > hscoin) {
                 int saveConfirm = JOptionPane.showConfirmDialog(this, "Purchase Hard Ship.","",JOptionPane.YES_NO_OPTION);
                 if (saveConfirm == JOptionPane.YES_OPTION) {
                     UserDB.is_hard_ship = true;
-                    UserDB.coin = UserDB.coin - 1000;
+                    UserDB.coin = UserDB.coin - hscoin;
                 }
             }
 
-            else if (UserDB.is_hard_ship == false && UserDB.coin < 1000) {
+            else if (!UserDB.is_hard_ship && UserDB.coin < hscoin) {
                 JOptionPane.showMessageDialog(this, "You don't have enough Coin.");
             }
 
@@ -96,17 +103,17 @@ public class ShopPanel extends JPanel implements ActionListener {
             }
 
         }
-
+        //행운의 우주선 구입
         else if(e.getSource() == buyLuckyShip){
-            if(UserDB.is_lucky_ship == false && UserDB.coin > 1500) {
+            if(!UserDB.is_lucky_ship && UserDB.coin > lscoin) {
                 int saveConfirm = JOptionPane.showConfirmDialog(this, "Purchase Speed Ship.","",JOptionPane.YES_NO_OPTION);
                 if (saveConfirm == JOptionPane.YES_OPTION) {
                     UserDB.is_lucky_ship = true;
-                    UserDB.coin = UserDB.coin - 1500;
+                    UserDB.coin = UserDB.coin - lscoin;
                 }
             }
 
-            else if (UserDB.is_lucky_ship == false && UserDB.coin < 1500) {
+            else if (!UserDB.is_lucky_ship&& UserDB.coin < lscoin) {
                 JOptionPane.showMessageDialog(this, "You don't have enough Coin.");
             }
 

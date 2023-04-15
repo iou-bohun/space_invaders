@@ -1,6 +1,7 @@
 package org.newdawn.spaceinvaders.entity;
 
 import org.newdawn.spaceinvaders.Game;
+import org.newdawn.spaceinvaders.UserDB;
 
 /**
  * An entity representing a shot fired by the player's ship
@@ -64,7 +65,7 @@ public class ItemUi extends Entity {
         if (other instanceof ShipEntity) {
                 switch (item){
                     case coin:
-                        game.coinCount++;
+                        UserDB.coin++;
                         break;
                     case other:
 

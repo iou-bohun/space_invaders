@@ -3,6 +3,7 @@ package org.newdawn.spaceinvaders.entity;
 import org.newdawn.spaceinvaders.Game;
 import org.newdawn.spaceinvaders.Sprite;
 import org.newdawn.spaceinvaders.SpriteStore;
+import org.newdawn.spaceinvaders.UserDB;
 
 /**
  * An entity which represents one of our space invader aliens.
@@ -23,6 +24,7 @@ public class AlienEntity extends Entity {
 	/** The current frame of animation being displayed */
 	private int frameNumber;
 
+	private double coinRate = 0.5;
 	private boolean gotHit = false;
 	
 	/**
@@ -88,7 +90,10 @@ public class AlienEntity extends Entity {
 	public int getY(){return (int)y;}
 	public void setX(int xx){this.x = xx;}
 	public void setY(int yy){this.y =yy;}
+
+	public void setCoinRate(double rate){this.coinRate = rate;}
 	/**
+	 *
 	 * Update the game logic related to aliens
 	 */
 	public void doLogic() {
@@ -115,10 +120,16 @@ public class AlienEntity extends Entity {
 		if(other instanceof ShotEntity){
 			gotHit = true;
 			double a = Math.random();
-			if(a>0.5){
-				game.SpawnCoin(this.getX(), this.getY());
+			if(UserDB.selected_ship ==2){
+				if(a>0){
+					game.SpawnCoin(this.getX(), this.getY());
+				}
 			}
-
+			else {
+				if(a>0.5){
+					game.SpawnCoin(this.getX(), this.getY());
+				}
+			}
 		}
 		// collisions with aliens are handled elsewhere
 	}
