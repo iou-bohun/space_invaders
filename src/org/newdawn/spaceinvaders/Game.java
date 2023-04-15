@@ -10,9 +10,13 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import java.io.*;
+import javax.sound.sampled.*;
+
 import javafx.scene.control.TextFormatter;
 import org.newdawn.spaceinvaders.entity.*;
 import org.newdawn.spaceinvaders.entity.*;
+
 
 
 /**
@@ -32,7 +36,9 @@ import org.newdawn.spaceinvaders.entity.*;
  */
 public class Game extends Canvas
 {
+	private double cuurrTime;
 	private long coolTime = 3000;
+
 	int timer;
 	int timeCheck;
 	int min=0;
@@ -64,15 +70,17 @@ public class Game extends Canvas
 	private Entity alien;
 
 	private Entity[] itemUi = new Entity[4];
+	private Entity stageUI ;
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
 	private double moveSpeed = 300;
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
 	private long lastUseSpeedPotion= 0;
+	private long lastAddRoundUI = 0;
 	private long lastUseHealPotion=0;
 	/** The interval between our players shot (ms) */
-	private long firingInterval = 200;
+	private long firingInterval = 300;
 	/** The number of aliens left on the screen */
 	private int alienCount;
 
@@ -102,7 +110,11 @@ public class Game extends Canvas
 
 
 	private Boolean bossAlive = false;
-	private int stage=2;
+	public int stage=1;
+
+	private boolean isStageUi = false;
+
+	double addRound = 0;
 
 
 	/**
@@ -170,13 +182,15 @@ public class Game extends Canvas
 		// clear out any existing entities and intialise a new set
 		entities.clear();
 		initEntities();
-
+		cuurrTime = System.currentTimeMillis();
 		// blank out any keyboard settings we might currently have
 		leftPressed = false;
 		rightPressed = false;
 		firePressed = false;
 		escPressed= false;
+
 	}
+
 
 
 	/**
@@ -184,7 +198,6 @@ public class Game extends Canvas
 	 * entitiy will be added to the overall list of entities in the game.
 	 */
 	private void initEntities() {
-		// create the player ship and place it roughly in the center of the screen
 		AddShip();
 		AddAlien();
 		//AddBoss(100);
@@ -192,8 +205,36 @@ public class Game extends Canvas
 		AddPlayerHpUI(ship.getHp());
 		AddCoidUI();
 		Addicon();
+		AddRound();
+
 	}
 
+	public void AddRound(){
+		isStageUi = true;
+		addRound = System.currentTimeMillis();
+		switch (stage){
+			case 1:
+				stageUI = new GameUi(this,"sprites/window/game_window_round_1.png",0,0);
+				entities.add(stageUI);
+				break;
+			case 2:
+				stageUI = new GameUi(this,"sprites/window/game_window_round_2.png",0,0);
+				entities.add(stageUI);
+				break;
+			case 3:
+				stageUI = new GameUi(this,"sprites/window/game_window_round_3.png",0,0);
+				entities.add(stageUI);
+				break;
+			case 4:
+				stageUI = new GameUi(this,"sprites/window/game_window_round_4.png",0,0);
+				entities.add(stageUI);
+				break;
+			case 5:
+				stageUI = new GameUi(this,"sprites/window/game_window_round_5.png",0,0);
+				entities.add(stageUI);
+				break;
+		}
+	}
 	/**플레이어 생성**/
 	public void AddShip(){
 		if(UserDB.selected_ship==0){
@@ -227,6 +268,7 @@ public class Game extends Canvas
 
 	/**기본 적 생성 **/
 	public void AddAlien(){
+
 		alienCount = 0;
 		for (int row=0;row<5;row++) {
 			for (int x=0;x<12;x++) {
@@ -319,6 +361,7 @@ public class Game extends Canvas
 		if (alienCount == 0) {
 			switch (stage){
 				case 1:
+
 					AddBoss(100);
 					AddBossHp(100);
 					break;
@@ -356,6 +399,7 @@ public class Game extends Canvas
 		bossCount--;
 		stage++;
 		score +=1000;
+		AddRound();
 		if(bossCount ==0){
 			AddAlien();
 		}
@@ -388,7 +432,7 @@ public class Game extends Canvas
 		if(!bossAlive){
 			return;
 		}
-		if((stage==1)||(stage==5)){
+		if((stage==1)||(stage==5)||(stage ==3)){
 			boss.ImmortallityCheck(time);
 		}
 	}
@@ -397,7 +441,7 @@ public class Game extends Canvas
 			return;
 		}
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
-			BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
+			BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 			entities.add(shot);
 			shot.shotXMove(ship.getX() - shot.getX(),300);
 		}
@@ -410,7 +454,7 @@ public class Game extends Canvas
 		double cos = Math.toRadians(timer);
 		double coss = Math.cos(cos);
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
-			if ((timer>100&&timer<300)&&(timer%35==0)){
+			if ((timer>100&&timer<300)&&(timer%15==0)){
 				BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
 				entities.add(shot);
 				shot.shotXMove(coss*300,200);
@@ -618,6 +662,9 @@ public class Game extends Canvas
 				if ((System.currentTimeMillis() - lastUseSpeedPotion) > 2000){
 					ReturnMoveSpeed();
 				}
+				if ((System.currentTimeMillis() - addRound) > 1000){
+					RemoveRoundUi();
+				}
 			}
 		}
 	}
@@ -627,6 +674,15 @@ public class Game extends Canvas
 			removeEntity(playerHpUI[ship.getHp()]);
 		}
 		else{ship.setHit(false);}
+	}
+
+	public void RemoveRoundUi(){
+		if(isStageUi ==false){
+			return;
+		}
+		for(int i=0; i<5; i++){
+			removeEntity(stageUI);
+		}
 	}
 
 	public  void UseHealPotion(int i){
@@ -642,7 +698,7 @@ public class Game extends Canvas
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
 			removeEntity(itemUi[0]);
-			itemUi[1] = new GameUi(this,"sprites/heart.png",20,550);
+			itemUi[1] = new GameUi(this,"sprites/used_heal_potion.png",20,550);
 			entities.add(itemUi[1]);
 	}
 	public void ChangeHealPotionIcon(){
@@ -666,7 +722,7 @@ public class Game extends Canvas
 		moveSpeed = 500;
 		UserDB.speed_potion--;
 		removeEntity(itemUi[2]);
-		itemUi[3] = new GameUi(this,"sprites/heart.png",50,550);
+		itemUi[3] = new GameUi(this,"sprites/used_speed_potion.png",50,550);
 		entities.add(itemUi[3]);
 	}
 	public void ReturnMoveSpeed(){
@@ -702,6 +758,18 @@ public class Game extends Canvas
 		}
 	}
 
+	public static void audio() {
+		try {
+			File file = new File("D:\\beep.wav");
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(file));
+			// clip.loop(Clip.LOOP_CONTINUOUSLY);
+			clip.loop(3);
+			clip.start();
+		} catch (Exception e) {
+			System.err.println("Put the music.wav file in the sound folder if you want to play background music, only optional!");
+		}
+	}
 	private void GetTime(){
 		timeCheck++;
 		if (timeCheck>100){
@@ -823,6 +891,8 @@ public class Game extends Canvas
 
 
 
+
+
 	/**
 	 * The entry point into the game. We'll simply create an
 	 * instance of class which will start the display and game
@@ -831,11 +901,14 @@ public class Game extends Canvas
 	 * @param argv The arguments that are passed into our game
 	 */
 	public static void main(String argv[]) {
-		//UserDB.is_logged_in = true;
+//		//UserDB.is_logged_in = true;
 		Game g = new Game(new GameLobbyPanel());
 		// Start the main game loop, note: this method will not
 		// return until the game has finished running. Hence we are
 		// using the actual main thread to run the game.
 		g.gameLoop();
+		new BGM();
 	}
 }
+
+
