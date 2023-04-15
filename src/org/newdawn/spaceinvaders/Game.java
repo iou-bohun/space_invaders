@@ -295,6 +295,9 @@ public class Game extends Canvas
 		stage = 1;
 		//게임오버 시 다시 할지 나갈지 결정(임시)
 		pauseGame("You Died! Wanna Quit?","",true);
+		if(UserDB.best_score < score){
+			UserDB.best_score = score;
+		}
 	}
 
 	/**
