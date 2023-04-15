@@ -173,9 +173,9 @@ public class Game extends Canvas
 	private void initEntities() {
 		// create the player ship and place it roughly in the center of the screen
 		AddShip();
-		AddAlien();
-		//AddBoss(100);
-		//AddBossHp(100);
+		//AddAlien();
+		AddBoss(100);
+		AddBossHp(100);
 		AddPlayerHpUI(ship.getHp());
 		AddCoidUI();
 		Addicon();
@@ -384,7 +384,7 @@ public class Game extends Canvas
 		double cos = Math.toRadians(timer);
 		double coss = Math.cos(cos);
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
-			if ((timer>100&&timer<400)&&(timer%10==0)){
+			if ((timer>100&&timer<300)&&(timer%15==0)){
 				BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
 				entities.add(shot);
 				shot.shotXMove(coss*300,200);
@@ -394,38 +394,8 @@ public class Game extends Canvas
 			}
 		}
 	}
-	public void AddBossShot(int startX){
-		BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+startX,boss.getY()+100);
-		entities.add(shot);
-		shot.shotXMove(0,200);
-	}
 
 
-	public void CircleBossShot(){
-
-		if((stage ==2)||(stage ==4) ||(stage==5) ){
-			switch (timer){
-				case 100:
-					AddBossShot(30);
-					break;
-				case 105:
-					AddBossShot(20);
-					AddBossShot(40);
-					break;
-				case 110:
-					AddBossShot(10);
-					AddBossShot(50);
-					break;
-				case 115:
-					AddBossShot(20);
-					AddBossShot(40);
-					break;
-				case 120:
-					AddBossShot(30);
-					break;
-			}
-		}
-	}
 	public void AddObstacle(){ /**3단계 보스 패턴**//**장애물 생성**/
 		if(!bossAlive){
 			return;}
