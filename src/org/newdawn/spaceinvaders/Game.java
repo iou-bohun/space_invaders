@@ -7,13 +7,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
-import java.io.File;
-import java.io.IOException;
-
 
 import javax.swing.*;
 
 import org.newdawn.spaceinvaders.entity.*;
+import org.newdawn.spaceinvaders.entity.*;
+
 
 /**
  * The main hook of our game. This class with both act as a manager
@@ -90,6 +89,7 @@ public class Game extends Canvas
 	/** True if game logic needs to be applied this loop, normally as a result of a game event */
 	private boolean logicRequiredThisLoop = false;
 	/** The last time at which we recorded the frame rate */
+	private boolean escPressed = false;
 	private long lastFpsTime;
 	/** The current number of frames recorded */
 	private int fps;
@@ -99,7 +99,8 @@ public class Game extends Canvas
 	private JFrame container;
 
 	private Boolean bossAlive = false;
-	private int stage=2; /** 게임 스테이지 **/
+	private int stage=2;
+
 
 	/**
 	 * Construct our game and set it running.
@@ -123,6 +124,8 @@ public class Game extends Canvas
 
 		// finally make the window visible
 		container.pack();
+		if(!UserDB.is_logged_in) {container.setLocationRelativeTo(null);}
+		else {container.setLocation(LoginFrame.frameLocation);}
 		container.setResizable(false);
 		container.setVisible(true);
 
@@ -164,7 +167,9 @@ public class Game extends Canvas
 		leftPressed = false;
 		rightPressed = false;
 		firePressed = false;
+		escPressed= false;
 	}
+
 
 	/**
 	 * Initialise the starting state of the entities (ship and aliens). Each
@@ -268,10 +273,11 @@ public class Game extends Canvas
 	/**
 	 * Notification that the player has died.
 	 */
-	public void notifyDeath() {
-		message = "Oh no! They got you, try again?";
-		waitingForKeyPress = true;
+	public void  notifyDeath() {
+		//message = "Oh no! They got you, try again?";
 		stage = 1;
+		//게임오버 시 다시 할지 나갈지 결정(임시)
+		pauseGame("You Died! Wanna Quit?","",true);
 	}
 
 	/**
@@ -561,8 +567,13 @@ public class Game extends Canvas
 				AddObstacle();
 				BossFire();
 			}
+			//게임 일시 정지 & 로비로 나가기
+			if(escPressed){
+				escPressed = false;
+				pauseGame("Paused","",false);
+			}
 
-			if(ship.getHp()<=0){
+			if(ship.getHp()<=0 && !waitingForKeyPress){
 				notifyDeath();
 			}
 
@@ -607,6 +618,21 @@ public class Game extends Canvas
 		}
 		else{
 			boss.setHit(false);
+		}
+	}
+
+	//게임 일시정지(미완)
+	public void pauseGame(String dialog_message, String title, boolean waitingTrue){
+		gameRunning = false;
+		int exitGame = JOptionPane.showConfirmDialog(this, dialog_message,title,JOptionPane.YES_NO_OPTION);
+		if (exitGame == JOptionPane.YES_OPTION) {
+			LoginFrame.frameLocation = container.getLocationOnScreen();
+			container.dispose();
+			new LoginFrame();
+		}
+		else {
+			if(waitingTrue) {waitingForKeyPress = true;}
+			gameRunning = true;
 		}
 	}
 
@@ -663,6 +689,9 @@ public class Game extends Canvas
 			if (e.getKeyChar() == 'z'){
 				UseItem(ship.getHp());
 			}
+			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+				escPressed = true;
+			}
 		}
 
 		/**
@@ -685,6 +714,9 @@ public class Game extends Canvas
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				firePressed = false;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+				escPressed = false;
 			}
 		}
 
@@ -719,8 +751,6 @@ public class Game extends Canvas
 			}
 		}
 	}
-
-
 
 
 	public static void main(String[] args) {

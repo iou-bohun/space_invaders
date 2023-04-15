@@ -4,21 +4,49 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GameLobbyPanel extends JPanel implements ActionListener {
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
+
+public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
+
+    Thread gameThread;
     JLabel logo;
     JButton gameStart, selectShip, goShop, changeNick, record, exitGame;
+    JFrame lobbyFrame;
+    //게임 상태(타이틀 화면인지, 상점인지)
+    int gameState = 3;
+    final int titleState = 0;
+    final int shopState = 1;
+    final int userState = 2;
+    final int initialState = 3;
+    final int signInState = 4;
+    final int signUpState = 5;
+    final int screenWidth = 800;
+    final int screenHeight = 600;
+    public MainUI mu = new MainUI(this);
+    public UIKeyHandler key = new UIKeyHandler(this);
+
+
+    LoginFrame lf;
 
     public GameLobbyPanel(){
-        setLayout(null);
+        //addFrame();
+        this.setPreferredSize(new Dimension(800,600));
+        this.setBackground(Color.black);
+        this.setDoubleBuffered(true);
+        this.addKeyListener(key);
+        this.setFocusable(true);
+        //paintComponent(g);
+        /*setLayout(null);
         setBackground(Color.black);
 
         logo = new JLabel("SPACE INVADERS");
-        logo.setFont(new Font("Arial", Font.BOLD, 30));
+        mu.setFontNeo(logo,50f);
 
         gameStart = new JButton("Game Start");
         selectShip = new JButton("Select Ship");
@@ -27,7 +55,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         record = new JButton("<html><body style='text-align:center;'>Score<br />Record</body></html>");
         exitGame = new JButton("Save & Exit");
 
-        logo.setBounds(265,100,300,50);
+        logo.setBounds(225,100,400,50);
         gameStart.setBounds(200,300,100,75);
         selectShip.setBounds(350,300,100,75);
         goShop.setBounds(500,300,100,75);
@@ -48,30 +76,65 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
         add(goShop);
         add(changeNick);
         add(record);
-        add(exitGame);
+        add(exitGame);*/
     }
+    public void addFrame(){
+        lobbyFrame = new JFrame("Space Invaders");
+        lobbyFrame.add(this);
+        lobbyFrame.setPreferredSize(new Dimension(800,600));
+        lobbyFrame.pack();
+        lobbyFrame.setLocation(LoginFrame.frameLocation);
+        lobbyFrame.setVisible(true);
+        lobbyFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        lobbyFrame.setResizable(false);
+    }
+
+    public void startGameThread(){
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
+
+    public void run(){
+        while (gameThread != null){
+            update();
+            repaint();
+            try {
+                //로비 화면은 15프레임 고정. 리소스를 덜 먹기 위함
+                Thread.sleep(32);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void update(){
+
+    }
+
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        mu.draw(g2);
+        g2.dispose();
+    }
+
     public void actionPerformed(ActionEvent e){
         Connection conn = UserDB.getConnection();
-        //게임 데이터 DB에 저장 후 종료 메세지 출력
+        //진행도 저장 후 종료
         if(e.getSource() == exitGame){
             try {
-                String dataSave = "UPDATE userdata SET nickname = ?, stage_process = ?, stage1_best_score = ?, stage2_best_score = ?, stage3_best_score = ?, stage4_best_score = ?, stage5_best_score = ?,coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ? WHERE id = ?";
+                String dataSave = "UPDATE userdata SET nickname = ?, best_score = ?, coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ? WHERE id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(dataSave);
 
                 pstmt.setString(1, UserDB.nickname);
-                pstmt.setInt(2, UserDB.stage_process);
-                pstmt.setInt(3, UserDB.stage1_best_score);
-                pstmt.setInt(4, UserDB.stage2_best_score);
-                pstmt.setInt(5, UserDB.stage3_best_score);
-                pstmt.setInt(6, UserDB.stage4_best_score);
-                pstmt.setInt(7, UserDB.stage5_best_score);
-                pstmt.setInt(8, UserDB.coin);
-                pstmt.setBoolean(9, UserDB.is_hard_ship);
-                pstmt.setBoolean(10, UserDB.is_lucky_ship);
-                pstmt.setInt(11, UserDB.HP_potion);
-                pstmt.setInt(12, UserDB.speed_potion);
-                pstmt.setInt(13, UserDB.selected_ship);
-                pstmt.setString(14, UserDB.userID);
+                pstmt.setInt(2, UserDB.best_score);
+                pstmt.setInt(3, UserDB.coin);
+                pstmt.setBoolean(4, UserDB.is_hard_ship);
+                pstmt.setBoolean(5, UserDB.is_lucky_ship);
+                pstmt.setInt(6, UserDB.HP_potion);
+                pstmt.setInt(7, UserDB.speed_potion);
+                pstmt.setInt(8, UserDB.selected_ship);
+                pstmt.setString(9, UserDB.userID);
 
                 int updateResult = pstmt.executeUpdate();
 
@@ -91,13 +154,9 @@ public class GameLobbyPanel extends JPanel implements ActionListener {
             catch (SQLException ex){
                 ex.printStackTrace();
             }
-        } /*else if (e.getSource() == gameStart) {
-            LoginFrame lf = new LoginFrame();
-            lf.card.show(lf.getContentPane(), "Game");
-            Game g = new Game();
-            g.gameLoop();
+        }
 
-        }*/
+        //임시 코인 테스트용
         else if (e.getSource() == selectShip){
             UserDB.coin = UserDB.coin + 1000;
             System.out.println(UserDB.coin);
