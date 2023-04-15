@@ -65,7 +65,7 @@ public class MainUI extends JPanel {
         else if(glp.gameState == glp.initialState){
             drawInitialScreen();
         }
-        
+
         else if(glp.gameState == glp.signInState){
             drawSignInScreen();
         }

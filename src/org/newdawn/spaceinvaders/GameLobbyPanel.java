@@ -105,6 +105,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            //if(Thread.interrupted()) break;
         }
     }
 

@@ -162,21 +162,21 @@ public class UIKeyHandler extends KeyAdapter {
                 }
 
                 if (glp.mu.commandNum == 1) {
-                        if(UserDB.coin >= MainUI.spcoin) {
-                            UserDB.speed_potion++;
-                            UserDB.coin = UserDB.coin - MainUI.spcoin;
-                            glp.mu.purchaseState = true;
-                        }
-                        else {
-                            glp.mu.coinLackState = true;
-                        }
+                    if(UserDB.coin >= MainUI.spcoin) {
+                        UserDB.speed_potion++;
+                        UserDB.coin = UserDB.coin - MainUI.spcoin;
+                        glp.mu.purchaseState = true;
+                    }
+                    else {
+                        glp.mu.coinLackState = true;
+                    }
                 }
 
                 if (glp.mu.commandNum == 2){
                     if(!UserDB.is_hard_ship && UserDB.coin >= MainUI.hscoin) {
-                            UserDB.is_hard_ship = true;
-                            UserDB.coin = UserDB.coin - MainUI.hscoin;
-                            glp.mu.purchaseState = true;
+                        UserDB.is_hard_ship = true;
+                        UserDB.coin = UserDB.coin - MainUI.hscoin;
+                        glp.mu.purchaseState = true;
                     }
 
                     else if (!UserDB.is_hard_ship /*&& UserDB.coin < MainUI.hscoin*/) {
@@ -294,17 +294,17 @@ public class UIKeyHandler extends KeyAdapter {
 
         if(glp.gameState == glp.initialState){
             if (code == KeyEvent.VK_DOWN) {
-                    glp.mu.commandNum++;
-                    if (glp.mu.commandNum > 3) {
-                        glp.mu.commandNum = 3;
-                    }
+                glp.mu.commandNum++;
+                if (glp.mu.commandNum > 3) {
+                    glp.mu.commandNum = 3;
+                }
             }
 
             if (code == KeyEvent.VK_UP) {
-                    glp.mu.commandNum--;
-                    if (glp.mu.commandNum < 0) {
-                        glp.mu.commandNum = 0;
-                    }
+                glp.mu.commandNum--;
+                if (glp.mu.commandNum < 0) {
+                    glp.mu.commandNum = 0;
+                }
             }
 
             if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE) {
@@ -407,7 +407,7 @@ public class UIKeyHandler extends KeyAdapter {
             if (code == KeyEvent.VK_ENTER) {
 
                 if (glp.mu.commandNum == 3) {
-                   registerDB();
+                    registerDB();
                 }
 
                 if (glp.mu.commandNum == 4) {
@@ -442,7 +442,7 @@ public class UIKeyHandler extends KeyAdapter {
                     idString += inputChar;
                 }
             }
-            
+
             if(glp.mu.commandNum == 1 && inputChar != KeyEvent.VK_BACK_SPACE && inputChar != KeyEvent.VK_ENTER){
                 if(pwString.length() < 12) {
                     pwString += inputChar;

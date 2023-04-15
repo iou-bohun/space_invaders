@@ -18,16 +18,16 @@ import org.newdawn.spaceinvaders.entity.*;
 /**
  * The main hook of our game. This class with both act as a manager
  * for the display and central mediator for the game logic. 
- * 
+ *
  * Display management will consist of a loop that cycles round all
  * entities in the game asking them to move and then drawing them
  * in the appropriate place. With the help of an inner class it
  * will also allow the player to control the main ship.
- * 
+ *
  * As a mediator it will be informed when entities within our game
  * detect events (e.g. alient killed, played died) and will take
  * appropriate game actions.
- * 
+ *
  * @author Kevin Glass
  */
 public class Game extends Canvas
@@ -99,8 +99,9 @@ public class Game extends Canvas
 	private String windowTitle = "Space Invaders 102";
 	/** The game window that we'll update with the frame count */
 	private JFrame container;
-
+	//private LoginFrame lf;
 	GameLobbyPanel glp;
+
 
 	private Boolean bossAlive = false;
 	private int stage=2;
@@ -111,6 +112,11 @@ public class Game extends Canvas
 	 */
 	public Game(GameLobbyPanel glp) {
 		this.glp = glp;
+		//UserDB.loggedIn();
+		/*GamePanel gp = (GamePanel) lf.getContentPane();
+		gp.setPreferredSize(new Dimension(800,600));
+		setBounds(0,0,800,600);
+		gp.add(this);*/
 		// create a frame to contain our game
 		container = new JFrame("Space Invaders 102");
 
@@ -125,7 +131,7 @@ public class Game extends Canvas
 
 		// Tell AWT not to bother repainting our canvas since we're
 		// going to do that our self in accelerated mode
-		setIgnoreRepaint(true);
+		//setIgnoreRepaint(true);
 
 		// finally make the window visible
 		container.pack();
@@ -426,7 +432,7 @@ public class Game extends Canvas
 	public void bossReflectStart(){ /**반사시 캐릭터 체력 감소**/
 		ship.setHp(-1);
 	}
-	
+
 	/**
 	 * The main game loop. This loop is running during all game
 	 * play as is responsible for the following activities:
@@ -464,6 +470,9 @@ public class Game extends Canvas
 					lastFpsTime = 0;
 					fps = 0;
 				}
+
+				// Get hold of a graphics context for the accelerated
+				// surface and blank it out
 
 				// Get hold of a graphics context for the accelerated
 				// surface and blank it out
@@ -673,7 +682,8 @@ public class Game extends Canvas
 		if (exitGame == JOptionPane.YES_OPTION) {
 			LoginFrame.frameLocation = container.getLocationOnScreen();
 			container.dispose();
-			new LoginFrame();
+			glp.gameState = glp.titleState;
+			//new MainFrame();
 		}
 		else {
 			if(waitingTrue) {waitingForKeyPress = true;}
@@ -801,8 +811,20 @@ public class Game extends Canvas
 	}
 
 
-	public static void main(String[] args) {
+
+	/**
+	 * The entry point into the game. We'll simply create an
+	 * instance of class which will start the display and game
+	 * loop.
+	 *
+	 * @param argv The arguments that are passed into our game
+	 */
+	public static void main(String argv[]) {
+		//UserDB.is_logged_in = true;
 		Game g = new Game(new GameLobbyPanel());
+		// Start the main game loop, note: this method will not
+		// return until the game has finished running. Hence we are
+		// using the actual main thread to run the game.
 		g.gameLoop();
 	}
 }
