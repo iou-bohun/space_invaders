@@ -36,9 +36,7 @@ import org.newdawn.spaceinvaders.entity.*;
  */
 public class Game extends Canvas
 {
-	private double cuurrTime;
 	private long coolTime = 3000;
-
 	int timer;
 	int timeCheck;
 	int min=0;
@@ -145,7 +143,7 @@ public class Game extends Canvas
 
 		// finally make the window visible
 		container.pack();
-		container.setLocationRelativeTo(null);
+		container.setLocation(glp.frameLocation);
 		container.setResizable(false);
 		container.setVisible(true);
 
@@ -182,7 +180,6 @@ public class Game extends Canvas
 		// clear out any existing entities and intialise a new set
 		entities.clear();
 		initEntities();
-		cuurrTime = System.currentTimeMillis();
 		// blank out any keyboard settings we might currently have
 		leftPressed = false;
 		rightPressed = false;
@@ -206,7 +203,6 @@ public class Game extends Canvas
 		AddCoidUI();
 		Addicon();
 		AddRound();
-
 	}
 
 	public void AddRound(){
@@ -601,14 +597,15 @@ public class Game extends Canvas
 				/** 시간**/
 				GetTime();
 				gi.setColor(Color.white);
-				gi.setFont(font);
+				gi.setFont(glp.mu.NeoDung);
+				gi.setFont(gi.getFont().deriveFont(Font.PLAIN,25f));
 				gi.drawString(String.valueOf(min)+":"+String.valueOf(second),377,35);
 
 				/** 스코어 **/
 				gi.drawString("Score "+score,29,35);
 
 				/**코인 **/
-				gi.drawString(String.valueOf(UserDB.coin),755,80);
+				gi.drawString(String.valueOf(UserDB.coin),755,70);
 
 
 
@@ -747,7 +744,7 @@ public class Game extends Canvas
 		gameRunning = false;
 		int exitGame = JOptionPane.showConfirmDialog(this, dialog_message,title,JOptionPane.YES_NO_OPTION);
 		if (exitGame == JOptionPane.YES_OPTION) {
-			LoginFrame.frameLocation = container.getLocationOnScreen();
+			glp.frameLocation = container.getLocationOnScreen();
 			container.dispose();
 			glp.gameState = glp.titleState;
 			//new MainFrame();
@@ -758,18 +755,6 @@ public class Game extends Canvas
 		}
 	}
 
-	public static void audio() {
-		try {
-			File file = new File("D:\\beep.wav");
-			Clip clip = AudioSystem.getClip();
-			clip.open(AudioSystem.getAudioInputStream(file));
-			// clip.loop(Clip.LOOP_CONTINUOUSLY);
-			clip.loop(3);
-			clip.start();
-		} catch (Exception e) {
-			System.err.println("Put the music.wav file in the sound folder if you want to play background music, only optional!");
-		}
-	}
 	private void GetTime(){
 		timeCheck++;
 		if (timeCheck>100){
@@ -907,7 +892,6 @@ public class Game extends Canvas
 		// return until the game has finished running. Hence we are
 		// using the actual main thread to run the game.
 		g.gameLoop();
-		new BGM();
 	}
 }
 

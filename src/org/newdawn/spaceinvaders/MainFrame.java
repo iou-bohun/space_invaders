@@ -19,7 +19,7 @@ public class MainFrame {
         window.pack();
 
         window.setLocationRelativeTo(null);
-        //window.setLocation(LoginFrame.frameLocation);
+        //window.setLocation(glp.frameLocation);
         window.setVisible(true);
         //window.createBufferStrategy(2);
 
