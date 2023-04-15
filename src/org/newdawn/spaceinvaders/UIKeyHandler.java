@@ -23,7 +23,7 @@ public class UIKeyHandler extends KeyAdapter {
         int code = e.getKeyCode();
 
         //타이틀 화면 조작
-        if (glp.gameState == glp.titleState) {
+        if (glp.gameState == glp.titleState && !glp.mu.dialogState) {
             if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_LEFT || code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN) {
                 if (glp.mu.commandNum == -2) {
                     glp.mu.commandNum = 0;
@@ -91,17 +91,22 @@ public class UIKeyHandler extends KeyAdapter {
 
                 if (glp.mu.commandNum == 3) {
                     saveGame();
-                    System.exit(0);
+                    glp.mu.commandNum = -1;
+                    glp.mu.dialogState = true;
+                    glp.mu.exitConfirmState = true;
                 }
 
                 if (glp.mu.commandNum == 4) {
                     if(UserDB.is_logged_in) {
                         saveGame();
-                        UserDB.loggedOut();
-                        UserDB.initializeDB();
+                        glp.mu.commandNum = -1;
+                        glp.mu.dialogState = true;
+                        glp.mu.signOutConfirmState = true;
                     }
-                    glp.gameState = glp.initialState;
-                    glp.mu.commandNum = -1;
+                    else {
+                        glp.gameState = glp.initialState;
+                        glp.mu.commandNum = -1;
+                    }
                 }
 
                 if (glp.mu.commandNum == 5) {
@@ -181,7 +186,7 @@ public class UIKeyHandler extends KeyAdapter {
                         glp.mu.purchaseState = true;
                     }
 
-                    else if (!UserDB.is_hard_ship /*&& UserDB.coin < MainUI.hscoin*/) {
+                    else if (!UserDB.is_hard_ship) {
                         glp.mu.coinLackState = true;
                     }
 
@@ -198,7 +203,7 @@ public class UIKeyHandler extends KeyAdapter {
                         glp.mu.purchaseState = true;
                     }
 
-                    else if (!UserDB.is_lucky_ship /*&&UserDB.coin < MainUI.lscoin*/) {
+                    else if (!UserDB.is_lucky_ship) {
                         glp.mu.coinLackState = true;
                     }
 
@@ -496,6 +501,51 @@ public class UIKeyHandler extends KeyAdapter {
                 }
             }
         }
+
+        if(glp.mu.dialogState){
+            if (code == KeyEvent.VK_RIGHT) {
+                glp.mu.commandNum++;
+                if (glp.mu.commandNum > 1) {
+                    glp.mu.commandNum = 0;
+                }
+            }
+
+            if (code == KeyEvent.VK_LEFT) {
+                glp.mu.commandNum--;
+                if (glp.mu.commandNum < 0) {
+                    glp.mu.commandNum = 1;
+                }
+            }
+
+            if (code == KeyEvent.VK_ENTER) {
+                if (glp.mu.exitConfirmState) {
+                    if(glp.mu.commandNum == 0) {
+                        System.exit(0);
+                        glp.mu.dialogState = false;
+                        glp.mu.exitConfirmState = false;
+                    }
+                    if(glp.mu.commandNum == 1) {
+                        glp.mu.dialogState = false;
+                        glp.mu.exitConfirmState = false;
+                    }
+                }
+
+                if (glp.mu.signOutConfirmState) {
+                    if(glp.mu.commandNum == 0){
+                        UserDB.loggedOut();
+                        UserDB.initializeDB();
+                        glp.gameState = glp.initialState;
+                        glp.mu.commandNum = -1;
+                        glp.mu.dialogState = false;
+                        glp.mu.signOutConfirmState = false;
+                    }
+                    if(glp.mu.commandNum == 1){
+                        glp.mu.dialogState = false;
+                        glp.mu.signOutConfirmState = false;
+                    }
+                }
+            }
+        }
     }
 
     public void keyTyped(KeyEvent e){
@@ -768,57 +818,4 @@ public class UIKeyHandler extends KeyAdapter {
 
     }
 
-/*    public void changeNick(){
-        Connection conn = UserDB.getConnection();
-
-        String dupnic = "";
-
-        String nicString = JOptionPane.showInputDialog(this,"Write Nickname to Change", "");
-        if (nicString.length() > 10 || nicString.length() < 5) {
-            JOptionPane.showMessageDialog(this, "Nickname is too long or short!\nNickname must be at least 5 and not more than 10.");
-            return;
-        }
-
-        try {
-            String dupCheck = "SELECT nickname FROM userdata WHERE nickname = ?";
-            PreparedStatement dpstmt = conn.prepareStatement(dupCheck);
-
-            dpstmt.setString(1, nicString);
-
-            ResultSet dprs = dpstmt.executeQuery();
-            while (dprs.next()){
-                dupnic = dprs.getString("nickname");
-            }
-            if(dupnic.equals("")){
-                try {
-                    String query = "UPDATE userdata SET nickname = ? WHERE nickname = ?";
-                    PreparedStatement pstmt = conn.prepareStatement(query);
-
-                    pstmt.setString(1, nicString);
-                    pstmt.setString(2, UserDB.nickname);
-
-                    int result = pstmt.executeUpdate();
-
-                    if (result > 0) {
-                        JOptionPane.showMessageDialog(this, "Successfully Changed!");
-                        UserDB.nickname = nicString;
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Changing Failed.");
-                    }
-
-                    pstmt.close();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            else {
-                JOptionPane.showMessageDialog(this, "Same nickname exists.");
-            }
-
-        }
-        catch (SQLException ex){
-            ex.printStackTrace();
-        }
-
-    }*/
 }

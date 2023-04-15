@@ -14,7 +14,7 @@ public class MainUI extends JPanel {
     Graphics2D g2;
     GameLobbyPanel glp;
     BufferedImage background, gameLogo, satellite, gameLogo_shadow, choiceButton;
-    BufferedImage coinImg, healPotion, speedPotion, hardShip, luckShip, tutorialWindow;
+    BufferedImage coinImg, healPotion, speedPotion, hardShip, luckShip, tutorialWindow, dialogWindow;
     BufferedImage userWindow, basicShip;
     Color lightRed = new Color(250,90,90);
     public int commandNum = 0;
@@ -28,6 +28,9 @@ public class MainUI extends JPanel {
     public boolean pwConfirmErrorState = false;
     public boolean registerSuccessState = false;
     public boolean inputExistState = false;
+    public boolean dialogState = false;
+    public boolean exitConfirmState = false;
+    public boolean signOutConfirmState = false;
 
     //상점 가격
     public static int hpcoin = 50;
@@ -99,7 +102,7 @@ public class MainUI extends JPanel {
         x = 171;
         y = 450;
         g2.drawString(text,x, y);
-        if(commandNum == 0){
+        if(commandNum == 0 && !dialogState){
             selectOption(x,y,text);
             additionalText = "Start the game. There are a total of five stages and each stage has a boss. Good luck!";
             showExplanation(additionalText);
@@ -117,7 +120,7 @@ public class MainUI extends JPanel {
         text = "shop";
         x = 310;
         g2.drawString(text,x,y);
-        if(commandNum == 1){
+        if(commandNum == 1 && !dialogState){
             selectOption(x,y,text);
             additionalText = "You can use the coins you got during the game. Be Stronger!";
             showExplanation(additionalText);
@@ -126,7 +129,7 @@ public class MainUI extends JPanel {
         text = "user";
         x = 440;
         g2.drawString(text, x,y);
-        if(commandNum == 2){
+        if(commandNum == 2 && !dialogState){
             selectOption(x,y,text);
             additionalText = "You can check the number of potions and change the ship.";
             showExplanation(additionalText);
@@ -135,7 +138,7 @@ public class MainUI extends JPanel {
         text = "quit";
         x = 570;
         g2.drawString(text, x,y);
-        if(commandNum == 3){
+        if(commandNum == 3 && !dialogState){
             selectOption(x,y,text);
             additionalText = "Save and exit the game.";
             showExplanation(additionalText);
@@ -147,7 +150,7 @@ public class MainUI extends JPanel {
             y = 88;
             g2.setFont(g2.getFont().deriveFont(Font.PLAIN,20f));
             g2.drawString(text, x,y);
-            if(commandNum == 4){
+            if(commandNum == 4 && !dialogState){
                 selectOption(x,y,text,true);
                 additionalText = "Save the game and sign out.";
                 showExplanation(additionalText);
@@ -160,7 +163,7 @@ public class MainUI extends JPanel {
             x = 575;
             y = 88;
             g2.drawString(text, x,y);
-            if(commandNum == 4){
+            if(commandNum == 4 && !dialogState){
                 selectOption(x,y,text,true);
                 additionalText = "Go back to the lobby to sign in or sign up.";
                 showExplanation(additionalText);
@@ -172,7 +175,7 @@ public class MainUI extends JPanel {
         x = getXforCenteredText(text);
         y = 350;
         g2.drawString(text, x, y);
-        if(commandNum == 5){
+        if(commandNum == 5 && !dialogState){
             selectOption(x,y,text);
             additionalText = "Change your nickname.";
             showExplanation(additionalText);
@@ -188,6 +191,10 @@ public class MainUI extends JPanel {
         g2.setColor(Color.orange);
         x += g2.getFontMetrics().stringWidth(text);
         g2.drawString(scoreComma,x,390);
+
+        if(dialogState){
+            drawDialogWindow();
+        }
     }
 
     public void drawShopScreen(){
@@ -798,7 +805,45 @@ public class MainUI extends JPanel {
     }
 
     public void drawDialogWindow(){
+        g2.drawImage(dialogWindow,0,0,null);
 
+        g2.setFont(NeoDung);
+
+        String text = "";
+        int x,y;
+
+        y = 255;
+        if (exitConfirmState) {
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN,35f));
+            g2.setColor(Color.white);
+            text = "Game saved. Wanna exit?";
+            x = getXforCenteredText(text);
+            g2.drawString(text,x, y);
+        }
+        else if (signOutConfirmState) {
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN,30f));
+            g2.setColor(Color.white);
+            text = "Game saved.";
+            x = getXforCenteredText(text);
+            g2.drawString(text,x, y);
+
+            text = "Sign out and back to main.";
+            x = getXforCenteredText(text);
+            y += 35;
+            g2.drawString(text,x, y);
+        }
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,30f));
+        text = "yes";
+        x = glp.screenWidth/2 - 110;
+        y = 350;
+        g2.drawString(text,x, y);
+        if(commandNum == 0){ selectOption(x,y,text);}
+
+        text = "no";
+        x = glp.screenWidth/2 + 75;
+        g2.drawString(text,x, y);
+        if(commandNum == 1){ selectOption(x,y,text);}
     }
 
 
@@ -807,23 +852,6 @@ public class MainUI extends JPanel {
         int xCoordinate = (glp.screenWidth - stringWidth) / 2;
         return xCoordinate;
     }
-
-    /*public String getDisplayScore(){
-        int scoreLength = (int)(Math.log10(UserDB.best_score) + 1);
-        String displayScore = "";
-        DecimalFormat df = new DecimalFormat("###,###");
-        String scoreComma = df.format(UserDB.best_score);
-
-        if(scoreLength == 1) { displayScore = "_ _ _ _ _ " + scoreComma; }
-        else if(scoreLength == 2) { displayScore = "_ _ _ _ " + scoreComma; }
-        else if(scoreLength == 3) { displayScore = "_ _ _ " + scoreComma; }
-        else if(scoreLength == 4) { displayScore = "_ _ " + scoreComma; }
-        else if(scoreLength == 5) { displayScore = "_ " + scoreComma; }
-        else if(scoreLength == 6) { displayScore = scoreComma; }
-        else { displayScore = "_ _ _ _ _ " + scoreComma;}
-
-        return displayScore;
-    }*/
 
     public void selectOption(int x, int y, String text){
         g2.drawImage(choiceButton,x - 32, y - 21,null);
@@ -924,6 +952,8 @@ public class MainUI extends JPanel {
             basicShip = ImageIO.read(is11);
             InputStream is12 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/tutorial_window.png")));
             tutorialWindow = ImageIO.read(is12);
+            InputStream is13 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/dialog_window_trans.png")));
+            dialogWindow = ImageIO.read(is13);
         } catch (IOException e) {
             e.printStackTrace();
         }
