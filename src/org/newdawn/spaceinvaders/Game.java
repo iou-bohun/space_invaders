@@ -407,7 +407,7 @@ public class Game extends Canvas
 		double cos = Math.toRadians(timer);
 		double coss = Math.cos(cos);
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
-			if ((timer>100&&timer<300)&&(timer%15==0)){
+			if ((timer>100&&timer<300)&&(timer%35==0)){
 				BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
 				entities.add(shot);
 				shot.shotXMove(coss*300,200);
@@ -417,8 +417,6 @@ public class Game extends Canvas
 			}
 		}
 	}
-
-
 	public void AddObstacle(){ /**3단계 보스 패턴**//**장애물 생성**/
 		if(!bossAlive){
 			return;}
