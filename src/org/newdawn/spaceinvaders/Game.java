@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import javafx.scene.control.TextFormatter;
 import org.newdawn.spaceinvaders.entity.*;
 import org.newdawn.spaceinvaders.entity.*;
 
@@ -64,13 +65,14 @@ public class Game extends Canvas
 	private Entity bossHpBar;
 	private Entity alien;
 
-	private Entity[] KeyUi = new Entity[2];
+	private Entity[] itemUi = new Entity[4];
 	/**화면에 남은 보스 수 **/
 	private int bossCount;
 	private double moveSpeed = 300;
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
-	private long lastUseitem= 0;
+	private long lastUseSpeedPotion= 0;
+	private long lastUseHealPotion=0;
 	/** The interval between our players shot (ms) */
 	private long firingInterval = 200;
 	/** The number of aliens left on the screen */
@@ -178,9 +180,9 @@ public class Game extends Canvas
 	private void initEntities() {
 		// create the player ship and place it roughly in the center of the screen
 		AddShip();
-		//AddAlien();
-		AddBoss(100);
-		AddBossHp(100);
+		AddAlien();
+		//AddBoss(100);
+		//AddBossHp(100);
 		AddPlayerHpUI(ship.getHp());
 		AddCoidUI();
 		Addicon();
@@ -202,10 +204,10 @@ public class Game extends Canvas
 
 	/**아이콘 생성**/
 	public void Addicon(){
-		KeyUi[0] = new GameUi(this,"sprites/heal_potion.png",20,550);
-		entities.add(KeyUi[0]);
-		KeyUi[0] = new GameUi(this,"sprites/speed_potion.png",50,550);
-		entities.add(KeyUi[0]);
+		itemUi[0] = new GameUi(this,"sprites/heal_potion.png",20,550);
+		entities.add(itemUi[0]);
+		itemUi[2] = new GameUi(this,"sprites/speed_potion.png",50,550);
+		entities.add(itemUi[2]);
 	}
 
 	/**기본 적 생성 **/
@@ -587,6 +589,8 @@ public class Game extends Canvas
 			// us our final value to wait for
 			SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 			BossUlti(timer);
+			ChangePotionIcon();
+			ReturnMoveSpeed();
 		}
 	}
 
@@ -596,19 +600,55 @@ public class Game extends Canvas
 		}
 		else{ship.setHit(false);}
 	}
-	public  void UseItem(int i){
+
+	public  void UseHealPotion(int i){
 		if(healPotionLeft<1){
 			return;
 		}
-		if ((System.currentTimeMillis() - lastUseitem) < coolTime) {
+		if ((System.currentTimeMillis() - lastUseHealPotion) < coolTime) {
 			return;
 		}
-		lastUseitem = System.currentTimeMillis();
+		lastUseHealPotion = System.currentTimeMillis();
 			healPotionLeft--;
 			ship.setHp(1);
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
+			removeEntity(itemUi[0]);
+			itemUi[1] = new GameUi(this,"sprites/heart.png",20,550);
+			entities.add(itemUi[1]);
 	}
+	public void ChangePotionIcon(){
+		if ((System.currentTimeMillis() - lastUseHealPotion) > coolTime) {
+			removeEntity(itemUi[1]);
+			entities.add(itemUi[0]);
+		}
+		if ((System.currentTimeMillis() - lastUseSpeedPotion) > coolTime) {
+			removeEntity(itemUi[3]);
+			entities.add(itemUi[2]);
+		}
+	}
+
+	public void UseSpeedPotion(){
+		if(speedPotionLeft<1){
+			return;
+		}
+		if ((System.currentTimeMillis() - lastUseSpeedPotion) < coolTime) {
+			return;
+		}
+		lastUseSpeedPotion = System.currentTimeMillis();
+		moveSpeed = 500;
+		speedPotionLeft--;
+		removeEntity(itemUi[2]);
+		itemUi[3] = new GameUi(this,"sprites/heart.png",50,550);
+		entities.add(itemUi[3]);
+	}
+	public void ReturnMoveSpeed(){
+		if ((System.currentTimeMillis() - lastUseSpeedPotion) > 2000) {
+			moveSpeed = 300;
+		}
+	}
+
+
 	public void BossHpDeal(){/**보스 hp ui 동작 **/
 		if(!bossAlive){return;}
 		if(boss.getHit()){
@@ -686,8 +726,11 @@ public class Game extends Canvas
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				firePressed = true;
 			}
+			if (e.getKeyChar() == 'x'){
+				UseSpeedPotion();
+			}
 			if (e.getKeyChar() == 'z'){
-				UseItem(ship.getHp());
+				UseHealPotion(ship.getHp());
 			}
 			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 				escPressed = true;
