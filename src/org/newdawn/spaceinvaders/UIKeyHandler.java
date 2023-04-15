@@ -72,14 +72,11 @@ public class UIKeyHandler extends KeyAdapter {
             if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE) {
 
                 if (glp.mu.commandNum == 0) {
-                    glp.gameState = glp.inGameState;
-                    Thread gameThread = new Thread(new Runnable() {
-                        public void run() {
-                            Game g = new Game(glp);
-                            g.gameLoop();
-                        }
-                    });
-                    gameThread.start();
+                    if(UserDB.isFirstPlay) {
+                        glp.gameState = glp.tutorialState;
+                        glp.mu.commandNum = -1;
+                    }
+                    else startGame();
                 }
 
                 if (glp.mu.commandNum == 1) {
@@ -105,6 +102,11 @@ public class UIKeyHandler extends KeyAdapter {
                     }
                     glp.gameState = glp.initialState;
                     glp.mu.commandNum = -1;
+                }
+
+                if (glp.mu.commandNum == 5) {
+                    glp.mu.commandNum = -1;
+                    glp.gameState = glp.changeNickState;
                 }
             }
         }
@@ -430,6 +432,70 @@ public class UIKeyHandler extends KeyAdapter {
                 }
             }*/
         }
+
+        if(glp.gameState == glp.tutorialState){
+            if (code == KeyEvent.VK_DOWN) {
+                glp.mu.commandNum++;
+                if (glp.mu.commandNum > 1) {
+                    glp.mu.commandNum = 1;
+                }
+            }
+
+            if (code == KeyEvent.VK_UP) {
+                glp.mu.commandNum--;
+                if (glp.mu.commandNum < 0) {
+                    glp.mu.commandNum = 0;
+                }
+            }
+
+            if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE) {
+
+                if (glp.mu.commandNum == 0) {
+                    startGame();
+                }
+
+                if (glp.mu.commandNum == 1) {
+                    glp.gameState = glp.titleState;
+                    glp.mu.commandNum = -2;
+                }
+            }
+        }
+
+        if(glp.gameState == glp.changeNickState){
+            glp.mu.outOfLengthState = false;
+            glp.mu.registerSuccessState = false;
+            glp.mu.inputExistState = false;
+
+            if (code == KeyEvent.VK_DOWN) {
+                glp.mu.commandNum++;
+                if (glp.mu.commandNum > 2) {
+                    glp.mu.commandNum = 2;
+                }
+            }
+
+            if (code == KeyEvent.VK_UP) {
+                glp.mu.commandNum--;
+                if (glp.mu.commandNum < 0) {
+                    glp.mu.commandNum = 0;
+                }
+            }
+
+            if (code == KeyEvent.VK_ENTER) {
+
+                if(glp.mu.commandNum == 0){
+                }
+
+                if (glp.mu.commandNum == 1) {
+                    changeNickname();
+                }
+
+                if (glp.mu.commandNum == 2) {
+                    nicString = "";
+                    glp.gameState = glp.titleState;
+                    glp.mu.commandNum = -2;
+                }
+            }
+        }
     }
 
     public void keyTyped(KeyEvent e){
@@ -488,6 +554,19 @@ public class UIKeyHandler extends KeyAdapter {
                 if(glp.mu.commandNum == 3 && nicString.length() != 0) nicString = nicString.substring(0,nicString.length()-1);
             }
         }
+        
+        //닉네임 변경 타이핑 조작
+        if(glp.gameState == glp.changeNickState){
+            if(glp.mu.commandNum == 0 && inputChar != KeyEvent.VK_BACK_SPACE && inputChar != KeyEvent.VK_ENTER){
+                if(nicString.length() < 12) {
+                    nicString += inputChar;
+                }
+            }
+
+            if(inputChar == KeyEvent.VK_BACK_SPACE){
+                if(glp.mu.commandNum == 0 && nicString.length() != 0) nicString = nicString.substring(0,nicString.length()-1);
+            }
+        }
     }
 
     public void loginDB() {
@@ -520,6 +599,7 @@ public class UIKeyHandler extends KeyAdapter {
                     UserDB.HP_potion = rs2.getInt("HP_potion");
                     UserDB.speed_potion = rs2.getInt("speed_potion");
                     UserDB.selected_ship = rs2.getInt("selected_ship");
+                    UserDB.isFirstPlay = rs2.getBoolean("is_first_play");
                     UserDB.loggedIn();
                 }
             } else {
@@ -602,7 +682,7 @@ public class UIKeyHandler extends KeyAdapter {
     public void saveGame() {
         Connection conn = UserDB.getConnection();
         try {
-            String dataSave = "UPDATE userdata SET nickname = ?, best_score = ?, coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ? WHERE id = ?";
+            String dataSave = "UPDATE userdata SET nickname = ?, best_score = ?, coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ?, is_first_play = ? WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(dataSave);
 
             pstmt.setString(1, UserDB.nickname);
@@ -613,7 +693,8 @@ public class UIKeyHandler extends KeyAdapter {
             pstmt.setInt(6, UserDB.HP_potion);
             pstmt.setInt(7, UserDB.speed_potion);
             pstmt.setInt(8, UserDB.selected_ship);
-            pstmt.setString(9, UserDB.userID);
+            pstmt.setBoolean(9, UserDB.isFirstPlay);
+            pstmt.setString(10, UserDB.userID);
 
             int updateResult = pstmt.executeUpdate();
 
@@ -625,14 +706,26 @@ public class UIKeyHandler extends KeyAdapter {
         }
     }
 
-/*    public void changeNick(){
+    public void startGame(){
+        glp.gameState = glp.inGameState;
+        UserDB.isFirstPlay = false;
+        glp.frameLocation = glp.getLocationOnScreen();
+        Thread gameThread = new Thread(new Runnable() {
+            public void run() {
+                Game g = new Game(glp);
+                g.gameLoop();
+            }
+        });
+        gameThread.start();
+    }
+    
+    public void changeNickname(){
         Connection conn = UserDB.getConnection();
-
+        
         String dupnic = "";
-
-        String changeNicLabel = JOptionPane.showInputDialog(this,"Write Nickname to Change", "");
-        if (changeNicLabel.length() > 10 || changeNicLabel.length() < 5) {
-            JOptionPane.showMessageDialog(this, "Nickname is too long or short!\nNickname must be at least 5 and not more than 10.");
+        
+        if (nicString.length() > 12 || nicString.length() < 8) {
+            glp.mu.outOfLengthState = true;
             return;
         }
 
@@ -640,7 +733,7 @@ public class UIKeyHandler extends KeyAdapter {
             String dupCheck = "SELECT nickname FROM userdata WHERE nickname = ?";
             PreparedStatement dpstmt = conn.prepareStatement(dupCheck);
 
-            dpstmt.setString(1, changeNicLabel);
+            dpstmt.setString(1, nicString);
 
             ResultSet dprs = dpstmt.executeQuery();
             while (dprs.next()){
@@ -651,14 +744,64 @@ public class UIKeyHandler extends KeyAdapter {
                     String query = "UPDATE userdata SET nickname = ? WHERE nickname = ?";
                     PreparedStatement pstmt = conn.prepareStatement(query);
 
-                    pstmt.setString(1, changeNicLabel);
+                    pstmt.setString(1, nicString);
+                    pstmt.setString(2, UserDB.nickname);
+
+                    int result = pstmt.executeUpdate();
+
+                    if (result > 0) {
+                        glp.mu.registerSuccessState = true;
+                        UserDB.nickname = nicString;
+                    }
+                    pstmt.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            else {
+                glp.mu.inputExistState = true;
+            }
+        }
+        catch (SQLException ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+/*    public void changeNick(){
+        Connection conn = UserDB.getConnection();
+
+        String dupnic = "";
+
+        String nicString = JOptionPane.showInputDialog(this,"Write Nickname to Change", "");
+        if (nicString.length() > 10 || nicString.length() < 5) {
+            JOptionPane.showMessageDialog(this, "Nickname is too long or short!\nNickname must be at least 5 and not more than 10.");
+            return;
+        }
+
+        try {
+            String dupCheck = "SELECT nickname FROM userdata WHERE nickname = ?";
+            PreparedStatement dpstmt = conn.prepareStatement(dupCheck);
+
+            dpstmt.setString(1, nicString);
+
+            ResultSet dprs = dpstmt.executeQuery();
+            while (dprs.next()){
+                dupnic = dprs.getString("nickname");
+            }
+            if(dupnic.equals("")){
+                try {
+                    String query = "UPDATE userdata SET nickname = ? WHERE nickname = ?";
+                    PreparedStatement pstmt = conn.prepareStatement(query);
+
+                    pstmt.setString(1, nicString);
                     pstmt.setString(2, UserDB.nickname);
 
                     int result = pstmt.executeUpdate();
 
                     if (result > 0) {
                         JOptionPane.showMessageDialog(this, "Successfully Changed!");
-                        UserDB.nickname = changeNicLabel;
+                        UserDB.nickname = nicString;
                     } else {
                         JOptionPane.showMessageDialog(this, "Changing Failed.");
                     }

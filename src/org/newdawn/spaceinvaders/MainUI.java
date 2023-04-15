@@ -14,7 +14,7 @@ public class MainUI extends JPanel {
     Graphics2D g2;
     GameLobbyPanel glp;
     BufferedImage background, gameLogo, satellite, gameLogo_shadow, choiceButton;
-    BufferedImage coinImg, healPotion, speedPotion, hardShip, luckShip;
+    BufferedImage coinImg, healPotion, speedPotion, hardShip, luckShip, tutorialWindow;
     BufferedImage userWindow, basicShip;
     Color lightRed = new Color(250,90,90);
     public int commandNum = 0;
@@ -71,6 +71,12 @@ public class MainUI extends JPanel {
         }
         else if(glp.gameState == glp.signUpState){
             drawSignUpScreen();
+        }
+        else if(glp.gameState == glp.tutorialState){
+            drawTutorialScreen();
+        }
+        else if(glp.gameState == glp.changeNickState){
+            drawChangeNickScreen();
         }
     }
 
@@ -713,6 +719,89 @@ public class MainUI extends JPanel {
         }
     }
 
+    public void drawTutorialScreen(){
+        g2.drawImage(tutorialWindow,0,0,null);
+
+        g2.setFont(NeoDung);
+
+        String text = "";
+        String additionalText = "";
+        int x,y;
+
+        g2.setColor(Color.white);
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,30f));
+        text = "OK!";
+        x = getXforCenteredText(text);
+        y = 520;
+        g2.drawString(text,x, y);
+        if(commandNum == 0){ selectOption(x,y,text);}
+
+        text = "back to title";
+        x = getXforCenteredText(text);
+        y += 40;
+        g2.drawString(text,x, y);
+        if(commandNum == 1){selectOption(x,y,text);}
+    }
+
+    public void drawChangeNickScreen(){
+        g2.drawImage(background,0,0,null);
+
+        g2.setFont(NeoDung);
+
+        String text = "";
+        String additionalText = "";
+        int x,y;
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,50f));
+        g2.setColor(Color.white);
+        text = "change nickname";
+        x = getXforCenteredText(text);
+        y = 145;
+        g2.drawString(text,x, y);
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,30f));
+        text = "nickname :";
+        x = 210;
+        y = 285;
+        g2.drawString(text,x, y);
+        if(commandNum == 0){ selectOptionOnlyImg(x,y); }
+
+        text = glp.key.nicString;
+        x += 150;
+        g2.drawString(text,x, y);
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,30f));
+        text = "OK!";
+        x = getXforCenteredText(text);
+        y = 430;
+        g2.drawString(text,x, y);
+        if(commandNum == 1){ selectOption(x,y,text);}
+
+        text = "back to title";
+        x = getXforCenteredText(text);
+        y += 50;
+        g2.drawString(text,x, y);
+        if(commandNum == 2){selectOption(x,y,text);}
+
+        if(outOfLengthState) {
+            additionalText = "Input must be 8 to 12 characters.";
+            showExplanation(25f, 20f, lightRed, 340, additionalText);
+        }
+        else if(inputExistState) {
+            additionalText = "Same nickname exists.";
+            showExplanation(25f, 20f, lightRed, 340, additionalText);
+        }
+        else if(registerSuccessState) {
+            additionalText = "Changed successful!";
+            showExplanation(25f, 20f, Color.green, 340, additionalText);
+        }
+    }
+
+    public void drawDialogWindow(){
+
+    }
+
+
     public int getXforCenteredText(String text){
         int stringWidth = g2.getFontMetrics().stringWidth(text);
         int xCoordinate = (glp.screenWidth - stringWidth) / 2;
@@ -833,6 +922,8 @@ public class MainUI extends JPanel {
             luckShip = ImageIO.read(is10);
             InputStream is11 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/ship.gif")));
             basicShip = ImageIO.read(is11);
+            InputStream is12 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/tutorial_window.png")));
+            tutorialWindow = ImageIO.read(is12);
         } catch (IOException e) {
             e.printStackTrace();
         }

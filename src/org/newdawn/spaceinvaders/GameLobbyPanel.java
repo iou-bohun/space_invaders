@@ -27,8 +27,11 @@ public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
     final int signInState = 4;
     final int signUpState = 5;
     final int inGameState = 6;
+    final int tutorialState = 7;
+    final int changeNickState = 8;
     final int screenWidth = 800;
     final int screenHeight = 600;
+    Point frameLocation;
     public MainUI mu = new MainUI(this);
     public UIKeyHandler key = new UIKeyHandler(this);
 

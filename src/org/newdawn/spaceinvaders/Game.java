@@ -102,7 +102,7 @@ public class Game extends Canvas
 
 
 	private Boolean bossAlive = false;
-	private int stage=2;
+	private int stage=1;
 
 
 	/**
@@ -133,7 +133,7 @@ public class Game extends Canvas
 
 		// finally make the window visible
 		container.pack();
-		container.setLocationRelativeTo(null);
+		container.setLocation(glp.frameLocation);
 		container.setResizable(false);
 		container.setVisible(true);
 
@@ -559,14 +559,15 @@ public class Game extends Canvas
 				/** 시간**/
 				GetTime();
 				gi.setColor(Color.white);
-				gi.setFont(font);
+				gi.setFont(glp.mu.NeoDung);
+				gi.setFont(gi.getFont().deriveFont(Font.PLAIN,25f));
 				gi.drawString(String.valueOf(min)+":"+String.valueOf(second),377,35);
 
 				/** 스코어 **/
 				gi.drawString("Score "+score,29,35);
 
 				/**코인 **/
-				gi.drawString(String.valueOf(UserDB.coin),755,80);
+				gi.drawString(String.valueOf(UserDB.coin),755,70);
 
 
 
@@ -689,7 +690,7 @@ public class Game extends Canvas
 		gameRunning = false;
 		int exitGame = JOptionPane.showConfirmDialog(this, dialog_message,title,JOptionPane.YES_NO_OPTION);
 		if (exitGame == JOptionPane.YES_OPTION) {
-			LoginFrame.frameLocation = container.getLocationOnScreen();
+			glp.frameLocation = container.getLocationOnScreen();
 			container.dispose();
 			glp.gameState = glp.titleState;
 			//new MainFrame();
