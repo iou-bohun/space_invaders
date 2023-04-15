@@ -37,10 +37,8 @@ public class Game extends Canvas
 	int timeCheck;
 	int min=0;
 	int second=0;
-	int healPotionLeft = 3; /**힐 포션**/
-	int speedPotionLeft = 10;/**스피드 포션**/
-	public int coinCount=0;/**코인 수**/
-
+	/**힐 포션**/
+	/**스피드 포션**/
 	private int score; /** 게임 스코어 **/
 
 
@@ -135,8 +133,7 @@ public class Game extends Canvas
 
 		// finally make the window visible
 		container.pack();
-		if(!UserDB.is_logged_in) {container.setLocationRelativeTo(null);}
-		else {container.setLocation(LoginFrame.frameLocation);}
+		container.setLocationRelativeTo(null);
 		container.setResizable(false);
 		container.setVisible(true);
 
@@ -199,7 +196,16 @@ public class Game extends Canvas
 
 	/**플레이어 생성**/
 	public void AddShip(){
-		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
+		if(UserDB.selected_ship==0){
+			ship = new ShipEntity(this,"sprites/ship.gif",370,550);
+		} else if (UserDB.selected_ship ==1) {
+			ship = new ShipEntity(this,"sprites/hard_ship.png",370,550);
+			ship.setHp(2);
+		}
+		else {
+			ship = new ShipEntity(this,"sprites/lucky_ship.png",370,550);
+
+		}
 		entities.add(ship);
 	}
 
@@ -541,8 +547,8 @@ public class Game extends Canvas
 				ggi.setColor(Color.white);
 				Font font1 = new Font("OCR A Extended",Font.PLAIN,15);
 				ggi.setFont(font1);
-				ggi.drawString(String.valueOf(healPotionLeft),33,580);
-				ggi.drawString(String.valueOf(speedPotionLeft),66,580);
+				ggi.drawString(String.valueOf(UserDB.HP_potion),33,580);
+				ggi.drawString(String.valueOf(UserDB.speed_potion),66,580);
 
 
 				Font font = new Font("HY얕은샘물M",Font.PLAIN,25);
@@ -557,7 +563,7 @@ public class Game extends Canvas
 				gi.drawString("Score "+score,29,35);
 
 				/**코인 **/
-				gi.drawString(String.valueOf(coinCount),755,80);
+				gi.drawString(String.valueOf(UserDB.coin),755,80);
 
 
 
@@ -602,8 +608,8 @@ public class Game extends Canvas
 				// us our final value to wait for
 				SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 				BossUlti(timer);
-				ChangePotionIcon();
-				ReturnMoveSpeed();
+				//ChangePotionIcon();
+				//ReturnMoveSpeed();
 			}
 		}
 	}
@@ -616,14 +622,14 @@ public class Game extends Canvas
 	}
 
 	public  void UseHealPotion(int i){
-		if(healPotionLeft<1){
+		if(UserDB.HP_potion<1){
 			return;
 		}
 		if ((System.currentTimeMillis() - lastUseHealPotion) < coolTime) {
 			return;
 		}
 		lastUseHealPotion = System.currentTimeMillis();
-			healPotionLeft--;
+			UserDB.HP_potion--;
 			ship.setHp(1);
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
@@ -643,7 +649,7 @@ public class Game extends Canvas
 	}
 
 	public void UseSpeedPotion(){
-		if(speedPotionLeft<1){
+		if(UserDB.speed_potion<1){
 			return;
 		}
 		if ((System.currentTimeMillis() - lastUseSpeedPotion) < coolTime) {
@@ -651,7 +657,7 @@ public class Game extends Canvas
 		}
 		lastUseSpeedPotion = System.currentTimeMillis();
 		moveSpeed = 500;
-		speedPotionLeft--;
+		UserDB.speed_potion--;
 		removeEntity(itemUi[2]);
 		itemUi[3] = new GameUi(this,"sprites/heart.png",50,550);
 		entities.add(itemUi[3]);

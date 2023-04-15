@@ -24,7 +24,7 @@ public final class UserDB {
     //포션 보유 개수
     public static int HP_potion = 0;
     public static int speed_potion = 0;
-    public static int selected_ship = 0;
+    public static int selected_ship = 1;
 
     //DB 저장용은 아님
     public static boolean is_logged_in = false;
