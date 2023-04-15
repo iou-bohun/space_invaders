@@ -1,18 +1,23 @@
 package org.newdawn.spaceinvaders;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.*;
 import javax.swing.JPanel;
 
-public class LoginPanel extends JPanel{
+public class LoginPanel extends JPanel {
     JLabel titleLabel, idLabel, pwLabel;
     JTextField idField;
     JPasswordField pwField;
     JButton loginButton, registerButton;
+    //MainUI mu = new MainUI();
 
     public LoginPanel(){
 
         setLayout(null);
+        //addKeyListener(new KeyInputHandler());
+        //requestFocus();
 
         idLabel = new JLabel("ID:");
         pwLabel = new JLabel("Password:");
@@ -25,7 +30,7 @@ public class LoginPanel extends JPanel{
         registerButton = new JButton("Register");
 
         titleLabel = new JLabel("SPACE INVADERS");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
+       //mu.setFontNeo(titleLabel,40f);
 
         //setBounds로 컴포넌트 크기, 위치 조정
         idLabel.setBounds(275,225,50,25);
@@ -44,4 +49,12 @@ public class LoginPanel extends JPanel{
         add(loginButton);
         add(registerButton);
     }
+    /*private class KeyInputHandler extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                System.out.println("yes");
+                login();
+            }
+        }
+    }*/
 }

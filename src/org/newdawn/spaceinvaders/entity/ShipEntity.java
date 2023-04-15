@@ -33,6 +33,8 @@ public class ShipEntity extends Entity {
 	public int getHp(){return hp;}
 
 	public void setHp(int Hp){this.hp += Hp;}
+
+
 	
 	/**
 	 * Request that the ship move itself based on an elapsed ammount of
