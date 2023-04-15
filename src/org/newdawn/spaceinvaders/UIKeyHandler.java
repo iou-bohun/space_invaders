@@ -517,7 +517,7 @@ public class UIKeyHandler extends KeyAdapter {
                 }
             }
 
-            if (code == KeyEvent.VK_ENTER) {
+            if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE) {
                 if (glp.mu.exitConfirmState) {
                     if(glp.mu.commandNum == 0) {
                         System.exit(0);

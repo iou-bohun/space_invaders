@@ -812,7 +812,7 @@ public class MainUI extends JPanel {
         String text = "";
         int x,y;
 
-        y = 255;
+        y = 265;
         if (exitConfirmState) {
             g2.setFont(g2.getFont().deriveFont(Font.PLAIN,35f));
             g2.setColor(Color.white);
@@ -834,13 +834,13 @@ public class MainUI extends JPanel {
         }
 
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,30f));
-        text = "yes";
+        text = "YES";
         x = glp.screenWidth/2 - 110;
-        y = 350;
+        y = 370;
         g2.drawString(text,x, y);
         if(commandNum == 0){ selectOption(x,y,text);}
 
-        text = "no";
+        text = "NO";
         x = glp.screenWidth/2 + 75;
         g2.drawString(text,x, y);
         if(commandNum == 1){ selectOption(x,y,text);}
