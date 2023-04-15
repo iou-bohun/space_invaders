@@ -296,7 +296,7 @@ public class Game extends Canvas
 
 	/** 코인UI 생성 **/
 	public void AddCoidUI(){
-		coidUI = new GameUi(this,"sprites/coin.png",725,50);
+		coidUI = new GameUi(this,"sprites/coin.png",675,50);
 		entities.add(coidUI);
 	}
 
@@ -605,7 +605,7 @@ public class Game extends Canvas
 				gi.drawString("Score "+score,29,35);
 
 				/**코인 **/
-				gi.drawString(String.valueOf(UserDB.coin),755,70);
+				gi.drawString(String.valueOf(UserDB.coin),710,70);
 
 
 

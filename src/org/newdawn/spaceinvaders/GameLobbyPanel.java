@@ -36,8 +36,6 @@ public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
     public UIKeyHandler key = new UIKeyHandler(this);
 
 
-    LoginFrame lf;
-
     public GameLobbyPanel(){
         //addFrame();
         this.setPreferredSize(new Dimension(800,600));
@@ -81,16 +79,6 @@ public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
         add(changeNick);
         add(record);
         add(exitGame);*/
-    }
-    public void addFrame(){
-        lobbyFrame = new JFrame("Space Invaders");
-        lobbyFrame.add(this);
-        lobbyFrame.setPreferredSize(new Dimension(800,600));
-        lobbyFrame.pack();
-        lobbyFrame.setLocation(LoginFrame.frameLocation);
-        lobbyFrame.setVisible(true);
-        lobbyFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        lobbyFrame.setResizable(false);
     }
 
     public void startGameThread(){
