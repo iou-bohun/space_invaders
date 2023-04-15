@@ -22,6 +22,8 @@ public class AlienEntity extends Entity {
 	private long frameDuration = 250;
 	/** The current frame of animation being displayed */
 	private int frameNumber;
+
+	private boolean gotHit = false;
 	
 	/**
 	 * Create a new alien entity
@@ -82,7 +84,10 @@ public class AlienEntity extends Entity {
 		// proceed with normal move
 		super.move(delta);
 	}
-	
+	public int getX(){return (int)x;}
+	public int getY(){return (int)y;}
+	public void setX(int xx){this.x = xx;}
+	public void setY(int yy){this.y =yy;}
 	/**
 	 * Update the game logic related to aliens
 	 */
@@ -98,6 +103,8 @@ public class AlienEntity extends Entity {
 			game.notifyDeath();
 		}
 	}
+
+	public boolean getHit(){return  gotHit;}
 	
 	/**
 	 * Notification that this alien has collided with another entity
@@ -105,6 +112,14 @@ public class AlienEntity extends Entity {
 	 * @param other The other entity
 	 */
 	public void collidedWith(Entity other) {
+		if(other instanceof ShotEntity){
+			gotHit = true;
+			double a = Math.random();
+			if(a>0.5){
+				game.SpawnCoin(this.getX(), this.getY());
+			}
+
+		}
 		// collisions with aliens are handled elsewhere
 	}
 }
