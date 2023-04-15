@@ -26,6 +26,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
     final int initialState = 3;
     final int signInState = 4;
     final int signUpState = 5;
+    final int inGameState = 6;
     final int screenWidth = 800;
     final int screenHeight = 600;
     public MainUI mu = new MainUI(this);
@@ -104,6 +105,7 @@ public class GameLobbyPanel extends JPanel implements ActionListener,Runnable {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            //if(Thread.interrupted()) break;
         }
     }
 

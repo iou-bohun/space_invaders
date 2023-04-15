@@ -4,6 +4,10 @@ import javax.swing.*;
 
 public class MainFrame {
     public MainFrame() {
+        //Frame window = new JFrame();
+        //window.dispose();
+    }
+    public static void main(String[] args) {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
@@ -17,10 +21,11 @@ public class MainFrame {
         window.setLocationRelativeTo(null);
         //window.setLocation(LoginFrame.frameLocation);
         window.setVisible(true);
-        glp.startGameThread();
-    }
+        //window.createBufferStrategy(2);
 
-    public static void main(String[] args) {
-        new MainFrame();
+        //if (glp.gameState != glp.inGameState)
+        glp.startGameThread();
+        //else glp.gameState = glp.titleState;
     }
 }
+
