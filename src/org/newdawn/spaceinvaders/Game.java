@@ -116,7 +116,7 @@ public class Game extends Canvas
 
 
 	private Boolean bossAlive = false;
-	public int stage=4;
+	public int stage=3;
 
 	private boolean isStageUi = false;
 
@@ -213,9 +213,9 @@ public class Game extends Canvas
 	 */
 	private void initEntities() {
 		AddShip();
-		AddAlien();
-		//AddBoss(100);
-		//AddBossHp(100);
+		//AddAlien();
+		AddBoss(100);
+		AddBossHp(100);
 		AddPlayerHpUI(ship.getHp());
 		AddCoidUI();
 		Addicon();
@@ -323,28 +323,14 @@ public class Game extends Canvas
 		entities.add(coinPrefab);
 	}
 
-	/**
-	 * Notification from a game entity that the logic of the game
-	 * should be run at the next opportunity (normally as a result of some
-	 * game event)
-	 */
 	public void updateLogic() {
 		logicRequiredThisLoop = true;
 	}
 
-	/**
-	 * Remove an entity from the game. The entity removed will
-	 * no longer move or be drawn.
-	 *
-	 * @param entity The entity that should be removed
-	 */
 	public void removeEntity(Entity entity) {
 		removeList.add(entity);
 	}
 
-	/**
-	 * Notification that the player has died.
-	 */
 	public void  notifyDeath() {
 		//message = "Oh no! They got you, try again?";
 		stage = 1;
@@ -355,18 +341,12 @@ public class Game extends Canvas
 		}
 	}
 
-	/**
-	 * Notification that the player has won since all the aliens
-	 * are dead.
-	 */
+
 	public void notifyWin() {
 		message = "Well done! You Win!";
 		waitingForKeyPress = true;
 	}
 
-	/**
-	 * Notification that an alien has been killed
-	 */
 	public void notifyAlienKilled() {
 		// reduce the alient count, if there are none left, the player has won!
 		alienCount--;
@@ -407,6 +387,7 @@ public class Game extends Canvas
 			}
 		}
 	}
+
 	public void notifyBossKilled(){
 		bossAlive = false;
 		bossCount--;
@@ -426,11 +407,7 @@ public class Game extends Canvas
 		}
 	}
 
-	/**
-	 * Attempt to fire a shot from the player. Its called "try"
-	 * since we must first check that the player can fire at this
-	 * point, i.e. has he/she waited long enough between shots
-	 */
+
 	public void tryToFire() {
 		// check that we have waiting long enough to fire
 		if (System.currentTimeMillis() - lastFire < firingInterval) {
@@ -504,8 +481,6 @@ public class Game extends Canvas
 			else {
 				obstacle = new ObstacleEntity(this,"sprites/obstacle_sun.png",(int)(Math.random()*750),10);
 			}
-
-			obstacle = new ObstacleEntity(this,"sprites/boss_shot1.png",(int)(Math.random()*750),10);
 			entities.add(obstacle);
 		}
 	}
