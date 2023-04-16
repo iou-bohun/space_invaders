@@ -106,7 +106,6 @@ public class Game extends Canvas
 	//private LoginFrame lf;
 	GameLobbyPanel glp;
 
-
 	private Boolean bossAlive = false;
 	public int stage=1;
 
@@ -451,10 +450,10 @@ public class Game extends Canvas
 		double coss = Math.cos(cos);
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
 			if ((timer>100&&timer<300)&&(timer%15==0)){
-				BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
+				BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 				entities.add(shot);
 				shot.shotXMove(coss*300,200);
-				BossShotEntity shot2 = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
+				BossShotEntity shot2 = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 				entities.add(shot2);
 				shot2.shotXMove(coss*300*-1,200);
 			}
@@ -464,7 +463,7 @@ public class Game extends Canvas
 		if(!bossAlive){
 			return;}
 		if((stage ==3)||(stage==5)){
-			obstacle = new ObstacleEntity(this,"sprites/Obstacle.png",(int)(Math.random()*750),10);
+			obstacle = new ObstacleEntity(this,"sprites/boss_shot1.png",(int)(Math.random()*750),10);
 			entities.add(obstacle);
 		}
 	}
@@ -478,6 +477,7 @@ public class Game extends Canvas
 	}
 	public void bossReflectStart(){ /**반사시 캐릭터 체력 감소**/
 		ship.setHp(-1);
+		removeEntity(playerHpUI[ship.getHp()]);
 	}
 
 	/**
@@ -650,15 +650,17 @@ public class Game extends Canvas
 				// us our final value to wait for
 				SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 				BossUlti(timer);
-				if ((System.currentTimeMillis() - lastUseHealPotion) > coolTime){
-					ChangeHealPotionIcon();
-				}
-				if ((System.currentTimeMillis() - lastUseSpeedPotion) > coolTime){
-					ChangeSpeedPotionIcon();
-				}
-				if ((System.currentTimeMillis() - lastUseSpeedPotion) > 2000){
-					ReturnMoveSpeed();
-				}
+
+				/** 프레임 저하 원인 **/
+//				if ((System.currentTimeMillis() - lastUseHealPotion) > coolTime){
+//					ChangeHealPotionIcon();
+//				}
+//				if ((System.currentTimeMillis() - lastUseSpeedPotion) > coolTime){
+//					ChangeSpeedPotionIcon();
+//				}
+//				if ((System.currentTimeMillis() - lastUseSpeedPotion) > 2000){
+//					ReturnMoveSpeed();
+//				}
 				if ((System.currentTimeMillis() - addRound) > 1000){
 					RemoveRoundUi();
 				}

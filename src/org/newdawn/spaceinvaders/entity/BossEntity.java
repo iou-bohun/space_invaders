@@ -42,28 +42,34 @@ public class BossEntity extends Entity {
     public BossEntity(Game game,int x,int y) {
         super("sprites/round1_alien.png",x,y);
         if(game.stage ==1){
-            frames[0] = sprite;
+            sprite = SpriteStore.get().getSprite("sprites/round1_alien.png");
+            frames[0] = SpriteStore.get().getSprite("sprites/round1_alien.png");
             frames[1] = SpriteStore.get().getSprite("sprites/round1_alien.png");
             hitFrame = SpriteStore.get().getSprite("sprites/round1_alien_shot.png");
             godFrame = SpriteStore.get().getSprite("sprites/round1_alien_ skill.png");
         }
         else if (game.stage==2){
+            sprite = SpriteStore.get().getSprite("sprites/round2_alien.png");
             frames[0] = SpriteStore.get().getSprite("sprites/round2_alien.png");
             frames[1] = SpriteStore.get().getSprite("sprites/round2_alien.png");
             hitFrame = SpriteStore.get().getSprite("sprites/round2_alien_shot.png");
         }
         else if(game.stage ==3){
+            sprite = SpriteStore.get().getSprite("sprites/round3_alien.png");
             frames[0] = SpriteStore.get().getSprite("sprites/round3_alien.png");
             frames[1] = SpriteStore.get().getSprite("sprites/round3_alien.png");
             hitFrame = SpriteStore.get().getSprite("sprites/round3_alien_shot.png");
             godFrame = SpriteStore.get().getSprite("sprites/round3_alien_skill.png");
         }
         else if(game.stage ==4){
+            sprite = SpriteStore.get().getSprite("sprites/round4_alien.png");
             frames[0] = SpriteStore.get().getSprite("sprites/round4_alien.png");
             frames[1] = SpriteStore.get().getSprite("sprites/round4_alien.png");
             hitFrame = SpriteStore.get().getSprite("sprites/round4_alien_shot.png");
+            reflectFrame = SpriteStore.get().getSprite("sprites/round4_alien_skill.png");
         }
         else {
+            sprite =  SpriteStore.get().getSprite("sprites/round5_alien.png");
             frames[0] = SpriteStore.get().getSprite("sprites/round5_alien.png");
             frames[1] = SpriteStore.get().getSprite("sprites/round5_alien.png");
             hitFrame = SpriteStore.get().getSprite("sprites/round5_alien_shot.png");
@@ -81,15 +87,8 @@ public class BossEntity extends Entity {
      * @param delta The time that has elapsed since last move (ms)
      */
     public void move(long delta) {
-        // since the move tells us how much time has passed
-        // by we can use it to drive the animation, however
-        // its the not the prettiest solution
         lastFrameChange += delta;
-
-        // if we need to change the frame, update the frame number
-        // and flip over the sprite in use
         if (lastFrameChange > frameDuration) {
-            // reset our frame change time counter
             lastFrameChange = 0;
 
             // update the frame
@@ -98,13 +97,19 @@ public class BossEntity extends Entity {
                 frameNumber = 0;
             }
             sprite = frames[frameNumber];
+
+            // 보스가 피격상태일 경우
             if (gotHit == true)
             {
                 sprite = hitFrame;
             }
+
+            //보스가 무적 상태일 경우
             else if(immortal ==true){
                 sprite = godFrame;
             }
+
+            //보스가 반사 상태일 경우
             gotHit = false;
             if(reflect ==true&&immortal ==true){
                 sprite = reflectFrame;
@@ -144,6 +149,7 @@ public class BossEntity extends Entity {
             immortal = false;
         }
     }
+
     public void ReflectCheck(int timer){
         if(timer %800 ==0){
             reflect = true;
