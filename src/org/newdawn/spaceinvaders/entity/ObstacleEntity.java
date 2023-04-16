@@ -19,15 +19,6 @@ public class ObstacleEntity extends Entity {
 
     private boolean used = false;
 
-
-    /**
-     * Create a new entity to represent the players ship
-     *
-     * @param game The game in which the ship is being created
-     * @param ref The reference to the sprite to show for the ship
-     * @param x The initial x location of the player's ship
-     * @param y The initial y location of the player's ship
-     */
     public ObstacleEntity(Game game, String ref, int x, int y) {
         super(ref,x,y);
         this.game = game;

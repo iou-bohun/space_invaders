@@ -75,6 +75,7 @@ public class ShipEntity extends Entity {
 		}
 		else if(other instanceof ObstacleEntity){
 			this.hp--;
+			gotHit=true;
 			if(this.hp<=0){
 				game.removeEntity(this);
 				game.notifyDeath();
