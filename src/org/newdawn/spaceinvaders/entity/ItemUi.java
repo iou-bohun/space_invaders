@@ -68,7 +68,6 @@ public class ItemUi extends Entity {
                         UserDB.coin++;
                         break;
                     case other:
-
                         break;
             }
             game.removeEntity(this);

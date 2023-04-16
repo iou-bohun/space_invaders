@@ -45,12 +45,8 @@ public class Game extends Canvas
 	int timeCheck;
 	int min=0;
 	int second=0;
-
 	int HPcooldownCheck;
 	int SPcooldownCheck;
-
-	int reflectCheck;
-
 	private int score; /** 게임 스코어 **/
 
 
@@ -116,7 +112,7 @@ public class Game extends Canvas
 
 
 	private Boolean bossAlive = false;
-	public int stage=3;
+	public int stage=2;
 
 	private boolean isStageUi = false;
 
@@ -127,7 +123,6 @@ public class Game extends Canvas
 	private int SPCooldown = 3;
 	private double reflectCooldown = 0.5;
 	private BufferedImage round1,round2,round3,round4,round5;
-
 	double addRound = 0;
 
 
@@ -205,22 +200,16 @@ public class Game extends Canvas
 
 	}
 
-
-
-	/**
-	 * Initialise the starting state of the entities (ship and aliens). Each
-	 * entitiy will be added to the overall list of entities in the game.
-	 */
 	private void initEntities() {
 		AddShip();
 		//AddAlien();
 		AddBoss(100);
 		AddBossHp(100);
 		AddPlayerHpUI(ship.getHp());
-		AddCoidUI();
 		Addicon();
 		AddRound();
 	}
+
 
 	public void AddRound(){
 		isStageUi = true;
@@ -248,6 +237,7 @@ public class Game extends Canvas
 				break;
 		}
 	}
+
 	/**플레이어 생성**/
 	public void AddShip(){
 		if(UserDB.selected_ship==0){
@@ -258,7 +248,6 @@ public class Game extends Canvas
 		}
 		else {
 			ship = new ShipEntity(this,"sprites/mini_lucky_ship.png",370,550);
-
 		}
 		entities.add(ship);
 	}
@@ -277,6 +266,8 @@ public class Game extends Canvas
 		entities.add(itemUi[0]);
 		itemUi[2] = new GameUi(this,"sprites/speed_potion.png",50,550);
 		entities.add(itemUi[2]);
+		coidUI = new GameUi(this,"sprites/coin.png",675,50);
+		entities.add(coidUI);
 	}
 
 	/**기본 적 생성 **/
@@ -310,13 +301,6 @@ public class Game extends Canvas
 			entities.add(bossHpUi[i]);
 		}
 	}
-
-	/** 코인UI 생성 **/
-	public void AddCoidUI(){
-		coidUI = new GameUi(this,"sprites/coin.png",675,50);
-		entities.add(coidUI);
-	}
-
 	/** 코인 생성**/
 	public void SpawnCoin(int x,int y){
 		coinPrefab = new ItemUi(this,"sprites/coin.png",x,y);
@@ -391,12 +375,13 @@ public class Game extends Canvas
 	public void notifyBossKilled(){
 		bossAlive = false;
 		bossCount--;
+		stage++;
+		score +=1000;
 		for (Entity value : bossHpUi) {
 			removeEntity(value);
 		}
 		removeEntity(bossHpBar);
-		stage++;
-		score +=1000;
+
 		AddRound();
 		if(bossCount ==0){
 			AddAlien();
