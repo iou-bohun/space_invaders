@@ -342,7 +342,7 @@ public class MainUI extends JPanel {
         if(commandNum == 3){
             selectOptionLightWithImg(x,y,text,true);
             if(!coinLackState && !possState && !purchaseState) {
-                additionalText = "Luck increases by 10%. For more coins!";
+                additionalText = "Luck increases by 50%. For more coins!";
                 showExplanation(25f, 20f, Color.lightGray, 180, additionalText);
             }
             if(coinLackState) {
@@ -463,7 +463,7 @@ public class MainUI extends JPanel {
             if (commandNum == 1) {
                 selectOption(x, y, text, true);
                 if (!equipState) {
-                    additionalText = "It will be revived only once.";
+                    additionalText = "The hardness of steel.";
                     showExplanation(25f, 20f, Color.lightGray, 180, additionalText);
                 }
                 if (equipState) {
@@ -481,7 +481,7 @@ public class MainUI extends JPanel {
             if(commandNum == 2){
                 selectOption(x,y,text,true);
                 if(!equipState) {
-                    additionalText = "When using the skill, it becomes invincible.";
+                    additionalText = "When using the skill , it becomes invincible.";
                     showExplanation(25f, 20f, Color.lightGray, 180, additionalText);
                 }
                 if(equipState) {
@@ -609,8 +609,9 @@ public class MainUI extends JPanel {
         g2.drawString(text,x, y);
 
         text = glp.key.pwString;
+        String passwordField = new String(new char[text.length()]).replace("\0","*");
         y += 55;
-        g2.drawString(text,x, y);
+        g2.drawString(passwordField,x, y);
 
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,30f));
         text = "OK!";

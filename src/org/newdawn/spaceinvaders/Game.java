@@ -112,6 +112,9 @@ public class Game extends Canvas
 
 	private boolean isStageUi = false;
 
+	private boolean usedHealPotion = false;
+	private boolean usedSpeedPotion = false;
+
 	double addRound = 0;
 
 
@@ -236,11 +239,11 @@ public class Game extends Canvas
 		if(UserDB.selected_ship==0){
 			ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		} else if (UserDB.selected_ship ==1) {
-			ship = new ShipEntity(this,"sprites/hard_ship.png",370,550);
+			ship = new ShipEntity(this,"sprites/mini_hard_ship.png",370,550);
 			ship.setHp(2);
 		}
 		else {
-			ship = new ShipEntity(this,"sprites/lucky_ship.png",370,550);
+			ship = new ShipEntity(this,"sprites/mini_lucky_ship.png",370,550);
 
 		}
 		entities.add(ship);
@@ -451,10 +454,10 @@ public class Game extends Canvas
 		double coss = Math.cos(cos);
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
 			if ((timer>100&&timer<300)&&(timer%15==0)){
-				BossShotEntity shot = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
+				BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 				entities.add(shot);
 				shot.shotXMove(coss*300,200);
-				BossShotEntity shot2 = new BossShotEntity(this,"sprites/shot.gif",boss.getX()+30,boss.getY()+100);
+				BossShotEntity shot2 = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 				entities.add(shot2);
 				shot2.shotXMove(coss*300*-1,200);
 			}
@@ -697,15 +700,22 @@ public class Game extends Canvas
 			removeEntity(itemUi[0]);
 			itemUi[1] = new GameUi(this,"sprites/used_heal_potion.png",20,550);
 			entities.add(itemUi[1]);
+			usedHealPotion = true;
 	}
 	public void ChangeHealPotionIcon(){
+		if (usedHealPotion) {
 			removeEntity(itemUi[1]);
 			entities.add(itemUi[0]);
+		}
+		usedHealPotion = false;
 	}
 
 	public void ChangeSpeedPotionIcon(){
-		removeEntity(itemUi[3]);
-		entities.add(itemUi[2]);
+		if (usedSpeedPotion) {
+			removeEntity(itemUi[3]);
+			entities.add(itemUi[2]);
+		}
+		usedSpeedPotion = false;
 	}
 
 	public void UseSpeedPotion(){
@@ -721,6 +731,7 @@ public class Game extends Canvas
 		removeEntity(itemUi[2]);
 		itemUi[3] = new GameUi(this,"sprites/used_speed_potion.png",50,550);
 		entities.add(itemUi[3]);
+		usedSpeedPotion = true;
 	}
 	public void ReturnMoveSpeed(){
 			moveSpeed = 300;
