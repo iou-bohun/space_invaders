@@ -49,8 +49,6 @@ public class Game extends Canvas
 	int HPcooldownCheck;
 	int SPcooldownCheck;
 
-	int reflectCheck;
-
 	private int score; /** 게임 스코어 **/
 
 
@@ -116,7 +114,7 @@ public class Game extends Canvas
 
 
 	private Boolean bossAlive = false;
-	public int stage=4;
+	public int stage=1;
 
 	private boolean isStageUi = false;
 

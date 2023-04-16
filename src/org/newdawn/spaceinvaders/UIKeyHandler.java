@@ -489,10 +489,7 @@ public class UIKeyHandler extends KeyAdapter {
                 }
             }
 
-            if (code == KeyEvent.VK_ENTER) {
-
-                if(glp.mu.commandNum == 0){
-                }
+            if (code == KeyEvent.VK_ENTER || (code == KeyEvent.VK_SPACE)) {
 
                 if (glp.mu.commandNum == 1) {
                     changeNickname();
