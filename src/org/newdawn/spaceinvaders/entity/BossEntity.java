@@ -40,9 +40,9 @@ public class BossEntity extends Entity {
     public Boolean reflect =false;
 
     public BossEntity(Game game,int x,int y) {
-        super("sprites/round1_alien.png",x,y);
+        super("sprites/nothing.png",x,y);
         if(game.stage ==1){
-            frames[0] = sprite;
+            frames[0] = SpriteStore.get().getSprite("sprites/round1_alien.png");
             frames[1] = SpriteStore.get().getSprite("sprites/round1_alien.png");
             hitFrame = SpriteStore.get().getSprite("sprites/round1_alien_shot.png");
             godFrame = SpriteStore.get().getSprite("sprites/round1_alien_ skill.png");
@@ -62,6 +62,7 @@ public class BossEntity extends Entity {
             frames[0] = SpriteStore.get().getSprite("sprites/round4_alien.png");
             frames[1] = SpriteStore.get().getSprite("sprites/round4_alien.png");
             hitFrame = SpriteStore.get().getSprite("sprites/round4_alien_shot.png");
+            reflectFrame = SpriteStore.get().getSprite("sprites/round4_alien_skill.png");
         }
         else {
             frames[0] = SpriteStore.get().getSprite("sprites/round5_alien.png");
@@ -169,7 +170,7 @@ public class BossEntity extends Entity {
     public void collidedWith(Entity other) {
         if (other instanceof ShotEntity) {
             if(immortal ==false ){
-                hp--;
+                hp -= 5;
                 gotHit = true;
                 if(hp<=0){
                     game.removeEntity(this);

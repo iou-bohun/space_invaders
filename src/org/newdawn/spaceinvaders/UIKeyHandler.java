@@ -355,7 +355,7 @@ public class UIKeyHandler extends KeyAdapter {
 
             if (code == KeyEvent.VK_ENTER) {
 
-                if(glp.mu.commandNum == 1){
+                if (glp.mu.commandNum == 1) {
                     loginDB();
                     if (UserDB.is_logged_in) {
                         glp.gameState = glp.titleState;
@@ -364,7 +364,9 @@ public class UIKeyHandler extends KeyAdapter {
                         pwString = "";
                     }
                 }
+            }
 
+            if(code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE){
                 if (glp.mu.commandNum == 2) {
                     loginDB();
                     if (UserDB.is_logged_in) {
@@ -416,7 +418,9 @@ public class UIKeyHandler extends KeyAdapter {
                 if (glp.mu.commandNum == 3) {
                     registerDB();
                 }
+            }
 
+            if(code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE){
                 if (glp.mu.commandNum == 4) {
                     registerDB();
                 }
