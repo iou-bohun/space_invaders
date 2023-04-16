@@ -114,6 +114,8 @@ public class Game extends Canvas
 
 	private boolean usedHealPotion = false;
 	private boolean usedSpeedPotion = false;
+	private int HPCooldown = 0;
+	private int SPCooldown = 0;
 
 	double addRound = 0;
 
@@ -610,6 +612,12 @@ public class Game extends Canvas
 				/**코인 **/
 				gi.drawString(String.valueOf(UserDB.coin),710,70);
 
+				//showHPCooldown();
+				gi.drawString(String.valueOf(HPCooldown),20,550);
+
+				//showSPCooldown();
+				gi.drawString(String.valueOf(SPCooldown),50,550);
+
 
 
 				strategy.show();
@@ -777,6 +785,21 @@ public class Game extends Canvas
 			second=0;
 		}
 	}
+
+	public void showHPCooldown( ){
+		long endTime = System.currentTimeMillis() + 4000; // 4초 후에 종료
+		while (System.currentTimeMillis() < endTime || usedHealPotion) {
+			HPCooldown = (int) ((endTime - System.currentTimeMillis()) / 1000) + 1;
+		}
+	}
+
+	public void showSPCooldown( ){
+		long endTime = System.currentTimeMillis() + 4000; // 4초 후에 종료
+		while (System.currentTimeMillis() < endTime || usedSpeedPotion) {
+			SPCooldown = (int) ((endTime - System.currentTimeMillis()) / 1000) + 1;
+		}
+	}
+
 	/**
 	 * A class to handle keyboard input from the user. The class
 	 * handles both dynamic input during game play, i.e. left/right
