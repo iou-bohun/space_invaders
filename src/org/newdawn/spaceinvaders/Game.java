@@ -113,7 +113,7 @@ public class Game extends Canvas
 
 
 	private Boolean bossAlive = false;
-	public int stage=4;
+	public int stage=1;
 
 	private boolean isStageUi = false;
 
@@ -199,7 +199,6 @@ public class Game extends Canvas
 		rightPressed = false;
 		firePressed = false;
 		escPressed= false;
-
 	}
 
 	private void initEntities() {
@@ -481,6 +480,7 @@ public class Game extends Canvas
 	public void bossReflectStart(){ /**반사시 캐릭터 체력 감소**/
 		if (!reflectDamaged) {
 			ship.setHp(-1);
+			removeEntity(playerHpUI[ship.getHp()]);
 			reflectDamaged = true;
 		}
 	}
