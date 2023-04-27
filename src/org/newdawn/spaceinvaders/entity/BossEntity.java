@@ -183,8 +183,8 @@ public class BossEntity extends Entity {
                 hp--;
                 gotHit = true;
                 if(hp<=0){
-                    game.removeEntity(this);
                     game.notifyBossKilled();
+                    game.removeEntity(this);
                 }
             }
             else if(reflect  == true){

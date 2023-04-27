@@ -953,7 +953,7 @@ public class MainUI extends JPanel {
             basicShip = ImageIO.read(is11);
             InputStream is12 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/tutorial_window.png")));
             tutorialWindow = ImageIO.read(is12);
-            InputStream is13 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/dialog_window_trans.png")));
+            InputStream is13 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/dialog_window_trans.png")));
             dialogWindow = ImageIO.read(is13);
         } catch (IOException e) {
             e.printStackTrace();
