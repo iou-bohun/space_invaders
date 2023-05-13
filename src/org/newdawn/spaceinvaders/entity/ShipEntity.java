@@ -11,37 +11,17 @@ import org.newdawn.spaceinvaders.Game;
 public class ShipEntity extends Entity {
 	/** The game in which the ship exists */
 	private Game game;
-
 	private int hp=5;
-
 	private boolean gotHit;
 	
-	/**
-	 * Create a new entity to represent the players ship
-	 *  
-	 * @param game The game in which the ship is being created
-	 * @param ref The reference to the sprite to show for the ship
-	 * @param x The initial x location of the player's ship
-	 * @param y The initial y location of the player's ship
-	 */
+
 	public ShipEntity(Game game,String ref,int x,int y) {
 		super(ref,x,y);
 		
 		this.game = game;
 	}
-
 	public int getHp(){return hp;}
-
 	public void setHp(int Hp){this.hp += Hp;}
-
-
-	
-	/**
-	 * Request that the ship move itself based on an elapsed ammount of
-	 * time
-	 * 
-	 * @param delta The time that has elapsed since last move (ms)
-	 */
 	public void move(long delta) {
 		// if we're moving left and have reached the left hand side
 		// of the screen, don't move

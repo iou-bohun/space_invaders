@@ -927,33 +927,33 @@ public class MainUI extends JPanel {
     public void loadTitleImg() {
         try {
             //타이틀 이미지 로딩
-            InputStream is = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/computer_back.png")));
+            InputStream is = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/computer_back.png")));
             background = ImageIO.read(is);
-            InputStream is2 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/gamelogo.png")));
+            InputStream is2 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/gamelogo.png")));
             gameLogo = ImageIO.read(is2);
-            InputStream is3 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/satellite.png")));
+            InputStream is3 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/satellite.png")));
             satellite = ImageIO.read(is3);
-            InputStream is4 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/gamelogo_shadow.png")));
+            InputStream is4 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/gamelogo_shadow.png")));
             gameLogo_shadow = ImageIO.read(is4);
-            InputStream is5 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/choice_tiny.png")));
+            InputStream is5 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/choice_tiny.png")));
             choiceButton = ImageIO.read(is5);
 
             //상점 이미지 로딩
-            InputStream is6 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/coin.png")));
+            InputStream is6 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/coin.png")));
             coinImg = ImageIO.read(is6);
-            InputStream is7 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/heal_potion.png")));
+            InputStream is7 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/heal_potion.png")));
             healPotion = ImageIO.read(is7);
-            InputStream is8 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/speed_potion.png")));
+            InputStream is8 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/speed_potion.png")));
             speedPotion = ImageIO.read(is8);
-            InputStream is9 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/hard_ship.png")));
+            InputStream is9 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/hard_ship.png")));
             hardShip = ImageIO.read(is9);
-            InputStream is10 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/lucky_ship.png")));
+            InputStream is10 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/lucky_ship.png")));
             luckShip = ImageIO.read(is10);
-            InputStream is11 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/ship.gif")));
+            InputStream is11 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/ship.gif")));
             basicShip = ImageIO.read(is11);
-            InputStream is12 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/tutorial_window.png")));
+            InputStream is12 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/tutorial_window.png")));
             tutorialWindow = ImageIO.read(is12);
-            InputStream is13 = new BufferedInputStream(Files.newInputStream(Paths.get("src/ui/dialog_window_trans.png")));
+            InputStream is13 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/ui/dialog_window_trans.png")));
             dialogWindow = ImageIO.read(is13);
         } catch (IOException e) {
             e.printStackTrace();
